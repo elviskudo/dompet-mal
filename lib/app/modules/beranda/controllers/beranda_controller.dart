@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BerandaController extends GetxController {
   //TODO: Implement BerandaController
-
+  final TextEditingController searchController = TextEditingController();
   final count = 0.obs;
   @override
   void onInit() {
