@@ -148,3 +148,58 @@ class StraightCharityComponent extends StatelessWidget {
     );
   }
 }
+
+class Section extends StatelessWidget {
+  final Widget child;
+  final EdgeInsetsGeometry? padding;
+  final Color backgroundColor;
+
+  const Section({
+    Key? key,
+    required this.child,
+    this.padding,
+    this.backgroundColor = Colors.white,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: backgroundColor,
+      child: Padding(
+        padding: padding ?? const EdgeInsets.all(16),
+        child: child,
+      ),
+    );
+  }
+}
+
+class HorizontalScrollRow extends StatelessWidget {
+  final List<Widget> items;
+  final double spacing;
+
+  const HorizontalScrollRow({
+    Key? key,
+    required this.items,
+    this.spacing = 12.0,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: items
+            .asMap()
+            .entries
+            .map(
+              (entry) => Padding(
+                padding: EdgeInsets.only(
+                    right: entry.key == items.length - 1 ? 0 : spacing),
+                child: entry.value,
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+}

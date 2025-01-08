@@ -2,6 +2,7 @@
 
 import 'package:dompet_mal/color/color.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 class EmergencyFundSection extends StatelessWidget {
@@ -27,60 +28,64 @@ class EmergencyFundSection extends StatelessWidget {
       ),
     ];
 
-    return Column(
-      children: [
-        // Header section
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Bantuan Dana Darurat',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // Navigate to list
-                },
-                child: const Text(
-                  'Lihat Lainnya',
-                  style: TextStyle(color: secondary),
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // Cards section
-        SizedBox(
-          height: 380, // Sesuaikan dengan tinggi card
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            itemCount: funds.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  right: index == funds.length - 1 ? 0 : 16,
-                ),
-                child: SizedBox(
-                  width: 300, // Sesuaikan dengan lebar yang diinginkan
-                  child: EmergencyFundCard(
-                    fund: funds[index],
-                    onTap: () {
-                      // Handle tap
-                    },
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          // Header section
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Bantuan Dana Darurat',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              );
-            },
+                TextButton(
+                  onPressed: () {
+                    // Navigate to list
+                  },
+                  child: const Text(
+                    'Lihat Lainnya',
+                    style: TextStyle(color: secondary),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+
+          // Cards section
+          SizedBox(
+            height: 380, // Sesuaikan dengan tinggi card
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              scrollDirection: Axis.horizontal,
+              itemCount: funds.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    right: index == funds.length - 1 ? 0 : 16,
+                  ),
+                  child: SizedBox(
+                    width: 300, // Sesuaikan dengan lebar yang diinginkan
+                    child: EmergencyFundCard(
+                      fund: funds[index],
+                      onTap: () {
+                        // Handle tap
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Gap(24)
+        ],
+      ),
     );
   }
 }

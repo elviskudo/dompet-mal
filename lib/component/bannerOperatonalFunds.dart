@@ -7,7 +7,7 @@ class BannerDanaOperasional extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -32,15 +32,15 @@ class BannerDanaOperasional extends StatelessWidget {
               children: [
                 // Icon container
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: 60,
+                  height: 60,
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.blue[50],
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Image.asset(
-                    "assets/images/Group 323.png",
+                    "images/BannerDana.png",
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -55,7 +55,7 @@ class BannerDanaOperasional extends StatelessWidget {
                       Text(
                         "Bantu Dana Operasional",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 20,
                           fontWeight: FontWeight.w600,
                           color: Colors.blue[600],
                         ),
@@ -66,7 +66,7 @@ class BannerDanaOperasional extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w300,
                         ),
                       ),
                     ],
@@ -75,9 +75,10 @@ class BannerDanaOperasional extends StatelessWidget {
                 // Arrow icon
                 Icon(
                   Icons.chevron_right,
-                  size: 24,
-                  color: Colors.grey[400],
+                  size: 32,
+                  color: Colors.grey[800],
                 ),
+                
               ],
             ),
           ),

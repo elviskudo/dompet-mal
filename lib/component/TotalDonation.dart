@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 class DanaDonasiLangsung {
@@ -52,22 +53,22 @@ class TotalDanaDonasi extends StatelessWidget {
                     const Text(
                       'Total dana donasi langsung',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         color: Colors.black87,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                Gap(4),
                 Text(
                   formatCurrency(danaDonasiLangsung.totalBudgets),
                   style: const TextStyle(
-                    fontSize: 24,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 4),
+                Gap(4),
                 Row(
                   children: [
                     Text(
