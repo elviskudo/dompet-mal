@@ -1,4 +1,6 @@
+import 'package:dompet_mal/app/modules/kategori/views/kategori_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 // Contoh data JSON
 const List<Map<String, String>> kategoriData = [
@@ -24,6 +26,9 @@ const List<Map<String, String>> kategoriData = [
   },
 ];
 
+// Halaman kategori yang akan dituju
+
+
 class KategoriGrid extends StatelessWidget {
   final String label;
   final String iconPath;
@@ -36,19 +41,31 @@ class KategoriGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Image.asset(
-          iconPath,
-          width: 40,
-          height: 40,
-          fit: BoxFit.contain,
+        InkWell(
+          onTap: () {
+            if (label == "Lihat Semua") {
+              Get.to(
+                  () => const KategoriView()); // Navigasi ke halaman kategori
+            }
+          },
+          child: Image.asset(
+            iconPath,
+            width: 30,
+            height: 30,
+            fit: BoxFit.contain,
+          ),
         ),
-        const SizedBox(height: 8), // Spasi antara ikon dan teks
-        Text(
-          label,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        const SizedBox(height: 12), // Spasi antara ikon dan teks
+        Container(
+          width: 55,
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
+          ),
         ),
       ],
     );
@@ -63,6 +80,8 @@ class KategoriGridIcon extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           kategoriData.length,
           (index) {

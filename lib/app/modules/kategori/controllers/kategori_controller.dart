@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class BerandaController extends GetxController {
-  //TODO: Implement BerandaController
+class KategoriController extends GetxController {
+  //TODO: Implement KategoriController
 
   final count = 0.obs;
   @override

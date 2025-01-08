@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
 
-import '../modules/beranda/bindings/beranda_binding.dart';
-import '../modules/beranda/views/beranda_view.dart';
+
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/kategori/bindings/kategori_binding.dart';
+import '../modules/kategori/views/kategori_view.dart';
 
 part 'app_routes.dart';
 
@@ -18,10 +19,11 @@ class AppPages {
       page: () => const HomeView(),
       binding: HomeBinding(),
     ),
+    
     GetPage(
-      name: _Paths.BERANDA,
-      page: () => const BerandaView(),
-      binding: BerandaBinding(),
+      name: _Paths.KATEGORI,
+      page: () => const KategoriView(),
+      binding: KategoriBinding(),
     ),
   ];
 }
