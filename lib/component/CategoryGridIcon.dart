@@ -28,7 +28,6 @@ const List<Map<String, String>> kategoriData = [
 
 // Halaman kategori yang akan dituju
 
-
 class KategoriGrid extends StatelessWidget {
   final String label;
   final String iconPath;
@@ -40,34 +39,37 @@ class KategoriGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        InkWell(
-          onTap: () {
-            if (label == "Lihat Semua") {
-              Get.to(
-                  () => const KategoriView()); // Navigasi ke halaman kategori
-            }
-          },
-          child: Image.asset(
-            iconPath,
-            width: 30,
-            height: 30,
-            fit: BoxFit.contain,
+    return Container(
+      height: 180,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: () {
+              if (label == "Lihat Semua") {
+                Get.to(
+                    () => const KategoriView()); // Navigasi ke halaman kategori
+              }
+            },
+            child: Image.asset(
+              iconPath,
+              width: 40,
+              height: 40,
+              fit: BoxFit.contain,
+            ),
           ),
-        ),
-        const SizedBox(height: 12), // Spasi antara ikon dan teks
-        Container(
-          width: 55,
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
+          const SizedBox(height: 12), // Spasi antara ikon dan teks
+          Container(
+            width: 65,
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -77,17 +79,17 @@ class KategoriGridIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+    return Container(
+      width: MediaQuery.of(context).size.width,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(
           kategoriData.length,
           (index) {
             final item = kategoriData[index];
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: KategoriGrid(
                 label: item["label"] ?? "",
                 iconPath: item["iconPath"] ?? "",
