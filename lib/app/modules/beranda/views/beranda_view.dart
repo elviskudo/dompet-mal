@@ -17,7 +17,7 @@ class BerandaView extends GetView<BerandaController> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: 310,
-        child: (KategoriGridScreen()),
+        child: (KategoriGridIcon()),
       ),
     );
   }
