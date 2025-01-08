@@ -1,4 +1,9 @@
+import 'package:dompet_mal/component/bottomBar.dart';
+import 'package:dompet_mal/component/chat.dart';
+import 'package:dompet_mal/component/logo.dart';
+import 'package:dompet_mal/component/notifcation.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
 
@@ -9,16 +14,44 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('HomeView'),
-        centerTitle: true,
+      body: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 226,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/bgbatik.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: (Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Logo(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [notification(), Gap(14), chat()],
+                        )
+                      ],
+                    ),
+                  ],
+                )),
+              ),
+            ),
+          ),
+        ],
       ),
-      body: const Center(
-        child: Text(
-          'HomeView is working',
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
+      bottomNavigationBar: Bottombar(),
     );
   }
 }
