@@ -15,7 +15,7 @@ class BerandaView extends GetView<BerandaController> {
       ),
       body: const Center(
         child: Text(
-          'BerandaView is working',
+          'BerandaView is hitam',
           style: TextStyle(fontSize: 20),
         ),
       ),
