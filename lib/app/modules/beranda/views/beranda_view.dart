@@ -1,3 +1,4 @@
+import 'package:dompet_mal/component/kategoriGridIcon.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -13,11 +14,10 @@ class BerandaView extends GetView<BerandaController> {
         title: const Text('BerandaView'),
         centerTitle: true,
       ),
-      body: const Center(
-        child: Text(
-          'BerandaView is hitam',
-          style: TextStyle(fontSize: 20),
-        ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 310,
+        child: (KategoriGridScreen()),
       ),
     );
   }
