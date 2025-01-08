@@ -68,12 +68,23 @@ class TotalDanaDonasi extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  '${danaDonasiLangsung.totalDonaturs} penyumbang',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black54,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      '${danaDonasiLangsung.totalDonaturs} ',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      'penyumbang',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

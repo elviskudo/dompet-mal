@@ -11,7 +11,7 @@ class SearchBars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
         height: 54,
         decoration: BoxDecoration(
@@ -36,7 +36,6 @@ class SearchBars extends StatelessWidget {
                   height: 40,
                   decoration: const BoxDecoration(
                     color: Color.fromRGBO(101, 182, 248, 1),
-                    
                     shape: BoxShape.circle,
                   ),
                   child: const Center(
