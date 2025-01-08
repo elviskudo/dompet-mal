@@ -40,7 +40,7 @@ class BannerDanaOperasional extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Image.asset(
-                    "assets/images/Group 323.png",
+                    "assets/Group 323.png",
                     fit: BoxFit.contain,
                   ),
                 ),
