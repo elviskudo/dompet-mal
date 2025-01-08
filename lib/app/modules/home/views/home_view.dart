@@ -1,17 +1,10 @@
-
 import 'package:dompet_mal/component/bannerCategoryChoice.dart';
 import 'package:dompet_mal/component/bannerOperatonalFunds.dart';
 import 'package:dompet_mal/component/bannerSliderMorningCharity.dart';
 import 'package:dompet_mal/component/search.dart';
 import 'package:dompet_mal/models/MorningCharity.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
-
-import 'package:dompet_mal/component/bottomBar.dart';
-import 'package:dompet_mal/component/chat.dart';
-import 'package:dompet_mal/component/logo.dart';
-import 'package:dompet_mal/component/notifcation.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
 
@@ -26,7 +19,7 @@ class HomeView extends GetView<HomeController> {
         title: const Text('HomeView'),
         centerTitle: true,
       ),
-      body:  ListView(
+      body:    ListView(
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
@@ -49,8 +42,10 @@ class HomeView extends GetView<HomeController> {
                 ),
                 BannerKategori(banners: dummyDataListCategoryBanner,)
               ],
-            
-            );
-            
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
