@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class KategoriController extends GetxController {
-  //TODO: Implement KategoriController
 
+  //TODO: Implement BerandaController
+  final TextEditingController searchController = TextEditingController();
   final count = 0.obs;
   @override
   void onInit() {
