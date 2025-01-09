@@ -1,15 +1,24 @@
+import 'package:dompet_mal/app/modules/aggrement/bindings/aggrement_binding.dart';
+import 'package:dompet_mal/app/modules/aggrement/views/aggrement_view.dart';
+import 'package:dompet_mal/app/modules/email_verification/bindings/email_verification_binding.dart';
+import 'package:dompet_mal/app/modules/email_verification/views/email_verification_view.dart';
+import 'package:dompet_mal/app/modules/forgot_password/bindings/forgot_password_binding.dart';
+import 'package:dompet_mal/app/modules/forgot_password/views/forgot_password_view.dart';
+import 'package:dompet_mal/app/modules/forgotpass_verification/bindings/forgotpass_verification_binding.dart';
+import 'package:dompet_mal/app/modules/forgotpass_verification/views/forgotpass_verification_view.dart';
+import 'package:dompet_mal/app/modules/login/bindings/login_binding.dart';
+import 'package:dompet_mal/app/modules/register/bindings/register_binding.dart';
+import 'package:dompet_mal/app/modules/register/views/register_view.dart';
+import 'package:dompet_mal/app/modules/reset_pass/bindings/reset_pass_binding.dart';
+import 'package:dompet_mal/app/modules/reset_pass/views/reset_pass_view.dart';
 import 'package:get/get.dart';
+
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/kategori/bindings/kategori_binding.dart';
 import '../modules/kategori/views/kategori_view.dart';
-import '../modules/onBoardingPage/bindings/on_boarding_page_binding.dart';
-import '../modules/onBoardingPage/views/on_boarding_page_view.dart';
-import '../modules/paymentAccountPage/bindings/payment_account_page_binding.dart';
-import '../modules/paymentAccountPage/views/payment_account_page_view.dart';
-import '../modules/splash_screen/bindings/splash_screen_binding.dart';
-import '../modules/splash_screen/views/splash_screen_view.dart';
+import '../modules/login/views/login_view.dart';
 
 part 'app_routes.dart';
 
@@ -29,20 +38,40 @@ class AppPages {
       page: () => const KategoriView(),
       binding: KategoriBinding(),
     ),
-    GetPage(
-      name: _Paths.SPLASH_SCREEN,
-      page: () => const SplashScreenView(),
-      binding: SplashScreenBinding(),
+        GetPage(
+      name: _Paths.LOGIN,
+      page: () => const LoginView(),
+      binding: LoginBinding(),
     ),
     GetPage(
-      name: _Paths.ON_BOARDING_PAGE,
-      page: () => const OnboardingPageView(),
-      binding: OnBoardingPageBinding(),
+      name: _Paths.REGISTER,
+      page: () => const RegisterView(),
+      binding: RegisterBinding(),
     ),
     GetPage(
-      name: _Paths.PAYMENT_ACCOUNT_PAGE,
-      page: () => const PaymentAccountPageView(),
-      binding: PaymentAccountPageBinding(),
+      name: _Paths.FORGOT_PASSWORD,
+      page: () => const ForgotPasswordView(),
+      binding: ForgotPasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.AGGREMENT,
+      page: () => const AggrementView(),
+      binding: AggrementBinding(),
+    ),
+    GetPage(
+      name: _Paths.EMAIL_VERIFICATION,
+      page: () => const EmailVerificationView(),
+      binding: EmailVerificationBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORGOTPASS_VERIFICATION,
+      page: () => const ForgotpassVerificationView(),
+      binding: ForgotpassVerificationBinding(),
+    ),
+    GetPage(
+      name: _Paths.RESET_PASS,
+      page: () => const ResetPassView(),
+      binding: ResetPassBinding(),
     ),
   ];
 }
