@@ -1,4 +1,3 @@
-import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/CategoryGridIcon.dart';
 import 'package:dompet_mal/component/StraightCharityCard.dart';
 import 'package:dompet_mal/component/TotalDonation.dart';
