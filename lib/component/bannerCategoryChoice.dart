@@ -1,4 +1,5 @@
 import 'package:avatar_stack/avatar_stack.dart';
+import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -46,7 +47,8 @@ class _BannerKategoriState extends State<BannerKategori> {
             ],
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start, // Align content to top
+            crossAxisAlignment:
+                CrossAxisAlignment.start, // Align content to top
             children: [
               Stack(
                 children: [
@@ -68,7 +70,8 @@ class _BannerKategoriState extends State<BannerKategori> {
                     bottom: 12,
                     left: 10,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(5),
@@ -89,7 +92,8 @@ class _BannerKategoriState extends State<BannerKategori> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Distribute space evenly
+                    mainAxisAlignment: MainAxisAlignment
+                        .spaceBetween, // Distribute space evenly
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +134,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                                 height: 5,
                                 width: 120,
                                 decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: basecolor,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                               ),

@@ -1,4 +1,5 @@
 import 'package:dompet_mal/app/modules/kategori/views/kategori_view.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -48,8 +49,7 @@ class KategoriGrid extends StatelessWidget {
           InkWell(
             onTap: () {
               if (label == "Lihat Semua") {
-                Get.to(
-                    () => const KategoriView()); // Navigasi ke halaman kategori
+                Get.toNamed(Routes.KATEGORI); // Navigasi ke halaman kategori
               }
             },
             child: Image.asset(
