@@ -1,7 +1,9 @@
 import 'package:avatar_stack/avatar_stack.dart';
 import 'package:dompet_mal/color/color.dart';
+import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class BannerKategori extends StatefulWidget {
@@ -33,7 +35,7 @@ class _BannerKategoriState extends State<BannerKategori> {
         final banner = widget.banners[index];
         return Container(
           width: MediaQuery.of(context).size.width,
-          height: 212,
+          height: 235,
           margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -54,7 +56,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                 children: [
                   Container(
                     width: 140,
-                    height: 212, // Make image full height
+                    height: 235, // Make image full height
                     decoration: const BoxDecoration(
                       borderRadius:
                           BorderRadius.horizontal(left: Radius.circular(10)),
@@ -179,6 +181,28 @@ class _BannerKategoriState extends State<BannerKategori> {
                           ),
                         ],
                       ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10)),
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Get.bottomSheet(
+                                 SlidingDonationSheet(),
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                backgroundColor: const Color(0xff4B76D9),
+                                foregroundColor: Colors.white),
+                            child: const Text("Donasi")),
+                      )
                     ],
                   ),
                 ),

@@ -10,13 +10,19 @@ import '../modules/konfirmasi-transfer/bindings/konfirmasi_transfer_binding.dart
 import '../modules/konfirmasi-transfer/views/konfirmasi_transfer_view.dart';
 import '../modules/list-donasi/bindings/list_donasi_binding.dart';
 import '../modules/list-donasi/views/list_donasi_view.dart';
+import '../modules/onBoardingPage/bindings/on_boarding_page_binding.dart';
+import '../modules/onBoardingPage/views/on_boarding_page_view.dart';
+import '../modules/paymentAccountPage/bindings/payment_account_page_binding.dart';
+import '../modules/paymentAccountPage/views/payment_account_page_view.dart';
+import '../modules/splash_screen/bindings/splash_screen_binding.dart';
+import '../modules/splash_screen/views/splash_screen_view.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.HOME;
+  static const INITIAL = Routes.PAYMENT_ACCOUNT_PAGE;
 
   static final routes = [
     GetPage(
@@ -43,6 +49,21 @@ class AppPages {
       name: _Paths.KIRIM_UANG,
       page: () => const KirimUangView(),
       binding: KirimUangBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPLASH_SCREEN,
+      page: () => const SplashScreenView(),
+      binding: SplashScreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.ON_BOARDING_PAGE,
+      page: () => const OnboardingPageView(),
+      binding: OnBoardingPageBinding(),
+    ),
+    GetPage(
+      name: _Paths.PAYMENT_ACCOUNT_PAGE,
+      page: () => const PaymentAccountPageView(),
+      binding: PaymentAccountPageBinding(),
     ),
   ];
 }
