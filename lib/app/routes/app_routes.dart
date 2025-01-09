@@ -20,12 +20,13 @@ abstract class Routes {
   static const FORGOTPASS_VERIFICATION = _Paths.FORGOTPASS_VERIFICATION;
   static const RESET_PASS = _Paths.RESET_PASS;
 }
+
 abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
   static const KATEGORI = '/kategori';
-  static const LIST_DONASI = '/list-donasi';
-  static const KONFIRMASI_TRANSFER = '/konfirmasi-transfer';
+  static const LIST_DONASI = '/listDonation';
+  static const KONFIRMASI_TRANSFER = '/confirmationTransfer';
   static const KIRIM_UANG = '/kirim-uang';
   static const SPLASH_SCREEN = '/splash-screen';
   static const ON_BOARDING_PAGE = '/on-boarding-page';

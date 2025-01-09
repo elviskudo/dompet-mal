@@ -1,4 +1,4 @@
-import 'package:dompet_mal/app/modules/kategori/views/kategori_view.dart';
+import 'package:dompet_mal/app/modules/kategori/views/category_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';

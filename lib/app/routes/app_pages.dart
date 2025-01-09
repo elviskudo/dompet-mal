@@ -16,13 +16,13 @@ import 'package:get/get.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/kategori/bindings/kategori_binding.dart';
-import '../modules/kategori/views/kategori_view.dart';
-import '../modules/kirim-uang/bindings/kirim_uang_binding.dart';
-import '../modules/kirim-uang/views/kirim_uang_view.dart';
-import '../modules/konfirmasi-transfer/bindings/konfirmasi_transfer_binding.dart';
-import '../modules/konfirmasi-transfer/views/konfirmasi_transfer_view.dart';
-import '../modules/list-donasi/bindings/list_donasi_binding.dart';
-import '../modules/list-donasi/views/list_donasi_view.dart';
+import '../modules/kategori/views/category_view.dart';
+import '../modules/sendMoney/bindings/kirim_uang_binding.dart';
+import '../modules/sendMoney/views/kirim_uang_view.dart';
+import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
+import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
+import '../modules/listDonation/bindings/list_donasi_binding.dart';
+import '../modules/listDonation/views/list_donasi_view.dart';
 import '../modules/onBoardingPage/bindings/on_boarding_page_binding.dart';
 import '../modules/onBoardingPage/views/on_boarding_page_view.dart';
 import '../modules/paymentAccountPage/bindings/payment_account_page_binding.dart';
@@ -36,7 +36,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.HOME;
+  static const INITIAL = Routes.SPLASH_SCREEN;
 
   static final routes = [
     GetPage(
@@ -103,6 +103,11 @@ class AppPages {
       name: _Paths.RESET_PASS,
       page: () => const ResetPassView(),
       binding: ResetPassBinding(),
+    ),
+    GetPage(
+      name: _Paths.ON_BOARDING_PAGE,
+      page: () => const OnboardingPageView(),
+      binding: OnBoardingPageBinding(),
     ),
     GetPage(
       name: '/payment-account-page',
