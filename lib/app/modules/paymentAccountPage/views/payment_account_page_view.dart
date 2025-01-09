@@ -11,20 +11,20 @@ class PaymentAccountPageView extends GetView<PaymentAccountPageController> {
       appBar: AppBar(
         toolbarHeight: 100,
         backgroundColor: const Color(0xff4B76D9),
-        // leading: const Icon(
-        //   Icons.arrow_back,
-        //   color: Colors.white,
-        // ),
+        // leading:
+        automaticallyImplyLeading: false,
         flexibleSpace: Container(
           alignment: Alignment.bottomLeft,
-          padding: const EdgeInsets.only(left: 16, bottom: 16),
+          padding: const EdgeInsets.only(left: 20, bottom: 16),
           child: Row(
             children: [
-              const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Get.back(),
               ),
-              const SizedBox(width: 8), // Space between icon and text
+              // SizedBox(
+              //   width: 16,
+              // ),
               const Text(
                 'Kirim Donasi',
                 style: TextStyle(
@@ -40,7 +40,7 @@ class PaymentAccountPageView extends GetView<PaymentAccountPageController> {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          Container(
+          Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,36 +53,46 @@ class PaymentAccountPageView extends GetView<PaymentAccountPageController> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Image.asset('images/mandiri.png'), // Replace with your image path
-                      const SizedBox(width: 24),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'ELVIS SONATHA',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text('1670003807988'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                Obx(() => Column(
+                      children: controller.bankAccounts
+                          .map((account) => GestureDetector(
+                                onTap: () =>
+                                    controller.selectBankAccount(account),
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 16),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  padding: const EdgeInsets.all(16),
+                                  child: Row(
+                                    children: [
+                                      Image.asset('images/mandiri.png'),
+                                      const SizedBox(width: 24),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            account.accountName,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(account.accountNumber),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    )),
               ],
             ),
           ),

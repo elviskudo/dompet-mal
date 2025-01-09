@@ -1,4 +1,5 @@
 import 'package:dompet_mal/app/modules/home/controllers/home_controller.dart';
+import 'package:dompet_mal/models/BankAccountModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -14,8 +15,10 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _slideAnimation;
-  final donationController = Get.put(HomeController());
+  final donationController = Get.find<HomeController>();
   final TextEditingController _textController = TextEditingController();
+  final Rx<BankAccount?> selectedBankAccount = Rx<BankAccount?>(null);
+
   final List<int> predefinedAmounts = [
     50000,
     100000,
@@ -28,6 +31,11 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
   @override
   void initState() {
     super.initState();
+    // Check if there's an argument passed
+    if (Get.arguments != null) {
+      selectedBankAccount.value = Get.arguments as BankAccount;
+    }
+
     // Set initial value of TextField
     _textController.text = donationController.donationAmount.value;
 
@@ -76,6 +84,77 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
     if (mounted && context.mounted) {
       Get.back();
     }
+  }
+
+  Widget _buildPaymentSection() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Obx(() {
+              if (selectedBankAccount.value != null) {
+                // Show bank account details when argument exists
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'images/mandiri.png',
+                      width: 80,
+                      height: 40,
+                    ),
+                    // const SizedBox(height: 4),
+                    Text(
+                      selectedBankAccount.value!.accountName,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      selectedBankAccount.value!.accountNumber,
+                      style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                );
+              } else {
+                // Show default text when no argument
+                return const Text(
+                  'Rekening Pembayaran',
+                  style: TextStyle(fontSize: 16),
+                );
+              }
+            }),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              // Get result from payment-account-page
+              final result = await Get.toNamed("payment-account-page");
+              if (result != null && result is BankAccount) {
+                selectedBankAccount.value = result;
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xff4B76D9),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            ),
+            child: const Text(
+              'Pilih',
+              style: TextStyle(fontSize: 14, color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -171,14 +250,26 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: TextField(
-                        controller: _textController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '0',
-                        ),
-                      ),
+                      child: Obx(() {
+                        _textController.text =
+                            donationController.donationAmount.value;
+                        return TextField(
+                          controller: _textController,
+                          onChanged: (value) {
+                            final parsedValue =
+                                int.tryParse(value.replaceAll('.', ''));
+                            if (parsedValue != null) {
+                              donationController
+                                  .setDonationAmount(parsedValue.toString());
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '0',
+                          ),
+                        );
+                      }),
                     ),
                   ],
                 ),
@@ -191,6 +282,8 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                   color: Colors.grey[600],
                 ),
               ),
+              const SizedBox(height: 16),
+              _buildPaymentSection(),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
