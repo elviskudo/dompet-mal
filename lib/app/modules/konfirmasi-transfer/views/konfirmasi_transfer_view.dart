@@ -2,6 +2,7 @@ import 'package:dompet_mal/app/modules/kategori/views/kategori_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
+import 'package:dompet_mal/models/BankAccountModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -14,8 +15,9 @@ class KonfirmasiTransferView extends GetView<KonfirmasiTransferController> {
   const KonfirmasiTransferView({super.key});
   @override
   Widget build(BuildContext context) {
-    final String nomorRekening = "1670003807988";
-    final String totalTransfer = "Rp10.052";
+    final args = Get.arguments as Map<String, dynamic>;
+    final nomorRekening = args['bankAccount'] as BankAccount;
+    final totalTransfer = args['amount'] as String;
     final String idTransaksi = "#DM110703412";
     var lebar = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -70,7 +72,7 @@ class KonfirmasiTransferView extends GetView<KonfirmasiTransferController> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  _inputCopyTransfer(nomorRekening, context),
+                  _inputCopyTransfer('$nomorRekening', context),
                   const SizedBox(height: 16),
                   _inputCopyTransfer(totalTransfer, context),
                   const SizedBox(height: 16),

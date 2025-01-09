@@ -104,5 +104,10 @@ class AppPages {
       page: () => const ResetPassView(),
       binding: ResetPassBinding(),
     ),
+    GetPage(
+      name: '/payment-account-page',
+      page: () => const PaymentAccountPageView(),
+      binding: PaymentAccountPageBinding(),
+    ),
   ];
 }

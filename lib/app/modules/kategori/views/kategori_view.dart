@@ -109,7 +109,6 @@ class KategoriView extends GetView<KategoriController> {
       appBar: appbar2(
         title: 'Kategori',
         color: Colors.white,
-        titleColor: Colors.white,
       ),
       body: GridView.builder(
         padding: EdgeInsets.all(16),
