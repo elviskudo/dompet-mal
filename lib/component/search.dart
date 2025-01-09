@@ -11,7 +11,7 @@ class SearchBars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
         height: 54,
         decoration: BoxDecoration(
@@ -30,22 +30,28 @@ class SearchBars extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(
               prefixIcon: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6.0, vertical: 0),
                 child: Container(
-                  width: 40,
-                  height: 40,
+                  padding: EdgeInsets.all(4),
+                  margin: EdgeInsets.only(right: 6),
+                  width: 44,
+                  height: 44,
                   decoration: const BoxDecoration(
-                    color: Color.fromRGBO(101, 182, 248, 1),
-                    
+                    color: Color(0xffE9EFFF),
                     shape: BoxShape.circle,
                   ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.white,
-                      size: 24,
+                  child: Center(
+                      child: InkWell(
+                    hoverColor: Colors.black45,
+                    onTap: () {},
+                    child: Image.asset(
+                      'icons/search.png',
+                      width: 24,
+                      color: Colors.black,
+                      height: 24,
                     ),
-                  ),
+                  )),
                 ),
               ),
               hintText: 'Coba cari "Bencana Alam"',
