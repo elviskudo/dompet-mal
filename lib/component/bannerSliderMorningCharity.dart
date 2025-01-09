@@ -93,9 +93,10 @@ class _BannerSliderState extends State<BannerSlider> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text(banner.buttonTitle, style: TextStyle(
-                            color: Colors.white
-                          ),),
+                          child: Text(
+                            banner.buttonTitle,
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
