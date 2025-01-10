@@ -30,7 +30,7 @@ class ListDonationView extends GetView<ListDonationController> {
               if (charityController.filteredCharities.value.isEmpty) {
                 return Center(child: Text('Tidak ada data ditemukan'));
               }
-              return BannerCATEGORY(
+              return BannerKategori(
                 banners: charityController.filteredCharities.value,
               );
             },

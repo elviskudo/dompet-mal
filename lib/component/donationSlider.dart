@@ -23,8 +23,8 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
   final List<int> predefinedAmounts = [
     50000,
     100000,
-    150000,
     200000,
+    300000,
     500000,
     1000000
   ];

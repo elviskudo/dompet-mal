@@ -144,13 +144,13 @@ class HomeView extends GetView<HomeController> {
                     child: Column(
                       children: [
                         SectionHeader(
-                          title: 'Pilihan CATEGORY',
+                          title: 'Pilihan Kategori',
                           actionText: '',
                           onActionPressed: () {
                             // Handle navigation to "Lihat lainnya"
                           },
                         ),
-                        BannerCATEGORY(banners: dummyDataListCategoryBanner),
+                        BannerKategori(banners: dummyDataListCategoryBanner),
                       ],
                     ),
                   )
@@ -160,7 +160,6 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
       ),
-      bottomNavigationBar: Bottombar(),
     );
   }
 }

@@ -81,11 +81,6 @@ class CategoryView extends GetView<CategoryController> {
       'color': Colors.orange,
     },
     {
-      'image': 'icons/foto_dummy.png',
-      'label': 'Pelari Baik',
-      'color': Colors.blue,
-    },
-    {
       'image': 'icons/kemanusiaan.png',
       'label': 'Kemanusiaan',
       'color': Colors.blue,
@@ -108,7 +103,7 @@ class CategoryView extends GetView<CategoryController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appbar2(
-        title: 'CATEGORY',
+        title: 'Category',
         color: Colors.white,
       ),
       body: GridView.builder(
