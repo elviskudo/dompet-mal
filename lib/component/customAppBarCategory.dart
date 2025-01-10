@@ -2,6 +2,19 @@ import 'package:dompet_mal/color/color.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+  final bool showFilterButtons;
+  final Function()? onBackPressed;
+  final Function()? onSortPressed;
+  final Function()? onFilterPressed;
+
+  CustomAppBar({
+    required this.title,
+    this.showFilterButtons = true,
+    this.onBackPressed,
+    this.onSortPressed,
+    this.onFilterPressed,
+  });
   @override
   Size get preferredSize => Size.fromHeight(120);
 
@@ -17,7 +30,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
-        'Donasi Langsung',
+        title,
         style: TextStyle(
           color: Colors.black,
           fontSize: 20,
@@ -40,8 +53,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Button_filter(lebar, 'icons/icon_sort.png', 'Urutkan'),
-              Button_filter(lebar, 'icons/icon_filter.png', 'Filter'),
+              Button_filter(
+                  lebar, 'icons/icon_sort.png', 'Urutkan', onSortPressed),
+              Button_filter(
+                  lebar, 'icons/icon_filter.png', 'Filter', onFilterPressed),
             ],
           ),
         ),
@@ -49,13 +64,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Container Button_filter(double lebar, String img, String name) {
+  Container Button_filter(
+      double lebar, String img, String name, Function()? onFilterPressed) {
     return Container(
       width: lebar * 0.25,
       child: OutlinedButton(
-        onPressed: () {
-          // Handle filter action
-        },
+        onPressed: onFilterPressed,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

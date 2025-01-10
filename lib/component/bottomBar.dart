@@ -1,8 +1,7 @@
 // ignore_for_file: unused_field, file_names, use_key_in_widget_constructors, library_private_types_in_public_api
-
 import 'package:dompet_mal/app/modules/home/views/home_view.dart';
-import 'package:dompet_mal/app/modules/profile/views/profile_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Bottombar extends StatefulWidget {
@@ -12,18 +11,30 @@ class Bottombar extends StatefulWidget {
 
 class _BottombarState extends State<Bottombar> {
   int _selectedIndex = 0;
+  final PageController _pageController = PageController();
 
   static final List<Widget> _pages = <Widget>[
     HomeView(),
     Center(child: Text('Donasiku')),
     Center(child: Text('Favorit')),
-    ProfileView(),
+    Center(child: Text('Profile')),
   ];
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    _pageController.animateToPage(
+      index,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -34,7 +45,6 @@ class _BottombarState extends State<Bottombar> {
         topRight: Radius.circular(20),
       ),
       child: BottomNavigationBar(
-        backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
