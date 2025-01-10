@@ -36,6 +36,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
     if (Get.arguments != null) {
       selectedBankAccount.value = Get.arguments as BankAccount;
     }
+    print(selectedBankAccount.value);
 
     // Set initial value of TextField
     _textController.text = donationController.donationAmount.value;

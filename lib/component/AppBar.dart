@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class appbar2 extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Color color;
   final Color titleColor;
   final Color iconColor;
+  final bool isIconMore;
 
   const appbar2({
     Key? key,
     required this.title,
     required this.color,
     this.titleColor = Colors.black,
+    this.isIconMore = false,
     this.iconColor = Colors.black,
   }) : super(key: key);
   @override
@@ -29,6 +32,37 @@ class appbar2 extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: TextStyle(color: titleColor),
       ),
+      actions: [
+        isIconMore
+            ? Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    // Tambahkan logika untuk ikon titik tiga di sini
+                    showMenu(
+                      context: context,
+                      position: RelativeRect.fromLTRB(100, 60, 20, 0),
+                      items: [
+                        PopupMenuItem(
+                          value: 'option1',
+                          child: Text('Option 1'),
+                        ),
+                        PopupMenuItem(
+                          value: 'option2',
+                          child: Text('Option 2'),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              )
+            : Gap(0),
+      ],
+
       // elevation: 4, // Adds shadow
       // shadowColor: Colors.black.withOpacity(0.3), // Custom shadow color
       backgroundColor: color, // White background

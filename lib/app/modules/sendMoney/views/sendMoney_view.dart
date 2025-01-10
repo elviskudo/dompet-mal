@@ -9,8 +9,8 @@ import 'package:get/get.dart';
 
 import '../controllers/kirim_uang_controller.dart';
 
-class KirimUangView extends GetView<KirimUangController> {
-  const KirimUangView({super.key});
+class SendMoneyView extends GetView<SendMoneyController> {
+  const SendMoneyView({super.key});
   @override
   Widget build(BuildContext context) {
     var tinggi = MediaQuery.of(context).size.height;

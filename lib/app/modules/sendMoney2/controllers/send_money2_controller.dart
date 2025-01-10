@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class ListDonasiController extends GetxController {
-  //TODO: Implement ListDonasiController
+class SendMoney2Controller extends GetxController {
+  //TODO: Implement SendMoney2Controller
 
   final count = 0.obs;
   @override

@@ -19,12 +19,17 @@ abstract class Routes {
   static const EMAIL_VERIFICATION = _Paths.EMAIL_VERIFICATION;
   static const FORGOTPASS_VERIFICATION = _Paths.FORGOTPASS_VERIFICATION;
   static const RESET_PASS = _Paths.RESET_PASS;
+  static const MY_DONATION = _Paths.MY_DONATION;
+  static const MY_FAVORITE = _Paths.MY_FAVORITE;
+  static const NAVIGATION = _Paths.NAVIGATION;
+  static const REPORT = _Paths.REPORT;
+  static const SEND_MONEY2 = _Paths.SEND_MONEY2;
 }
 
 abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
-  static const KATEGORI = '/kategori';
+  static const KATEGORI = '/category';
   static const LIST_DONASI = '/listDonation';
   static const KONFIRMASI_TRANSFER = '/confirmationTransfer';
   static const KIRIM_UANG = '/kirim-uang';
@@ -39,4 +44,9 @@ abstract class _Paths {
   static const EMAIL_VERIFICATION = '/email-verification';
   static const FORGOTPASS_VERIFICATION = '/forgotpass-verification';
   static const RESET_PASS = '/reset-pass';
+  static const MY_DONATION = '/my-donation';
+  static const MY_FAVORITE = '/my-favorite';
+  static const NAVIGATION = '/navigation';
+  static const REPORT = '/report';
+  static const SEND_MONEY2 = '/send-money2';
 }

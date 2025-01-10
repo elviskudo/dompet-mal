@@ -30,7 +30,7 @@ class _BannerKategoriState extends State<BannerKategori> {
   Widget build(BuildContext context) {
     return Column(
         children: List.generate(
-      3,
+      widget.banners.length,
       (index) {
         final banner = widget.banners[index];
         return Container(
@@ -191,7 +191,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                         child: ElevatedButton(
                             onPressed: () {
                               Get.bottomSheet(
-                                 SlidingDonationSheet(),
+                                SlidingDonationSheet(),
                                 isScrollControlled: true,
                                 backgroundColor: Colors.transparent,
                               );

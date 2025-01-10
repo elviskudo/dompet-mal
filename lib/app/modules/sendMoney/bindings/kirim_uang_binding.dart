@@ -2,11 +2,11 @@ import 'package:get/get.dart';
 
 import '../controllers/kirim_uang_controller.dart';
 
-class KirimUangBinding extends Bindings {
+class SendMoneyBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<KirimUangController>(
-      () => KirimUangController(),
+    Get.lazyPut<SendMoneyController>(
+      () => SendMoneyController(),
     );
   }
 }
