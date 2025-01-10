@@ -13,11 +13,11 @@ class DonationDetailPageController extends GetxController {
   final RxInt participantsCount = 1034.obs;
     var currentSliderIndex = 0.obs;
 
-  final List<String> imageList = [
-    'https://picsum.photos/id/237/400/600',
-    'https://picsum.photos/id/238/400/600',
-    'https://picsum.photos/id/239/400/600',
-  ];
+  // final List<String> imageList = [
+  //   'https://picsum.photos/id/237/400/600',
+  //   'https://picsum.photos/id/238/400/600',
+  //   'https://picsum.photos/id/239/400/600',
+  // ];
 
   void updateSliderIndex(int index) {
     currentSliderIndex.value = index;

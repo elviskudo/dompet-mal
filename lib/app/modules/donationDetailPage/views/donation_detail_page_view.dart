@@ -17,11 +17,8 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
     );
     return formatter.format(value);
   }
-  final List<String> images = [
-    'https://picsum.photos/id/237/400/600',
-    'https://picsum.photos/id/238/400/600',
-    'https://picsum.photos/id/239/400/600',
-  ];
+
+
   Widget build(BuildContext context) {
     CharityByCategory bannerData = Get.arguments;
     return Scaffold(
@@ -29,9 +26,11 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         // elevation: 0,
-        title: Text(bannerData.title, maxLines: 1, style: TextStyle(
-        overflow: TextOverflow.ellipsis
-        ),),
+        title: Text(
+          bannerData.title,
+          maxLines: 1,
+          style: TextStyle(overflow: TextOverflow.ellipsis),
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Get.back(),
@@ -68,7 +67,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       controller.updateSliderIndex(index);
                     },
                   ),
-                  items: controller.imageList.map((item) {
+                  items: bannerData.imageUrls.map((item) {
                     return Container(
                       width: MediaQuery.of(context).size.width,
                       child: Image.network(
@@ -85,23 +84,24 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                   child: Obx(
                     () => Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: controller.imageList.asMap().entries.map((entry) {
+                      children:
+                          bannerData.imageUrls.asMap().entries.map((entry) {
                         return Container(
                           width: 8,
                           height: 8,
                           margin: EdgeInsets.symmetric(horizontal: 4),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: controller.currentSliderIndex.value == entry.key
-                                ? Colors.white
-                                : Colors.white.withOpacity(0.5),
+                            color:
+                                controller.currentSliderIndex.value == entry.key
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.5),
                           ),
                         );
                       }).toList(),
                     ),
                   ),
                 ),
-                
               ],
             ),
             Padding(
@@ -192,9 +192,11 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Text(
-                          'Target Rp200.000.000',
+                          'Target ${formatRupiah(bannerData.targetCharityDonation)}',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 14,
@@ -215,11 +217,10 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                   ),
                   SizedBox(height: 16),
                   Row(
-          
                     children: [
                       CircleAvatar(
                         backgroundImage:
-                            NetworkImage('https://placehold.co/40x40'),
+                            NetworkImage(bannerData.company.image ?? 'https://placehold.co/40x40'),
                         radius: 20,
                       ),
                       SizedBox(width: 12),
@@ -229,7 +230,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           Row(
                             children: [
                               Text(
-                                'Peduli Sahabat',
+                                bannerData.company.companyName,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -269,7 +270,8 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       ),
                       SizedBox(height: 4.0),
                       Text(
-                        DateFormat('dd MMMM yyyy', 'id_ID').format(bannerData.createdAt)  ,
+                        DateFormat('dd MMMM yyyy', 'id_ID')
+                            .format(bannerData.createdAt),
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 14.0,
@@ -277,7 +279,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       ),
                       SizedBox(height: 8.0),
                       Text(
-                        'bannerData',
+                        bannerData.description,
                         style: TextStyle(
                           // color: Colors.grey[700],
                           fontSize: 14.0,
@@ -318,21 +320,22 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         height: 16,
                       ),
                       Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                        .spaceBetween, // Mengatur spasi antar elemen
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment
+                            .spaceBetween, // Mengatur spasi antar elemen
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Flexible(
-                            child:AvatarStack(
-                                height: 30,
-                                avatars: bannerData.contributors.map((contributor) {
-                                  return NetworkImage(
-                                    contributor.avatarUrl ??
-                                        'https://via.placeholder.com/40',
-                                  );
-                                }).toList(),
-                              ),
+                            child: AvatarStack(
+                              height: 30,
+                              avatars:
+                                  bannerData.contributors.map((contributor) {
+                                return NetworkImage(
+                                  contributor.avatarUrl ??
+                                      'https://via.placeholder.com/40',
+                                );
+                              }).toList(),
+                            ),
                           ),
                           Text(
                             bannerData.contributors.length.toString(),
@@ -341,7 +344,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(width: 5,),
+                          SizedBox(
+                            width: 5,
+                          ),
                           Text(
                             'Partisipan',
                             style: TextStyle(
