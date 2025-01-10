@@ -1,3 +1,5 @@
+import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/CategoryGridIcon.dart';
 import 'package:dompet_mal/component/StraightCharityCard.dart';
 import 'package:dompet_mal/component/TotalDonation.dart';
@@ -79,7 +81,8 @@ class HomeView extends GetView<HomeController> {
                     child: TotalDanaDonasi(
                         danaDonasiLangsung: DanaDonasiLangsung(
                             totalBudgets: 12000, totalDonaturs: 10000),
-                        onAddPressed: () {}),
+                        onAddPressed: () =>
+                            Get.toNamed(Routes.KONFIRMASI_TRANSFER)),
                   ),
                   Gap(24),
                   BannerSlider(banners: dummyMorningCharity),
@@ -136,7 +139,7 @@ class HomeView extends GetView<HomeController> {
                   Gap(0),
                   Container(
                     padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 24, vertical: 24),
+                        horizontal: 24, vertical: 16),
                     color: Colors.white,
                     child: Column(
                       children: [

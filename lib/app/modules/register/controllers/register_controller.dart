@@ -1,36 +1,44 @@
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert'; // untuk JSON encode/decode
 
 class RegisterController extends GetxController {
   final formKey = GlobalKey<FormState>();
-  late SharedPreferences prefs;
-
   final namaController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final phoneController = TextEditingController();
-
+  bool _initialized = false;
+  bool get isInitialized => _initialized;
   final isPasswordHidden = true.obs;
   final isConfirmPasswordHidden = true.obs;
   final isAgreed = false.obs;
+  final isLoading = false.obs;
+
+  final storage = GetStorage();
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
-    prefs = await SharedPreferences.getInstance();
+    initializePage();
+  }
+
+  Future<void> initializePage() async {
+    isLoading.value = true; // Start loading
   }
 
   void togglePasswordVisibility() =>
       isPasswordHidden.value = !isPasswordHidden.value;
+
   void toggleConfirmPasswordVisibility() =>
       isConfirmPasswordHidden.value = !isConfirmPasswordHidden.value;
+
   void toggleAgreement() => isAgreed.value = !isAgreed.value;
 
-  void register() async {
+  void register() {
     if (!formKey.currentState!.validate()) return;
 
     String pattern =
@@ -74,8 +82,9 @@ class RegisterController extends GetxController {
         'isVerified': false,
       };
 
-      await prefs.setString('userData', jsonEncode(userData));
-      await prefs.setBool('isLoggedIn', false);
+      // Simpan data ke GetStorage
+      storage.write('userData', userData);
+      storage.write('isLoggedIn', false);
 
       Get.snackbar(
         'Sukses',

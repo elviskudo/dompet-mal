@@ -1,4 +1,5 @@
 import 'package:dompet_mal/app/modules/home/controllers/home_controller.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/models/BankAccountModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -292,7 +293,40 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                       onPressed: donationController.isLoading.value
                           ? null
                           : () async {
-                              await donationController.processDonation();
+                              // Validasi bank account sudah dipilih
+                              if (selectedBankAccount.value == null) {
+                                Get.snackbar(
+                                  'Peringatan',
+                                  'Silahkan pilih rekening pembayaran terlebih dahulu',
+                                  backgroundColor: Colors.red,
+                                  colorText: Colors.white,
+                                );
+                                return;
+                              }
+
+                              // Validasi jumlah donasi
+                              final amount = int.tryParse(
+                                  donationController.donationAmount.value);
+                              if (amount == null || amount < 10000) {
+                                Get.snackbar(
+                                  'Peringatan',
+                                  'Minimal donasi Rp 10.000',
+                                  backgroundColor: Colors.red,
+                                  colorText: Colors.white,
+                                );
+                                return;
+                              }
+
+                              // Kirim data ke halaman konfirmasi
+                              Get.toNamed(
+                                Routes.KONFIRMASI_TRANSFER,
+                                arguments: {
+                                  'bankAccount': selectedBankAccount.value,
+                                  'amount':
+                                      donationController.donationAmount.value,
+                                  // Tambahkan data lain yang diperlukan
+                                },
+                              );
                             },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xff4B76D9),

@@ -13,11 +13,22 @@ import 'package:dompet_mal/app/modules/reset_pass/bindings/reset_pass_binding.da
 import 'package:dompet_mal/app/modules/reset_pass/views/reset_pass_view.dart';
 import 'package:get/get.dart';
 
-
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/kategori/bindings/kategori_binding.dart';
-import '../modules/kategori/views/kategori_view.dart';
+import '../modules/kategori/views/category_view.dart';
+import '../modules/sendMoney/bindings/kirim_uang_binding.dart';
+import '../modules/sendMoney/views/kirim_uang_view.dart';
+import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
+import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
+import '../modules/listDonation/bindings/list_donasi_binding.dart';
+import '../modules/listDonation/views/list_donasi_view.dart';
+import '../modules/onBoardingPage/bindings/on_boarding_page_binding.dart';
+import '../modules/onBoardingPage/views/on_boarding_page_view.dart';
+import '../modules/paymentAccountPage/bindings/payment_account_page_binding.dart';
+import '../modules/paymentAccountPage/views/payment_account_page_view.dart';
+import '../modules/splash_screen/bindings/splash_screen_binding.dart';
+import '../modules/splash_screen/views/splash_screen_view.dart';
 import '../modules/login/views/login_view.dart';
 
 part 'app_routes.dart';
@@ -25,7 +36,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.HOME;
+  static const INITIAL = Routes.SPLASH_SCREEN;
 
   static final routes = [
     GetPage(
@@ -35,10 +46,30 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.KATEGORI,
-      page: () => const KategoriView(),
+      page: () => KategoriView(),
       binding: KategoriBinding(),
     ),
-        GetPage(
+    GetPage(
+      name: _Paths.LIST_DONASI,
+      page: () => const ListDonasiView(),
+      binding: ListDonasiBinding(),
+    ),
+    GetPage(
+      name: _Paths.KONFIRMASI_TRANSFER,
+      page: () => const KonfirmasiTransferView(),
+      binding: KonfirmasiTransferBinding(),
+    ),
+    GetPage(
+      name: _Paths.KIRIM_UANG,
+      page: () => const KirimUangView(),
+      binding: KirimUangBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPLASH_SCREEN,
+      page: () => const SplashScreenView(),
+      binding: SplashScreenBinding(),
+    ),
+    GetPage(
       name: _Paths.LOGIN,
       page: () => const LoginView(),
       binding: LoginBinding(),
@@ -72,6 +103,16 @@ class AppPages {
       name: _Paths.RESET_PASS,
       page: () => const ResetPassView(),
       binding: ResetPassBinding(),
+    ),
+    GetPage(
+      name: _Paths.ON_BOARDING_PAGE,
+      page: () => const OnboardingPageView(),
+      binding: OnBoardingPageBinding(),
+    ),
+    GetPage(
+      name: '/payment-account-page',
+      page: () => const PaymentAccountPageView(),
+      binding: PaymentAccountPageBinding(),
     ),
   ];
 }

@@ -1,3 +1,4 @@
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,6 +20,12 @@ class KategoriController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+  }
+
+  void handleCategoryTap(int index) {
+    if (index == 0) {
+      Get.toNamed(Routes.LIST_DONASI); // Navigate using GetX
+    }
   }
 
   void increment() => count.value++;

@@ -1,4 +1,5 @@
 import 'package:avatar_stack/avatar_stack.dart';
+import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
@@ -135,7 +136,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                                 height: 5,
                                 width: 120,
                                 decoration: BoxDecoration(
-                                  color: Color(0xff4B76D9),
+                                  color: basecolor,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                               ),
