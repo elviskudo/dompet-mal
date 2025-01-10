@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class BannerKategori extends StatefulWidget {
+class BannerCATEGORY extends StatefulWidget {
   final List<CharityByCategory> banners;
 
-  const BannerKategori({super.key, required this.banners});
+  const BannerCATEGORY({super.key, required this.banners});
 
   @override
-  State<BannerKategori> createState() => _BannerKategoriState();
+  State<BannerCATEGORY> createState() => _BannerCATEGORYState();
 }
 
-class _BannerKategoriState extends State<BannerKategori> {
+class _BannerCATEGORYState extends State<BannerCATEGORY> {
   // Format currency
   String formatRupiah(num value) {
     final formatter = NumberFormat.currency(

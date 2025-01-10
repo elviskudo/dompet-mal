@@ -7,107 +7,108 @@ import 'package:get/get.dart';
 import '../controllers/category_controller.dart';
 
 class CategoryView extends GetView<CategoryController> {
-  const CategoryView({super.key});
+  CategoryView({super.key});
+
+  final List<Map<String, dynamic>> categories = [
+    {
+      'image': 'icons/lihat_semua.png',
+      'label': 'Semua\nKategori',
+      'color': Colors.blue,
+    },
+    {
+      'image': 'icons/icon_bencana.png',
+      'label': 'Bencana\nAlam',
+      'color': Colors.orange,
+    },
+    {
+      'image': 'icons/bayi.png',
+      'label': 'Balita &\nAnak Sakit',
+      'color': Colors.blue,
+    },
+    {
+      'image': 'icons/icon_medis.png',
+      'label': 'Bantuan Medis\n& Kesehatan',
+      'color': Colors.red,
+    },
+    {
+      'image': 'icons/tas.png',
+      'label': 'Bantuan\nPendidikan',
+      'color': Colors.blue,
+    },
+    {
+      'image': 'icons/icon_lingkungan.png',
+      'label': 'Lingkungan',
+      'color': Colors.green,
+    },
+    {
+      'image': 'icons/icon_kegiatan.png',
+      'label': 'Kegiatan\nSosial',
+      'color': Colors.blue,
+    },
+    {
+      'image': 'icons/infrastruktur.png',
+      'label': 'Infrastruktur\nUmum',
+      'color': Colors.blue,
+    },
+    {
+      'image': 'icons/karya_kreatif.png',
+      'label': 'Karya Kreatif &\nModal Usaha',
+      'color': Colors.blue,
+    },
+    {
+      'image': 'icons/disable.png',
+      'label': 'Menolong\nHewan',
+      'color': Colors.grey,
+    },
+    {
+      'image': 'icons/icon_lainnya.png',
+      'label': 'Rumah\nIbadah',
+      'color': Colors.grey,
+    },
+    {
+      'image': 'icons/disable.png',
+      'label': 'Difabel',
+      'color': Colors.orange,
+    },
+    {
+      'image': 'icons/zakat.png',
+      'label': 'Zakat',
+      'color': Colors.green,
+    },
+    {
+      'image': 'icons/panti_asuhan.png',
+      'label': 'Panti Asuhan\ndan Kaum Du\'afa',
+      'color': Colors.orange,
+    },
+    {
+      'image': 'icons/foto_dummy.png',
+      'label': 'Pelari Baik',
+      'color': Colors.blue,
+    },
+    {
+      'image': 'icons/kemanusiaan.png',
+      'label': 'Kemanusiaan',
+      'color': Colors.blue,
+    },
+    {
+      'image': 'icons/panti_jompo.png',
+      'label': 'Panti Jompo',
+      'color': Colors.blue,
+    },
+  ];
+
+  void handleCategoryTap(int index) {
+    if (index == 0) {
+      Get.toNamed(Routes.ListDonation); // Navigate using GetX
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> categories = [
-      {
-        'image': 'icons/lihat_semua.png',
-        'label': 'Semua\nKategori',
-        'color': Colors.blue,
-      },
-      {
-        'image': 'icons/icon_bencana.png',
-        'label': 'Bencana\nAlam',
-        'color': Colors.orange,
-      },
-      {
-        'image': 'icons/bayi.png',
-        'label': 'Balita &\nAnak Sakit',
-        'color': Colors.blue,
-      },
-      {
-        'image': 'icons/icon_medis.png',
-        'label': 'Bantuan Medis\n& Kesehatan',
-        'color': Colors.red,
-      },
-      {
-        'image': 'icons/tas.png',
-        'label': 'Bantuan\nPendidikan',
-        'color': Colors.blue,
-      },
-      {
-        'image': 'icons/icon_lingkungan.png',
-        'label': 'Lingkungan',
-        'color': Colors.green,
-      },
-      {
-        'image': 'icons/icon_kegiatan.png',
-        'label': 'Kegiatan\nSosial',
-        'color': Colors.blue,
-      },
-      {
-        'image': 'icons/infrastruktur.png',
-        'label': 'Infrastruktur\nUmum',
-        'color': Colors.blue,
-      },
-      {
-        'image': 'icons/karya_kreatif.png',
-        'label': 'Karya Kreatif &\nModal Usaha',
-        'color': Colors.blue,
-      },
-      {
-        'image': 'icons/disable.png',
-        'label': 'Menolong\nHewan',
-        'color': Colors.grey,
-      },
-      {
-        'image': 'icons/icon_lainnya.png',
-        'label': 'Rumah\nIbadah',
-        'color': Colors.grey,
-      },
-      {
-        'image': 'icons/disable.png',
-        'label': 'Difabel',
-        'color': Colors.orange,
-      },
-      {
-        'image': 'icons/zakat.png',
-        'label': 'Zakat',
-        'color': Colors.green,
-      },
-      {
-        'image': 'icons/panti_asuhan.png',
-        'label': 'Panti Asuhan\ndan Kaum Du\'afa',
-        'color': Colors.orange,
-      },
-      {
-        'image': 'icons/foto_dummy.png',
-        'label': 'Pelari Baik',
-        'color': Colors.blue,
-      },
-      {
-        'image': 'icons/kemanusiaan.png',
-        'label': 'Kemanusiaan',
-        'color': Colors.blue,
-      },
-      {
-        'image': 'icons/panti_jompo.png',
-        'label': 'Panti Jompo',
-        'color': Colors.blue,
-      },
-    ];
-
-    void handleCategoryTap(int index) {
-      if (index == 0) {
-        Get.toNamed(Routes.LIST_DONASI); // Navigate using GetX
-      }
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appbar2(
-        title: 'Kategori',
+        title: 'CATEGORY',
         color: Colors.white,
       ),
       body: GridView.builder(

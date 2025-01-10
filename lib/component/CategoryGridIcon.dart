@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 // Contoh data JSON
-const List<Map<String, String>> kategoriData = [
+const List<Map<String, String>> CATEGORYData = [
   {
     "label": "Bencana Alam",
     "iconPath": "icons/icon_bencana.png",
@@ -27,13 +27,13 @@ const List<Map<String, String>> kategoriData = [
   },
 ];
 
-// Halaman kategori yang akan dituju
+// Halaman CATEGORY yang akan dituju
 
-class KategoriGrid extends StatelessWidget {
+class CATEGORYGrid extends StatelessWidget {
   final String label;
   final String iconPath;
 
-  const KategoriGrid({
+  const CATEGORYGrid({
     required this.label,
     required this.iconPath,
   });
@@ -49,7 +49,7 @@ class KategoriGrid extends StatelessWidget {
           InkWell(
             onTap: () {
               if (label == "Lihat Semua") {
-                Get.toNamed(Routes.KATEGORI); // Navigasi ke halaman kategori
+                Get.toNamed(Routes.CATEGORY); // Navigasi ke halaman CATEGORY
               }
             },
             child: Image.asset(
@@ -74,8 +74,8 @@ class KategoriGrid extends StatelessWidget {
   }
 }
 
-class KategoriGridIcon extends StatelessWidget {
-  const KategoriGridIcon({Key? key}) : super(key: key);
+class CATEGORYGridIcon extends StatelessWidget {
+  const CATEGORYGridIcon({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,12 +85,12 @@ class KategoriGridIcon extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(
-          kategoriData.length,
+          CATEGORYData.length,
           (index) {
-            final item = kategoriData[index];
+            final item = CATEGORYData[index];
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: KategoriGrid(
+              child: CATEGORYGrid(
                 label: item["label"] ?? "",
                 iconPath: item["iconPath"] ?? "",
               ),

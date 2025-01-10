@@ -1,4 +1,3 @@
-import 'package:dompet_mal/app/modules/category/views/category_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
@@ -11,8 +10,8 @@ import 'package:get/get.dart';
 
 import '../controllers/konfirmasi_transfer_controller.dart';
 
-class KonfirmasiTransferView extends GetView<KonfirmasiTransferController> {
-  const KonfirmasiTransferView({super.key});
+class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
+  const ConfirmationTransferView({super.key});
   @override
   Widget build(BuildContext context) {
     final args = Get.arguments as Map<String, dynamic>;
