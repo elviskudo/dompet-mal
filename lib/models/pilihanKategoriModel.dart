@@ -7,7 +7,7 @@ class CharityByCategory {
   final int progress;
   final int totalCharities;
   final List<Contributor> contributors;
-  final String createdAt;
+  final DateTime createdAt;
   final String updatedAt;
 
   CharityByCategory({
@@ -94,7 +94,7 @@ class Contributor {
           updatedAt: "2025-01-02T00:00:00Z",
         ),
       ],
-      createdAt: "2025-01-01T00:00:00Z",
+      createdAt: DateTime.parse("2025-01-01T00:00:00Z"),
       updatedAt: "2025-01-02T00:00:00Z",
     ),
     CharityByCategory(
@@ -119,7 +119,7 @@ class Contributor {
           updatedAt: "2025-02-02T00:00:00Z",
         ),
       ],
-      createdAt: "2025-02-01T00:00:00Z",
+      createdAt:  DateTime.parse("2025-01-01T00:00:00Z"),
       updatedAt: "2025-02-02T00:00:00Z",
     ),
     CharityByCategory(
@@ -144,7 +144,7 @@ class Contributor {
           updatedAt: "2025-03-02T00:00:00Z",
         ),
       ],
-      createdAt: "2025-03-01T00:00:00Z",
+      createdAt:  DateTime.parse("2025-01-01T00:00:00Z"),
       updatedAt: "2025-03-02T00:00:00Z",
     ),
     CharityByCategory(
@@ -169,7 +169,7 @@ class Contributor {
           updatedAt: "2025-04-02T00:00:00Z",
         ),
       ],
-      createdAt: "2025-04-01T00:00:00Z",
+      createdAt:  DateTime.parse("2025-01-01T00:00:00Z"),
       updatedAt: "2025-04-02T00:00:00Z",
     ),
   ];
