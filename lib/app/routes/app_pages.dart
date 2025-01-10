@@ -34,7 +34,7 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_pass/bindings/reset_pass_binding.dart';
 import '../modules/reset_pass/views/reset_pass_view.dart';
-import '../modules/sendMoney/bindings/kirim_uang_binding.dart';
+import '../modules/sendMoney/bindings/sendMoney_binding.dart';
 import '../modules/sendMoney/views/sendMoney_view.dart';
 import '../modules/sendMoney2/bindings/send_money2_binding.dart';
 import '../modules/sendMoney2/views/send_money2_view.dart';
@@ -60,8 +60,8 @@ class AppPages {
       binding: KategoriBinding(),
     ),
     GetPage(
-      name: _Paths.LIST_DONASI,
-      page: () => const ListDonationView(),
+      name: _Paths.ListDonation,
+      page: () => ListDonationView(),
       binding: ListDonationBinding(),
     ),
     GetPage(

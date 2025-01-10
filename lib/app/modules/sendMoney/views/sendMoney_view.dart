@@ -1,3 +1,4 @@
+import 'package:dompet_mal/app/modules/sendMoney/controllers/sendMoney_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
@@ -6,8 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
-
-import '../controllers/kirim_uang_controller.dart';
 
 class SendMoneyView extends GetView<SendMoneyController> {
   const SendMoneyView({super.key});
@@ -48,7 +47,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
                           backgroundColor: basecolor,
                           padding: EdgeInsets.all(24),
                         ),
-                        onPressed: () {},
+                        onPressed: () => Get.toNamed(Routes.SEND_MONEY2),
                         child: const Text(
                           "UNGGAH BUKTI TRANSFER",
                           style: TextStyle(

@@ -1,6 +1,6 @@
+import 'package:dompet_mal/app/modules/listDonation/controllers/list_donation_controller.dart';
 import 'package:get/get.dart';
 
-import '../controllers/list_donasi_controller.dart';
 
 class ListDonationBinding extends Bindings {
   @override

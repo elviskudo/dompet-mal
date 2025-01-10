@@ -5,7 +5,7 @@ abstract class Routes {
   Routes._();
   static const HOME = _Paths.HOME;
   static const KATEGORI = _Paths.KATEGORI;
-  static const LIST_DONASI = _Paths.LIST_DONASI;
+  static const ListDonation = _Paths.ListDonation;
   static const KONFIRMASI_TRANSFER = _Paths.KONFIRMASI_TRANSFER;
   static const KIRIM_UANG = _Paths.KIRIM_UANG;
   static const SPLASH_SCREEN = _Paths.SPLASH_SCREEN;
@@ -30,7 +30,7 @@ abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
   static const KATEGORI = '/category';
-  static const LIST_DONASI = '/listDonation';
+  static const ListDonation = '/listDonation';
   static const KONFIRMASI_TRANSFER = '/confirmationTransfer';
   static const KIRIM_UANG = '/kirim-uang';
   static const SPLASH_SCREEN = '/splash-screen';

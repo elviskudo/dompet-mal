@@ -98,7 +98,7 @@ class KategoriView extends GetView<KategoriController> {
 
   void handleCategoryTap(int index) {
     if (index == 0) {
-      Get.toNamed(Routes.LIST_DONASI); // Navigate using GetX
+      Get.toNamed(Routes.ListDonation); // Navigate using GetX
     }
   }
 

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class KategoriController extends GetxController {
-
   //TODO: Implement BerandaController
   final TextEditingController searchController = TextEditingController();
   final count = 0.obs;
@@ -24,7 +23,7 @@ class KategoriController extends GetxController {
 
   void handleCategoryTap(int index) {
     if (index == 0) {
-      Get.toNamed(Routes.LIST_DONASI); // Navigate using GetX
+      Get.toNamed(Routes.ListDonation); // Navigate using GetX
     }
   }
 
