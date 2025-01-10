@@ -87,7 +87,7 @@ class HomeView extends GetView<HomeController> {
                   Gap(24),
                   BannerSlider(banners: dummyMorningCharity),
                   Gap(24),
-                  KategoriGridIcon(),
+                  CATEGORYGridIcon(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: BannerDanaOperasional(),
@@ -130,7 +130,7 @@ class HomeView extends GetView<HomeController> {
 
                   const EmergencyFundSection(),
 
-                  // Pilihan kategori
+                  // Pilihan CATEGORY
                   Container(
                     height: 10,
                     color: Color(0xfff2f2f2),
@@ -144,13 +144,13 @@ class HomeView extends GetView<HomeController> {
                     child: Column(
                       children: [
                         SectionHeader(
-                          title: 'Pilihan Kategori',
+                          title: 'Pilihan CATEGORY',
                           actionText: '',
                           onActionPressed: () {
                             // Handle navigation to "Lihat lainnya"
                           },
                         ),
-                        BannerKategori(banners: dummyDataListCategoryBanner),
+                        BannerCATEGORY(banners: dummyDataListCategoryBanner),
                       ],
                     ),
                   )
@@ -160,7 +160,7 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
       ),
-      // bottomNavigationBar: Bottombar(),
+      bottomNavigationBar: Bottombar(),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class KonfirmasiTransferController extends GetxController {
-  //TODO: Implement KonfirmasiTransferController
+class ConfirmationTransferController extends GetxController {
+  //TODO: Implement ConfirmationTransferController
 
   final count = 0.obs;
   @override

@@ -1,11 +1,12 @@
+import 'package:dompet_mal/app/modules/category/bindings/category_binding.dart';
+import 'package:dompet_mal/app/modules/category/views/category_view.dart';
+import 'package:dompet_mal/app/modules/listDonation/bindings/list_donation_binding.dart';
+import 'package:dompet_mal/app/modules/listDonation/views/list_donation_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
-import '../modules/Report/bindings/report_binding.dart';
-import '../modules/Report/views/report_view.dart';
 import '../modules/aggrement/bindings/aggrement_binding.dart';
 import '../modules/aggrement/views/aggrement_view.dart';
-import '../modules/category/bindings/kategori_binding.dart';
-import '../modules/category/views/category_view.dart';
 import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
 import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
 import '../modules/email_verification/bindings/email_verification_binding.dart';
@@ -16,28 +17,24 @@ import '../modules/forgotpass_verification/bindings/forgotpass_verification_bind
 import '../modules/forgotpass_verification/views/forgotpass_verification_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
-import '../modules/listDonation/bindings/list_donation_binding.dart';
-import '../modules/listDonation/views/list_donation_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
-import '../modules/myDonation/bindings/my_donation_binding.dart';
-import '../modules/myDonation/views/my_donation_view.dart';
-import '../modules/myFavorite/bindings/my_favorite_binding.dart';
-import '../modules/myFavorite/views/my_favorite_view.dart';
 import '../modules/navigation/bindings/navigation_binding.dart';
 import '../modules/navigation/views/navigation_view.dart';
 import '../modules/onBoardingPage/bindings/on_boarding_page_binding.dart';
 import '../modules/onBoardingPage/views/on_boarding_page_view.dart';
+import '../modules/participants/bindings/participants_binding.dart';
+import '../modules/participants/views/participants_view.dart';
 import '../modules/paymentAccountPage/bindings/payment_account_page_binding.dart';
 import '../modules/paymentAccountPage/views/payment_account_page_view.dart';
+import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/profile_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_pass/bindings/reset_pass_binding.dart';
 import '../modules/reset_pass/views/reset_pass_view.dart';
 import '../modules/sendMoney/bindings/sendMoney_binding.dart';
 import '../modules/sendMoney/views/sendMoney_view.dart';
-import '../modules/sendMoney2/bindings/send_money2_binding.dart';
-import '../modules/sendMoney2/views/send_money2_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
 
@@ -46,7 +43,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.NAVIGATION;
+  static const INITIAL = Routes.LOGIN;
 
   static final routes = [
     GetPage(
@@ -54,23 +51,24 @@ class AppPages {
       page: () => const HomeView(),
       binding: HomeBinding(),
     ),
-    GetPage(
-      name: _Paths.KATEGORI,
-      page: () => KategoriView(),
-      binding: KategoriBinding(),
-    ),
+    
     GetPage(
       name: _Paths.ListDonation,
       page: () => ListDonationView(),
       binding: ListDonationBinding(),
     ),
     GetPage(
-      name: _Paths.KONFIRMASI_TRANSFER,
-      page: () => const KonfirmasiTransferView(),
-      binding: KonfirmasiTransferBinding(),
+      name: _Paths.CATEGORY,
+      page: () => CategoryView(),
+      binding: CategoryBinding(),
     ),
     GetPage(
-      name: _Paths.KIRIM_UANG,
+      name: _Paths.KONFIRMASI_TRANSFER,
+      page: () => const ConfirmationTransferView(),
+      binding: ConfirmationTransferBinding(),
+    ),
+    GetPage(
+      name: _Paths.SEND_MONEY,
       page: () => const SendMoneyView(),
       binding: SendMoneyBinding(),
     ),
@@ -125,14 +123,9 @@ class AppPages {
       binding: PaymentAccountPageBinding(),
     ),
     GetPage(
-      name: _Paths.MY_DONATION,
-      page: () => MyDonationView(),
-      binding: MyDonationBinding(),
-    ),
-    GetPage(
-      name: _Paths.MY_FAVORITE,
-      page: () => MyFavoriteView(),
-      binding: MyFavoriteBinding(),
+      name: _Paths.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
     ),
     GetPage(
       name: _Paths.NAVIGATION,
@@ -140,14 +133,9 @@ class AppPages {
       binding: NavigationBinding(),
     ),
     GetPage(
-      name: _Paths.REPORT,
-      page: () => const ReportView(),
-      binding: ReportBinding(),
-    ),
-    GetPage(
-      name: _Paths.SEND_MONEY2,
-      page: () => const SendMoney2View(),
-      binding: SendMoney2Binding(),
+      name: _Paths.PARTICIPANTS,
+      page: () => const ParticipantsView(),
+      binding: ParticipantsBinding(),
     ),
   ];
 }

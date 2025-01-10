@@ -1,3 +1,4 @@
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
@@ -146,7 +147,7 @@ class EmailVerificationController extends GetxController {
       );
 
       await Future.delayed(Duration(milliseconds: 800));
-      Get.offAllNamed('/home');
+      Get.offAllNamed(Routes.NAVIGATION);
     } catch (e) {
       Get.back();
       Get.snackbar('Error', 'Gagal memverifikasi OTP');

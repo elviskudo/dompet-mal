@@ -2,7 +2,7 @@ import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class KategoriController extends GetxController {
+class CategoryController extends GetxController {
   //TODO: Implement BerandaController
   final TextEditingController searchController = TextEditingController();
   final count = 0.obs;

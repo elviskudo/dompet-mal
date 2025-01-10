@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../controllers/kategori_controller.dart';
+import '../controllers/category_controller.dart';
 
-class KategoriView extends GetView<KategoriController> {
-  KategoriView({super.key});
+class CategoryView extends GetView<CategoryController> {
+  CategoryView({super.key});
   final List<Map<String, dynamic>> categories = [
     {
       'image': 'icons/lihat_semua.png',
-      'label': 'Semua\nKategori',
+      'label': 'Semua\nCATEGORY',
       'color': Colors.blue,
     },
     {
@@ -107,7 +107,7 @@ class KategoriView extends GetView<KategoriController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appbar2(
-        title: 'Kategori',
+        title: 'CATEGORY',
         color: Colors.white,
       ),
       body: GridView.builder(

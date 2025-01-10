@@ -41,17 +41,17 @@ class RegisterController extends GetxController {
   void register() {
     if (!formKey.currentState!.validate()) return;
 
-    String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$';
-    if (!RegExp(pattern).hasMatch(passwordController.text)) {
-      Get.snackbar(
-        'Error',
-        'Password minimal 6 karakter dan harus mengandung huruf besar, huruf kecil, angka, dan simbol',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
+    // String pattern =
+    //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$';
+    // if (!RegExp(pattern).hasMatch(passwordController.text)) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Password minimal 6 karakter dan harus mengandung huruf besar, huruf kecil, angka, dan simbol',
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //   );
+    //   return;
+    // }
 
     if (passwordController.text != confirmPasswordController.text) {
       Get.snackbar(

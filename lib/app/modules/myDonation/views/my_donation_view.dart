@@ -1,6 +1,5 @@
 import 'package:dompet_mal/component/bannerCategoryChoice.dart';
 import 'package:dompet_mal/component/customAppBarCategory.dart';
-import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -31,7 +30,7 @@ class MyDonationView extends GetView<MyDonationController> {
               if (controller.filteredCharities.value.isEmpty) {
                 return Center(child: Text('Tidak ada data ditemukan'));
               }
-              return BannerKategori(
+              return BannerCATEGORY(
                 banners: charityController.filteredCharities.value,
               );
             },

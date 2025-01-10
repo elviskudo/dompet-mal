@@ -1,6 +1,3 @@
-// ignore_for_file: unnecessary_string_interpolations
-
-import 'package:dompet_mal/app/modules/category/views/category_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
@@ -13,13 +10,12 @@ import 'package:get/get.dart';
 
 import '../controllers/konfirmasi_transfer_controller.dart';
 
-class KonfirmasiTransferView extends GetView<KonfirmasiTransferController> {
-  const KonfirmasiTransferView({super.key});
+class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
+  const ConfirmationTransferView({super.key});
   @override
   Widget build(BuildContext context) {
     final args = Get.arguments as Map<String, dynamic>;
-    final selectedBankAccount = args['bankAccount'] as BankAccount;
-    String accountName = selectedBankAccount.accountName;
+    final nomorRekening = args['bankAccount'] as BankAccount;
     final totalTransfer = args['amount'] as String;
     final String idTransaksi = "#DM110703412";
     var lebar = MediaQuery.of(context).size.width;
@@ -61,7 +57,7 @@ class KonfirmasiTransferView extends GetView<KonfirmasiTransferController> {
                         height: 21,
                       ),
                       const SizedBox(width: 16),
-                      Column(
+                      const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -69,14 +65,13 @@ class KonfirmasiTransferView extends GetView<KonfirmasiTransferController> {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          Text('${selectedBankAccount.accountName}')
+                          Text("ELVIS SONATHA"),
                         ],
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  _inputCopyTransfer(
-                      '${selectedBankAccount.accountNumber}', context),
+                  _inputCopyTransfer('$nomorRekening', context),
                   const SizedBox(height: 16),
                   _inputCopyTransfer(totalTransfer, context),
                   const SizedBox(height: 16),
@@ -270,7 +265,7 @@ class KonfirmasiTransferView extends GetView<KonfirmasiTransferController> {
                         ),
                         onPressed: () {
                           Navigator.pop(context);
-                          Get.toNamed(Routes.KIRIM_UANG);
+                          Get.toNamed(Routes.SEND_MONEY);
                         },
                         child: const Text(
                           "SUDAH",
