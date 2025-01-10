@@ -6,10 +6,14 @@ import 'package:get/get.dart';
 
 import '../modules/Report/bindings/report_binding.dart';
 import '../modules/Report/views/report_view.dart';
+import 'package:get/get.dart';
+
 import '../modules/aggrement/bindings/aggrement_binding.dart';
 import '../modules/aggrement/views/aggrement_view.dart';
 import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
 import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
+import '../modules/donationDetailPage/bindings/donation_detail_page_binding.dart';
+import '../modules/donationDetailPage/views/donation_detail_page_view.dart';
 import '../modules/email_verification/bindings/email_verification_binding.dart';
 import '../modules/email_verification/views/email_verification_view.dart';
 import '../modules/forgot_password/bindings/forgot_password_binding.dart';
@@ -30,6 +34,18 @@ import '../modules/paymentAccountPage/bindings/payment_account_page_binding.dart
 import '../modules/paymentAccountPage/views/payment_account_page_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/category/bindings/category_binding.dart';
+import '../modules/category/views/category_view.dart';
+import '../modules/listDonation/bindings/list_donation_binding.dart';
+import '../modules/listDonation/views/list_donation_view.dart';
+import '../modules/login/bindings/login_binding.dart';
+import '../modules/login/views/login_view.dart';
+import '../modules/onBoardingPage/bindings/on_boarding_page_binding.dart';
+import '../modules/onBoardingPage/views/on_boarding_page_view.dart';
+import '../modules/participantPage/bindings/participant_page_binding.dart';
+import '../modules/participantPage/views/participant_page_view.dart';
+import '../modules/paymentAccountPage/bindings/payment_account_page_binding.dart';
+import '../modules/paymentAccountPage/views/payment_account_page_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_pass/bindings/reset_pass_binding.dart';
@@ -56,7 +72,6 @@ class AppPages {
       page: () => const HomeView(),
       binding: HomeBinding(),
     ),
-    
     GetPage(
       name: _Paths.ListDonation,
       page: () => ListDonationView(),
@@ -159,8 +174,18 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CATEGORY,
-      page: () =>  CategoryView(),
+      page: () => CategoryView(),
       binding: CategoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.DONATION_DETAIL_PAGE,
+      page: () => DonationDetailView(),
+      binding: DonationDetailPageBinding(),
+    ),
+    GetPage(
+      name: _Paths.PARTICIPANT_PAGE,
+      page: () => ParticipantPage(),
+      binding: ParticipantPageBinding(),
     ),
   ];
 }
