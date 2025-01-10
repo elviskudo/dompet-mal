@@ -1,4 +1,4 @@
-import 'package:dompet_mal/app/modules/kategori/views/category_view.dart';
+import 'package:dompet_mal/app/modules/category/views/category_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
@@ -266,7 +266,7 @@ class KonfirmasiTransferView extends GetView<KonfirmasiTransferController> {
                         ),
                         onPressed: () {
                           Navigator.pop(context);
-                          Get.toNamed(Routes.KIRIM_UANG);
+                          Get.toNamed(Routes.SEND_MONEY);
                         },
                         child: const Text(
                           "SUDAH",

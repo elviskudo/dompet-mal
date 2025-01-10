@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class KirimUangController extends GetxController
+class SendMoneyController extends GetxController
     with SingleGetTickerProviderMixin {
   late AnimationController animationController;
 
