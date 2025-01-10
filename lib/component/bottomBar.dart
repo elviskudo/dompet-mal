@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field, file_names, use_key_in_widget_constructors, library_private_types_in_public_api
 
 import 'package:dompet_mal/app/modules/home/views/home_view.dart';
+import 'package:dompet_mal/app/modules/profile/views/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,7 +17,7 @@ class _BottombarState extends State<Bottombar> {
     HomeView(),
     Center(child: Text('Donasiku')),
     Center(child: Text('Favorit')),
-    Center(child: Text('Profile')),
+    ProfileView(),
   ];
 
   void _onItemTapped(int index) {
@@ -33,6 +34,7 @@ class _BottombarState extends State<Bottombar> {
         topRight: Radius.circular(20),
       ),
       child: BottomNavigationBar(
+        backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

@@ -14,9 +14,7 @@ void main() async {
       title: "Application",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
-      theme: ThemeData(
-        useMaterial3: true  
-      ),
+      theme: ThemeData(useMaterial3: true),
     ),
   );
 }

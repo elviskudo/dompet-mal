@@ -39,14 +39,14 @@ class LoginController extends GetxController {
       return;
     }
 
-    String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$';
-    if (!RegExp(pattern).hasMatch(passC.text)) {
-      Get.snackbar('Error',
-          'Password minimal 6 karakter dan harus mengandung huruf besar, huruf kecil, angka, dan simbol',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      return;
-    }
+    // String pattern =
+    //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$';
+    // if (!RegExp(pattern).hasMatch(passC.text)) {
+    //   Get.snackbar('Error',
+    //       'Password minimal 6 karakter dan harus mengandung huruf besar, huruf kecil, angka, dan simbol',
+    //       backgroundColor: Colors.red, colorText: Colors.white);
+    //   return;
+    // }
 
     try {
       isLoading.value = true;
@@ -56,11 +56,12 @@ class LoginController extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('userEmail', emailC.text);
+      print('Email yang disimpan: ${emailC.text}');
 
       Get.snackbar('Sukses', 'Berhasil login',
           backgroundColor: Colors.green, colorText: Colors.white);
 
-      Get.offAllNamed(Routes.HOME);
+      Get.offAllNamed(Routes.NAVIGATION);
     } catch (e) {
       Get.snackbar('Error', 'Terjadi kesalahan: $e',
           backgroundColor: Colors.red, colorText: Colors.white);

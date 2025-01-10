@@ -19,6 +19,9 @@ abstract class Routes {
   static const EMAIL_VERIFICATION = _Paths.EMAIL_VERIFICATION;
   static const FORGOTPASS_VERIFICATION = _Paths.FORGOTPASS_VERIFICATION;
   static const RESET_PASS = _Paths.RESET_PASS;
+  static const PROFILE = _Paths.PROFILE;
+  static const NAVIGATION = _Paths.NAVIGATION;
+  static const PARTICIPANTS = _Paths.PARTICIPANTS;
 }
 
 abstract class _Paths {
@@ -39,4 +42,7 @@ abstract class _Paths {
   static const EMAIL_VERIFICATION = '/email-verification';
   static const FORGOTPASS_VERIFICATION = '/forgotpass-verification';
   static const RESET_PASS = '/reset-pass';
+  static const PROFILE = '/profile';
+  static const NAVIGATION = '/navigation';
+  static const PARTICIPANTS = '/participants';
 }
