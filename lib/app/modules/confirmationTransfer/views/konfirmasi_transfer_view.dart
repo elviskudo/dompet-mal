@@ -15,7 +15,8 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
   @override
   Widget build(BuildContext context) {
     final args = Get.arguments as Map<String, dynamic>;
-    final nomorRekening = args['bankAccount'] as BankAccount;
+    var bankName = args['bankAccount'] as String;
+    var bankNumber = args['bankNumber'] as String;
     final totalTransfer = args['amount'] as String;
     final String idTransaksi = "#DM110703412";
     var lebar = MediaQuery.of(context).size.width;
@@ -57,7 +58,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                         height: 21,
                       ),
                       const SizedBox(width: 16),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -65,13 +66,13 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          Text("ELVIS SONATHA"),
+                          Text("${bankName}"),
                         ],
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  _inputCopyTransfer('$nomorRekening', context),
+                  _inputCopyTransfer('${bankNumber}', context),
                   const SizedBox(height: 16),
                   _inputCopyTransfer(totalTransfer, context),
                   const SizedBox(height: 16),

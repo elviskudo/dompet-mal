@@ -160,7 +160,6 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
       ),
-      bottomNavigationBar: Bottombar(),
     );
   }
 }

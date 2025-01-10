@@ -322,7 +322,8 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                               Get.toNamed(
                                 Routes.KONFIRMASI_TRANSFER,
                                 arguments: {
-                                  'bankAccount': selectedBankAccount.value,
+                                  'bankAccount': selectedBankAccount.value!.accountName,
+                                  'bankNumber': selectedBankAccount.value!.accountNumber,
                                   'amount':
                                       donationController.donationAmount.value,
                                   // Tambahkan data lain yang diperlukan

@@ -33,8 +33,8 @@ abstract class _Paths {
   static const ListDonation = '/listDonation';
   static const LIST_DONASI = '/listDonation';
   static const KONFIRMASI_TRANSFER = '/confirmationTransfer';
-  static const SEND_MONEY = 'sendMoney';
-  static const SEND_MONEY2 = 'sendMoney2';
+  static const SEND_MONEY = '/sendMoney';
+  static const SEND_MONEY2 = '/sendMoney2';
   static const SPLASH_SCREEN = '/splash-screen';
   static const ON_BOARDING_PAGE = '/on-boarding-page';
   static const PAYMENT_ACCOUNT_PAGE = '/payment-account-page';

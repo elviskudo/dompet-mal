@@ -2,6 +2,8 @@ import 'package:dompet_mal/app/modules/category/bindings/category_binding.dart';
 import 'package:dompet_mal/app/modules/category/views/category_view.dart';
 import 'package:dompet_mal/app/modules/listDonation/bindings/list_donation_binding.dart';
 import 'package:dompet_mal/app/modules/listDonation/views/list_donation_view.dart';
+import 'package:dompet_mal/app/modules/sendMoney2/bindings/send_money2_binding.dart';
+import 'package:dompet_mal/app/modules/sendMoney2/views/send_money2_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -43,7 +45,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.LOGIN;
+  static const INITIAL = Routes.NAVIGATION;
 
   static final routes = [
     GetPage(
@@ -51,7 +53,6 @@ class AppPages {
       page: () => const HomeView(),
       binding: HomeBinding(),
     ),
-    
     GetPage(
       name: _Paths.ListDonation,
       page: () => ListDonationView(),
@@ -71,6 +72,11 @@ class AppPages {
       name: _Paths.SEND_MONEY,
       page: () => const SendMoneyView(),
       binding: SendMoneyBinding(),
+    ),
+    GetPage(
+      name: _Paths.SEND_MONEY2,
+      page: () => const SendMoney2View(),
+      binding: SendMoney2Binding(),
     ),
     GetPage(
       name: _Paths.SPLASH_SCREEN,
