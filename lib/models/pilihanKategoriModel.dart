@@ -82,8 +82,8 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     description:
         "Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri ",
     imageUrls: [
-      "https://example.com/image1.png",
-      "https://example.com/image1-2.png"
+      "https://picsum.photos/id/237/400/600",
+      "https://picsum.photos/id/237/400/600"
     ],
     category: Category(id: 1, name: "Kegiatan Sosial"),
     progress: 20,
@@ -150,8 +150,8 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     description:
         "Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri ",
     imageUrls: [
-      "https://example.com/image2.png",
-      "https://example.com/image2-2.png"
+      "https://picsum.photos/id/237/400/600",
+      "https://picsum.photos/id/237/400/600"
     ],
     category: Category(id: 2, name: "Bantuan Kemanusiaan"),
     progress: 50,

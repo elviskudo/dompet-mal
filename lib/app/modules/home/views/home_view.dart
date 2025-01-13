@@ -106,12 +106,8 @@ class HomeView extends GetView<HomeController> {
                             Get.toNamed(Routes.ListDonation);
                           },
                         ),
-                        HorizontalScrollRow(
-                          items: charities
-                              .map((charity) => StraightCharityComponent(
-                                  banners: dummyDataListCategoryBanner))
-                              .toList(),
-                        ),
+                        StraightCharityComponent(
+                            banners: dummyDataListCategoryBanner)
                       ],
                     ),
                   ),

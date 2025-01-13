@@ -2,11 +2,11 @@ import 'package:dompet_mal/app/modules/home/controllers/home_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/models/BankAccountModel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class SlidingDonationSheet extends StatefulWidget {
-
   @override
   final String kategori;
 
@@ -24,7 +24,6 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
   final donationController = Get.find<HomeController>();
   final TextEditingController _textController = TextEditingController();
   final Rx<BankAccount?> selectedBankAccount = Rx<BankAccount?>(null);
-  
 
   final List<int> predefinedAmounts = [
     50000,
@@ -85,6 +84,11 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
       decimalDigits: 0,
     );
     return formatter.format(value);
+  }
+
+  String formatRupiah2(num value) {
+    final formatter = NumberFormat('#,##0', 'id_ID');
+    return 'Rp ' + formatter.format(value).replaceAll(',', '.');
   }
 
   void _handleClose() async {
@@ -209,7 +213,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                   return InkWell(
                     onTap: () {
                       donationController.setDonationAmount(amount.toString());
-                      _textController.text = amount.toString();
+                      _textController.text = formatRupiah(amount);
                     },
                     child: Obx(() => Container(
                           padding: const EdgeInsets.symmetric(
@@ -264,13 +268,42 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                         return TextField(
                           controller: _textController,
                           onChanged: (value) {
-                            final parsedValue =
-                                int.tryParse(value.replaceAll('.', ''));
+                            // Menghilangkan titik sebelum memproses input
+                            final cleanValue = value.replaceAll('.', '');
+                            final parsedValue = int.tryParse(cleanValue);
+
                             if (parsedValue != null) {
+                              // Set nilai yang diformat dengan titik ribuan
                               donationController
                                   .setDonationAmount(parsedValue.toString());
                             }
                           },
+                          inputFormatters: [
+                            // Filter untuk hanya angka
+                            FilteringTextInputFormatter.digitsOnly,
+                            // Formatter untuk menambahkan titik di setiap ribuan
+                            TextInputFormatter.withFunction(
+                              (oldValue, newValue) {
+                                // Mengambil nilai input yang bersih (tanpa titik)
+                                final cleanValue =
+                                    newValue.text.replaceAll('.', '');
+                                final parsedValue =
+                                    int.tryParse(cleanValue) ?? 0;
+
+                                // Memformat nilai menjadi format rupiah
+                                final formattedValue =
+                                    formatRupiah2(parsedValue);
+
+                                // Kembali dengan nilai yang sudah diformat dan kursor yang tetap di tempat yang tepat
+                                return newValue.copyWith(
+                                  text: formattedValue,
+                                  selection: TextSelection.collapsed(
+                                    offset: formattedValue.length,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
@@ -328,7 +361,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                               Get.toNamed(
                                 Routes.KONFIRMASI_TRANSFER,
                                 arguments: {
-                                  'kategori' : widget.kategori.toString(),
+                                  'kategori': widget.kategori.toString(),
                                   'bankAccount':
                                       selectedBankAccount.value!.accountName,
                                   'bankNumber':
