@@ -1,4 +1,6 @@
-import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'dart:math';
+
+import 'package:dompet_mal/app/modules/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
 import 'package:dompet_mal/models/BankAccountModel.dart';
@@ -7,19 +9,85 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../controllers/konfirmasi_transfer_controller.dart';
+
+String formatAmount(String value) {
+  try {
+    // Bersihkan string dari karakter non-numerik
+    final cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Konversi ke number
+    int number = int.tryParse(cleanValue) ?? 0;
+
+    // Generate random number (0-99)
+    final random = Random();
+    final randomNum = random.nextInt(100);
+
+    // Tambahkan random number
+    number = number + randomNum;
+
+    // Format dengan separator ribuan dan tambahkan Rp
+    final formatter = NumberFormat('#,###', 'id_ID');
+    return "Rp ${formatter.format(number).replaceAll(',', '.')}";
+  } catch (e) {
+    print('Error formatting amount: $e');
+    return 'Rp 0';
+  }
+}
+
+String generateTransactionId({
+  required String categoryName,
+}) {
+  // Buat inisial kategori dari nama kategori
+  String categoryInitial = categoryName
+      .split(' ') // Pisahkan nama kategori berdasarkan spasi
+      .map((word) => word[0]
+          .toUpperCase()) // Ambil huruf pertama dari tiap kata dan jadikan huruf besar
+      .join(); // Gabungkan semua huruf pertama
+
+  // Ambil tanggal saat ini
+  DateTime now = DateTime.now();
+  String year = now.year.toString();
+  String month = now.month.toString().padLeft(2, '0'); // Pastikan bulan 2 digit
+
+  // Generate angka acak untuk urutan
+  Random random = Random();
+  int randomSequence = random.nextInt(9999) + 1; // Angka antara 1 dan 9999
+  String formattedSequence =
+      randomSequence.toString().padLeft(4, '0'); // Pastikan 4 digit
+
+  // Gabungkan semua bagian untuk membuat ID transaksi
+  return "#$categoryInitial$year$month$formattedSequence";
+}
 
 class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
   const ConfirmationTransferView({super.key});
   @override
   Widget build(BuildContext context) {
-    final args = Get.arguments as Map<String, dynamic>;
-    var bankName = args['bankAccount'] as String;
-    var bankNumber = args['bankNumber'] as String;
-    final totalTransfer = args['amount'] as String;
-    final String idTransaksi = "#DM110703412";
+    final args = Get.arguments as Map<String, dynamic>?;
+
+    if (args == null) {
+      return Center(
+        child: Text(
+          'Data tidak ditemukan!',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+
+    final bankName =
+        args['bankAccount'] as String? ?? 'Nama bank tidak tersedia';
+    final bankNumber =
+        args['bankNumber'] as String? ?? 'Nomor rekening tidak tersedia';
     var lebar = MediaQuery.of(context).size.width;
+    final totalTransfer = args['amount'] as String? ?? '0';
+    final namaKategori = args['kategori'] as String? ?? 'haha';
+    final String idTransaksi =
+        generateTransactionId(categoryName: namaKategori);
+
+    final totalTransferFormatted = formatAmount(totalTransfer);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appbar2(
@@ -74,7 +142,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                   const SizedBox(height: 16),
                   _inputCopyTransfer('${bankNumber}', context),
                   const SizedBox(height: 16),
-                  _inputCopyTransfer(totalTransfer, context),
+                  _inputCopyTransfer(totalTransferFormatted, context),
                   const SizedBox(height: 16),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,

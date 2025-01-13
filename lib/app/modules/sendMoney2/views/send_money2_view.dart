@@ -1,12 +1,112 @@
+import 'dart:io';
+import 'package:dompet_mal/app/modules/routes/app_pages.dart';
 import 'package:dompet_mal/app/modules/sendMoney2/controllers/send_money2_controller.dart';
-import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SendMoney2View extends GetView<SendMoney2Controller> {
   const SendMoney2View({super.key});
+
+  // Function to show image source picker
+  void _showImageSourceDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Pilih Sumber Gambar',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Camera option
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        _pickImage(ImageSource.camera);
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Color(0xffC5D6FF),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 32,
+                              color: basecolor,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text('Kamera'),
+                        ],
+                      ),
+                    ),
+                    // Gallery option
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        _pickImage(ImageSource.gallery);
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Color(0xffC5D6FF),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.photo_library,
+                              size: 32,
+                              color: basecolor,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text('Galeri'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Function to pick image
+  Future<void> _pickImage(ImageSource source) async {
+    final ImagePicker _picker = ImagePicker();
+    try {
+      final XFile? image = await _picker.pickImage(source: source);
+      if (image != null) {
+        controller.setSelectedImage(File(image.path));
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+  }
 
   // Function to show loading dialog
   void _showLoadingDialog(BuildContext context) {
@@ -27,8 +127,9 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                 Container(
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(999),
-                      color: Color(0xffC5D6FF)),
+                    borderRadius: BorderRadius.circular(999),
+                    color: Color(0xffC5D6FF),
+                  ),
                   child: Image.asset(
                     'icons/dompet.png',
                     width: 22,
@@ -67,8 +168,10 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircularProgressIndicator(
-                  color: basecolor,
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 50,
                 ),
                 SizedBox(height: 20),
                 Text(
@@ -88,23 +191,22 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
 
   // Function to handle upload process
   void _handleUpload(BuildContext context) async {
-    // Show loading dialog
+    if (controller.selectedImage.value == null) {
+      Get.snackbar(
+        'Error',
+        'Silahkan pilih gambar terlebih dahulu',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     _showLoadingDialog(context);
-
-    // Simulate upload process
     await Future.delayed(Duration(seconds: 2));
-
-    // Close loading dialog
     Navigator.pop(context);
-
-    // Show success dialog
     _showSuccessDialog(context);
-
-    // Automatically close success dialog after 2 seconds
     await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
-
-    // Navigate to home or next screen
     Get.toNamed(Routes.HOME);
   }
 
@@ -132,14 +234,29 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              height: tinggi * 0.7,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
+            Obx(() => Container(
+                  width: double.infinity,
+                  height: tinggi * 0.7,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: controller.selectedImage.value != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(
+                            controller.selectedImage.value!,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : Center(
+                          child: Icon(
+                            Icons.image,
+                            size: 50,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                )),
             SizedBox(height: 16),
             Container(
               width: lebar,
@@ -148,9 +265,13 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                   backgroundColor: basecolor,
                   padding: EdgeInsets.all(24),
                 ),
-                onPressed: () => _handleUpload(context),
-                child: const Text(
-                  "UNGGAH BUKTI TRANSFER",
+                onPressed: () => controller.selectedImage.value == null
+                    ? _showImageSourceDialog(context)
+                    : _handleUpload(context),
+                child: Text(
+                  controller.selectedImage.value == null
+                      ? "UNGGAH BUKTI TRANSFER"
+                      : "KIRIM BUKTI TRANSFER",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -160,15 +281,35 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
               ),
             ),
             Gap(16),
+            if (controller.selectedImage.value != null)
+              Container(
+                width: lebar,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.all(24),
+                    side: BorderSide(color: Color.fromARGB(48, 49, 48, 54)),
+                  ),
+                  onPressed: () => _showImageSourceDialog(context),
+                  child: Text(
+                    "UBAH GAMBAR",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromARGB(160, 49, 48, 54),
+                    ),
+                  ),
+                ),
+              ),
+            Gap(16),
             Container(
               width: lebar,
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   padding: EdgeInsets.all(24),
-                  side: const BorderSide(color: Color.fromARGB(48, 49, 48, 54)),
+                  side: BorderSide(color: Color.fromARGB(48, 49, 48, 54)),
                 ),
                 onPressed: () => Get.toNamed(Routes.HOME),
-                child: const Text(
+                child: Text(
                   "KEMBALI KE BERANDA",
                   style: TextStyle(
                     fontSize: 16,

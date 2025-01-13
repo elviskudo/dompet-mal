@@ -11,6 +11,7 @@ class MyDonationView extends GetView<MyDonationController> {
   @override
   final charityController = Get.put(MyDonationController());
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Donasi Ku',
@@ -30,7 +31,7 @@ class MyDonationView extends GetView<MyDonationController> {
               if (controller.filteredCharities.value.isEmpty) {
                 return Center(child: Text('Tidak ada data ditemukan'));
               }
-              return BannerCATEGORY(
+              return BannerKategori(
                 banners: charityController.filteredCharities.value,
               );
             },

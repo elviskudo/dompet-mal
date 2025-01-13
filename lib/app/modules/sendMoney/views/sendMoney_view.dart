@@ -1,5 +1,5 @@
 import 'package:dompet_mal/app/modules/sendMoney/controllers/sendMoney_controller.dart';
-import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/app/modules/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
 import 'package:flutter/material.dart';

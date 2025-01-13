@@ -10,10 +10,19 @@ class ListDonationView extends GetView<ListDonationController> {
   ListDonationView({super.key});
   @override
   final charityController = Get.put(MyDonationController());
+
   Widget build(BuildContext context) {
+    final String searchQuery = Get.arguments ?? '';
+
+    // Tambahkan Future.delayed untuk menunda pemanggilan filterCharities
+    if (searchQuery.isNotEmpty) {
+      Future.delayed(Duration.zero, () {
+        charityController.filterCharities(searchQuery);
+      });
+    }
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Donasi Ku',
+        title: 'List Donasi',
         onSortPressed: () {
           charityController.showSortDialog(context);
         },
@@ -30,7 +39,7 @@ class ListDonationView extends GetView<ListDonationController> {
               if (charityController.filteredCharities.value.isEmpty) {
                 return Center(child: Text('Tidak ada data ditemukan'));
               }
-              return BannerCATEGORY(
+              return BannerKategori(
                 banners: charityController.filteredCharities.value,
               );
             },

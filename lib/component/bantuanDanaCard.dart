@@ -1,8 +1,10 @@
 // in beranda_view.dart
 
 import 'package:dompet_mal/color/color.dart';
+import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class EmergencyFundSection extends StatelessWidget {
@@ -60,7 +62,7 @@ class EmergencyFundSection extends StatelessWidget {
 
           // Cards section
           SizedBox(
-            height: 380, // Sesuaikan dengan tinggi card
+            height: 430, // Sesuaikan dengan tinggi card
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,
@@ -160,14 +162,17 @@ class EmergencyFundCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    fund.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  Container(
+                    height: 42,
+                    child: Text(
+                      fund.title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 16),
                   LinearProgressIndicator(
@@ -259,6 +264,26 @@ class EmergencyFundCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  Gap(16),
+                  Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Get.bottomSheet(
+                            SlidingDonationSheet(kategori: 'Bantuan Kemanusiaan',),
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            backgroundColor: const Color(0xff4B76D9),
+                            foregroundColor: Colors.white),
+                        child: const Text("Donasi")),
+                  )
                 ],
               ),
             ),

@@ -1,5 +1,5 @@
 import 'package:dompet_mal/app/modules/category/views/category_view.dart';
-import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/app/modules/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

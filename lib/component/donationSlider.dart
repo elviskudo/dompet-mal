@@ -1,14 +1,19 @@
 import 'package:dompet_mal/app/modules/home/controllers/home_controller.dart';
-import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/app/modules/routes/app_pages.dart';
 import 'package:dompet_mal/models/BankAccountModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class SlidingDonationSheet extends StatefulWidget {
-  SlidingDonationSheet({Key? key}) : super(key: key);
 
   @override
+  final String kategori;
+
+  const SlidingDonationSheet({
+    Key? key,
+    required this.kategori,
+  }) : super(key: key);
   State<SlidingDonationSheet> createState() => _SlidingDonationSheetState();
 }
 
@@ -19,12 +24,13 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
   final donationController = Get.find<HomeController>();
   final TextEditingController _textController = TextEditingController();
   final Rx<BankAccount?> selectedBankAccount = Rx<BankAccount?>(null);
+  
 
   final List<int> predefinedAmounts = [
     50000,
     100000,
-    150000,
     200000,
+    300000,
     500000,
     1000000
   ];
@@ -322,8 +328,11 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                               Get.toNamed(
                                 Routes.KONFIRMASI_TRANSFER,
                                 arguments: {
-                                  'bankAccount': selectedBankAccount.value!.accountName,
-                                  'bankNumber': selectedBankAccount.value!.accountNumber,
+                                  'kategori' : widget.kategori.toString(),
+                                  'bankAccount':
+                                      selectedBankAccount.value!.accountName,
+                                  'bankNumber':
+                                      selectedBankAccount.value!.accountNumber,
                                   'amount':
                                       donationController.donationAmount.value,
                                   // Tambahkan data lain yang diperlukan

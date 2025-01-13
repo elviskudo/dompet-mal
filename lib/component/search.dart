@@ -1,4 +1,6 @@
+import 'package:dompet_mal/app/modules/listDonation/views/list_donation_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SearchBars extends StatelessWidget {
   final TextEditingController controller;
@@ -28,6 +30,10 @@ class SearchBars extends StatelessWidget {
         child: Center(
           child: TextField(
             controller: controller,
+            onSubmitted: (value) {
+              // Navigate to ListDonationView with search query
+              Get.to(() => ListDonationView(), arguments: value);
+            },
             decoration: InputDecoration(
               prefixIcon: Padding(
                 padding:

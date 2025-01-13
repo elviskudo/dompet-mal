@@ -10,6 +10,7 @@ class MyDonationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    
     if (dummyDataListCategoryBanner != null) {
       initCharities(dummyDataListCategoryBanner);
     }
@@ -36,8 +37,8 @@ class MyDonationController extends GetxController {
 
   void sortByDate(bool ascending) {
     filteredCharities.sort((a, b) {
-      DateTime dateA = DateTime.parse(a.createdAt);
-      DateTime dateB = DateTime.parse(b.createdAt);
+      DateTime dateA = DateTime.parse(a.createdAt.toString());
+      DateTime dateB = DateTime.parse(b.createdAt.toString());
       return ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
     });
     filteredCharities.refresh();

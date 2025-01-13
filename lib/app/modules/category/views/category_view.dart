@@ -1,4 +1,4 @@
-import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/app/modules/routes/app_pages.dart';
 import 'package:dompet_mal/component/AppBar.dart';
 import 'package:flutter/material.dart';
 
@@ -8,10 +8,11 @@ import '../controllers/category_controller.dart';
 
 class CategoryView extends GetView<CategoryController> {
   CategoryView({super.key});
+
   final List<Map<String, dynamic>> categories = [
     {
       'image': 'icons/lihat_semua.png',
-      'label': 'Semua\nCATEGORY',
+      'label': 'Semua\nKategori',
       'color': Colors.blue,
     },
     {
@@ -80,11 +81,6 @@ class CategoryView extends GetView<CategoryController> {
       'color': Colors.orange,
     },
     {
-      'image': 'icons/foto_dummy.png',
-      'label': 'Pelari Baik',
-      'color': Colors.blue,
-    },
-    {
       'image': 'icons/kemanusiaan.png',
       'label': 'Kemanusiaan',
       'color': Colors.blue,
@@ -107,7 +103,7 @@ class CategoryView extends GetView<CategoryController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appbar2(
-        title: 'CATEGORY',
+        title: 'Category',
         color: Colors.white,
       ),
       body: GridView.builder(

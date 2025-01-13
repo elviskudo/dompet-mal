@@ -1,4 +1,4 @@
-import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/app/modules/routes/app_pages.dart';
 import 'package:get/get.dart';
 
 class SplashScreenController extends GetxController {

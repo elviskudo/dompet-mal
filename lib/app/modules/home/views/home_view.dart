@@ -1,4 +1,4 @@
-import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/app/modules/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/CategoryGridIcon.dart';
 import 'package:dompet_mal/component/StraightCharityCard.dart';
@@ -104,17 +104,13 @@ class HomeView extends GetView<HomeController> {
                           title: 'Donasi Langsung',
                           actionText: 'Lihat lainnya',
                           onActionPressed: () {
-                            // Handle navigation to "Lihat lainnya"
+                            Get.toNamed(Routes.ListDonation);
                           },
                         ),
                         HorizontalScrollRow(
                           items: charities
-                              .map(
-                                (charity) => StraightCharityComponent(
-                                  charity: charity,
-                                  onSeeMorePressed: () => {},
-                                ),
-                              )
+                              .map((charity) => StraightCharityComponent(
+                                  banners: dummyDataListCategoryBanner))
                               .toList(),
                         ),
                       ],
@@ -144,13 +140,13 @@ class HomeView extends GetView<HomeController> {
                     child: Column(
                       children: [
                         SectionHeader(
-                          title: 'Pilihan CATEGORY',
+                          title: 'Pilihan Kategori',
                           actionText: '',
                           onActionPressed: () {
                             // Handle navigation to "Lihat lainnya"
                           },
                         ),
-                        BannerCATEGORY(banners: dummyDataListCategoryBanner),
+                        BannerKategori(banners: dummyDataListCategoryBanner),
                       ],
                     ),
                   )

@@ -1,6 +1,6 @@
-import 'package:dompet_mal/app/modules/category/controllers/category_controller.dart';
-import 'package:get/get.dart';
 
+import 'package:get/get.dart';
+import '../controllers/category_controller.dart';
 
 class CategoryBinding extends Bindings {
   @override
