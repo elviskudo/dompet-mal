@@ -1,5 +1,4 @@
 import 'package:dompet_mal/app/routes/app_pages.dart';
-import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/CategoryGridIcon.dart';
 import 'package:dompet_mal/component/StraightCharityCard.dart';
 import 'package:dompet_mal/component/TotalDonation.dart';
@@ -7,7 +6,6 @@ import 'package:dompet_mal/component/bannerCategoryChoice.dart';
 import 'package:dompet_mal/component/bannerOperatonalFunds.dart';
 import 'package:dompet_mal/component/bannerSliderMorningCharity.dart';
 import 'package:dompet_mal/component/bantuanDanaCard.dart';
-import 'package:dompet_mal/component/bottomBar.dart';
 import 'package:dompet_mal/component/chat.dart';
 import 'package:dompet_mal/component/logo.dart';
 import 'package:dompet_mal/component/notifcation.dart';
@@ -105,16 +103,13 @@ class HomeView extends GetView<HomeController> {
                           actionText: 'Lihat lainnya',
                           onActionPressed: () {
                             
+                            Get.toNamed(Routes.ListDonation);
                           },
                         ),
                         HorizontalScrollRow(
                           items: charities
-                              .map(
-                                (charity) => StraightCharityComponent(
-                                  charity: charity,
-                                  onSeeMorePressed: () => {},
-                                ),
-                              )
+                              .map((charity) => StraightCharityComponent(
+                                  banners: dummyDataListCategoryBanner))
                               .toList(),
                         ),
                       ],

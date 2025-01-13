@@ -72,7 +72,7 @@ class TotalDanaDonasi extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '${danaDonasiLangsung.totalDonaturs} ',
+                      '${NumberFormat.decimalPattern('id_ID').format(danaDonasiLangsung.totalDonaturs)} ',
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.black,

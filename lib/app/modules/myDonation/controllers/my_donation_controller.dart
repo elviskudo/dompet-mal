@@ -10,6 +10,7 @@ class MyDonationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    
     if (dummyDataListCategoryBanner != null) {
       initCharities(dummyDataListCategoryBanner);
     }

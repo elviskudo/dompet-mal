@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
 import 'package:dompet_mal/models/BankAccountModel.dart';
@@ -37,6 +38,31 @@ String formatAmount(String value) {
   }
 }
 
+String generateTransactionId({
+  required String categoryName,
+}) {
+  // Buat inisial kategori dari nama kategori
+  String categoryInitial = categoryName
+      .split(' ') // Pisahkan nama kategori berdasarkan spasi
+      .map((word) => word[0]
+          .toUpperCase()) // Ambil huruf pertama dari tiap kata dan jadikan huruf besar
+      .join(); // Gabungkan semua huruf pertama
+
+  // Ambil tanggal saat ini
+  DateTime now = DateTime.now();
+  String year = now.year.toString();
+  String month = now.month.toString().padLeft(2, '0'); // Pastikan bulan 2 digit
+
+  // Generate angka acak untuk urutan
+  Random random = Random();
+  int randomSequence = random.nextInt(9999) + 1; // Angka antara 1 dan 9999
+  String formattedSequence =
+      randomSequence.toString().padLeft(4, '0'); // Pastikan 4 digit
+
+  // Gabungkan semua bagian untuk membuat ID transaksi
+  return "#$categoryInitial$year$month$formattedSequence";
+}
+
 class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
   const ConfirmationTransferView({super.key});
   @override
@@ -56,9 +82,12 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
         args['bankAccount'] as String? ?? 'Nama bank tidak tersedia';
     final bankNumber =
         args['bankNumber'] as String? ?? 'Nomor rekening tidak tersedia';
-    final String idTransaksi = "#DM110703412";
+    // final String idTransaksi = "#DM110703412";
     var lebar = MediaQuery.of(context).size.width;
     final totalTransfer = args['amount'] as String? ?? '0';
+    final namaKategori = args['kategori'] as String? ?? 'haha';
+    final String idTransaksi =
+        generateTransactionId(categoryName: namaKategori);
 
     final totalTransferFormatted = formatAmount(totalTransfer);
     return Scaffold(

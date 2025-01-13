@@ -11,6 +11,7 @@ class MyDonationView extends GetView<MyDonationController> {
   @override
   final charityController = Get.put(MyDonationController());
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Donasi Ku',
