@@ -1,32 +1,30 @@
-// in beranda_view.dart
-
-import 'package:dompet_mal/color/color.dart';
+import 'package:avatar_stack/avatar_stack.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+import 'package:dompet_mal/models/pilihanKategoriModel.dart';
+import 'package:dompet_mal/color/color.dart';
 
-class EmergencyFundSection extends StatelessWidget {
-  const EmergencyFundSection({Key? key}) : super(key: key);
+class EmergencyFundSection extends StatefulWidget {
+  final List<CharityByCategory> banners;
+  final int maxItems;
+
+  const EmergencyFundSection(
+      {Key? key, required this.banners, required this.maxItems})
+      : super(key: key);
 
   @override
+  State<EmergencyFundSection> createState() => _EmergencyFundSectionState();
+}
+
+class _EmergencyFundSectionState extends State<EmergencyFundSection> {
+  @override
   Widget build(BuildContext context) {
-    // Sample data
-    final List<EmergencyFund> funds = [
-      EmergencyFund(
-        title: 'Bantu Korban Bencana Banjir Kalimantan Barat',
-        imageUrl: 'assets/images/banjir.jpg', // pastikan image ada di assets
-        collectedAmount: 151472721,
-        daysLeft: 35,
-        totalDonors: 1500,
-      ),
-      EmergencyFund(
-        title: 'Bantu Korban Gempa Bumi',
-        imageUrl: 'assets/images/gempa.jpg',
-        collectedAmount: 98650000,
-        daysLeft: 28,
-        totalDonors: 1200,
-      ),
-    ];
+    // Filter the banners based on maxItems
+    final displayBanners = widget.maxItems > 0
+        ? widget.banners.take(widget.maxItems).toList()
+        : widget.banners;
 
     return Container(
       color: Colors.white,
@@ -47,7 +45,7 @@ class EmergencyFundSection extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Navigate to list
+                    // Navigate to the full list
                   },
                   child: const Text(
                     'Lihat Lainnya',
@@ -60,22 +58,24 @@ class EmergencyFundSection extends StatelessWidget {
 
           // Cards section
           SizedBox(
-            height: 380, // Sesuaikan dengan tinggi card
+            height: 380, // Adjust the height to fit the cards
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,
-              itemCount: funds.length,
+              itemCount: displayBanners.length,
               itemBuilder: (context, index) {
+                final banner = displayBanners[index];
                 return Padding(
                   padding: EdgeInsets.only(
-                    right: index == funds.length - 1 ? 0 : 16,
+                    right: index == displayBanners.length - 1 ? 0 : 16,
                   ),
                   child: SizedBox(
-                    width: 300, // Sesuaikan dengan lebar yang diinginkan
+                    width: 300, // Adjust the width of the card
                     child: EmergencyFundCard(
-                      fund: funds[index],
+                      fund: banner,
                       onTap: () {
-                        // Handle tap
+                        // Handle tap, navigate to the donation details page
+                        Get.toNamed('/donation-detail-page', arguments: banner);
                       },
                     ),
                   ),
@@ -90,24 +90,8 @@ class EmergencyFundSection extends StatelessWidget {
   }
 }
 
-class EmergencyFund {
-  final String title;
-  final String imageUrl;
-  final int collectedAmount;
-  final int daysLeft;
-  final int totalDonors;
-
-  EmergencyFund({
-    required this.title,
-    required this.imageUrl,
-    required this.collectedAmount,
-    required this.daysLeft,
-    required this.totalDonors,
-  });
-}
-
 class EmergencyFundCard extends StatelessWidget {
-  final EmergencyFund fund;
+  final CharityByCategory fund;
   final VoidCallback onTap;
 
   const EmergencyFundCard({
@@ -116,6 +100,7 @@ class EmergencyFundCard extends StatelessWidget {
     required this.onTap,
   }) : super(key: key);
 
+  // Format currency in Rupiah
   String formatCurrency(int amount) {
     final formatter = NumberFormat.currency(
       locale: 'id_ID',
@@ -135,7 +120,6 @@ class EmergencyFundCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: InkWell(
-        hoverColor: Colors.white,
         onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,8 +127,8 @@ class EmergencyFundCard extends StatelessWidget {
             // Image
             AspectRatio(
               aspectRatio: 16 / 9,
-              child: Image.asset(
-                fund.imageUrl,
+              child: Image.network(
+                fund.imageUrls.isNotEmpty ? fund.imageUrls[0] : 'https://via.placeholder.com/150',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -154,7 +138,6 @@ class EmergencyFundCard extends StatelessWidget {
                 },
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -170,11 +153,14 @@ class EmergencyFundCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 16),
-                  LinearProgressIndicator(
-                    value: 0.7,
-                    minHeight: 8,
-                    backgroundColor: baseGray,
-                    valueColor: AlwaysStoppedAnimation<Color>(basecolor),
+                  ClipRRect(
+                     borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: fund.progress / 100,
+                      minHeight: 8,
+                      backgroundColor: baseGray,
+                      valueColor: AlwaysStoppedAnimation<Color>(basecolor),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -191,7 +177,7 @@ class EmergencyFundCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            formatCurrency(fund.collectedAmount),
+                            formatCurrency(fund.totalCharities),
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -209,7 +195,7 @@ class EmergencyFundCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${fund.daysLeft}',
+                            '35',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -221,38 +207,20 @@ class EmergencyFundCard extends StatelessWidget {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      SizedBox(
-                        width: 70,
-                        height: 30,
-                        child: Stack(
-                          children: List.generate(
-                            3,
-                            (index) => Positioned(
-                              left: index * 20.0,
-                              child: Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2,
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.person,
-                                  size: 20,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
+                      Flexible(
+                        child: AvatarStack(
+                          height: 30,
+                          avatars: fund.contributors.map((contributor) {
+                            return NetworkImage(
+                              contributor.avatarUrl ??
+                                  'https://via.placeholder.com/40',
+                            );
+                          }).toList(),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        '${fund.totalDonors} penyumbang',
+                        '${fund.contributors.length} penyumbang',
                         style: TextStyle(
                           color: Colors.grey[600],
                         ),

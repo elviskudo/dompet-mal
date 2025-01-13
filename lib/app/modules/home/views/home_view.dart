@@ -1,5 +1,6 @@
+
+import 'package:dompet_mal/app/modules/listDonation/views/list_donation_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
-import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/CategoryGridIcon.dart';
 import 'package:dompet_mal/component/StraightCharityCard.dart';
 import 'package:dompet_mal/component/TotalDonation.dart';
@@ -7,7 +8,6 @@ import 'package:dompet_mal/component/bannerCategoryChoice.dart';
 import 'package:dompet_mal/component/bannerOperatonalFunds.dart';
 import 'package:dompet_mal/component/bannerSliderMorningCharity.dart';
 import 'package:dompet_mal/component/bantuanDanaCard.dart';
-import 'package:dompet_mal/component/bottomBar.dart';
 import 'package:dompet_mal/component/chat.dart';
 import 'package:dompet_mal/component/logo.dart';
 import 'package:dompet_mal/component/notifcation.dart';
@@ -87,7 +87,7 @@ class HomeView extends GetView<HomeController> {
                   Gap(24),
                   BannerSlider(banners: dummyMorningCharity),
                   Gap(24),
-                  CATEGORYGridIcon(),
+                  CATEGORYGrid(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: BannerDanaOperasional(),
@@ -107,16 +107,8 @@ class HomeView extends GetView<HomeController> {
                             // Handle navigation to "Lihat lainnya"
                           },
                         ),
-                        HorizontalScrollRow(
-                          items: charities
-                              .map(
-                                (charity) => StraightCharityComponent(
-                                  charity: charity,
-                                  onSeeMorePressed: () => {},
-                                ),
-                              )
-                              .toList(),
-                        ),
+                        StraightCharityComponent(
+                            banners: dummyDataListCategoryBanner)
                       ],
                     ),
                   ),
@@ -128,7 +120,7 @@ class HomeView extends GetView<HomeController> {
                     width: lebar,
                   ),
 
-                  const EmergencyFundSection(),
+                   EmergencyFundSection(banners: dummyDataListCategoryBanner, maxItems: 3,),
 
                   // Pilihan CATEGORY
                   Container(
@@ -150,7 +142,20 @@ class HomeView extends GetView<HomeController> {
                             // Handle navigation to "Lihat lainnya"
                           },
                         ),
-                        BannerKategori(banners: dummyDataListCategoryBanner),
+                        BannerKategori(banners: dummyDataListCategoryBanner, maxItems: 4,),
+                        SizedBox(height: 16,),
+                        Container(
+                          width: 190,
+                          height: 40,
+                          child: ElevatedButton(onPressed: () {
+                            Get.to(ListDonationView());
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xffD6E1FF),
+                            foregroundColor: Color(0xff4B76D9)
+                          ),
+                           child: Text("Lihat lainnya")),
+                        )
                       ],
                     ),
                   )

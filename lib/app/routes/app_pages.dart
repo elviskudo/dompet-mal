@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 
 import '../modules/Report/bindings/report_binding.dart';
 import '../modules/Report/views/report_view.dart';
-import 'package:get/get.dart';
 
 import '../modules/aggrement/bindings/aggrement_binding.dart';
 import '../modules/aggrement/views/aggrement_view.dart';
