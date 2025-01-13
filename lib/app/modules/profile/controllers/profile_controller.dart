@@ -16,21 +16,30 @@ class ProfileController extends GetxController {
     loadUserData();
   }
 
-  Future<void> updateProfile(
-      {required String name, required String phone}) async {
+  Future<void> updateProfile({
+    required String name,
+    required String phone,
+  }) async {
+    // Cek apakah data baru sama dengan data lama
+    if (name == userName.value && phone == userPhone.value) {
+      Get.snackbar(
+        'Gagal',
+        'Tidak ada perubahan yang dibuat pada profil',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: EdgeInsets.symmetric(vertical: 20),
+        snackPosition: SnackPosition.BOTTOM,
+        snackStyle: SnackStyle.FLOATING,
+        forwardAnimationCurve: Curves.easeOut,
+        reverseAnimationCurve: Curves.easeIn,
+      );
+      return;
+    }
+
     try {
       isLoading.value = true;
-
-      // // Validasi nomor telepon
-      // if (!phone.startsWith('0') || phone.length < 10 || phone.length > 13) {
-      //   Get.snackbar(
-      //     'Error',
-      //     'Nomor telepon harus dimulai dengan 0 dan panjang 10-13 digit',
-      //     backgroundColor: Colors.red,
-      //     colorText: Colors.white,
-      //   );
-      //   return;
-      // }
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userName', name);
@@ -38,9 +47,10 @@ class ProfileController extends GetxController {
 
       userName.value = name;
       userPhone.value = phone;
+
       await Get.defaultDialog(
         title: 'Sukses',
-        middleText: 'Profile berhasil diperbarui',
+        middleText: 'Profil berhasil diperbarui',
         textConfirm: 'OK',
         confirmTextColor: Colors.white,
         onConfirm: () {
@@ -51,7 +61,7 @@ class ProfileController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Error',
-        'Gagal memperbarui profile: $e',
+        'Gagal memperbarui profil: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -84,7 +94,7 @@ class ProfileController extends GetxController {
       print('Error loading user data: $e');
       Get.snackbar(
         'Error',
-        'Gagal memuat data profile: $e',
+        'Gagal memuat data profil: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );

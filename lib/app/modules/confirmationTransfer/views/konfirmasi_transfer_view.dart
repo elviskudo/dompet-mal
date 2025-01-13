@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
@@ -7,18 +9,58 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../controllers/konfirmasi_transfer_controller.dart';
+
+String formatAmount(String value) {
+  try {
+    // Bersihkan string dari karakter non-numerik
+    final cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Konversi ke number
+    int number = int.tryParse(cleanValue) ?? 0;
+
+    // Generate random number (0-99)
+    final random = Random();
+    final randomNum = random.nextInt(100);
+
+    // Tambahkan random number
+    number = number + randomNum;
+
+    // Format dengan separator ribuan dan tambahkan Rp
+    final formatter = NumberFormat('#,###', 'id_ID');
+    return "Rp ${formatter.format(number).replaceAll(',', '.')}";
+  } catch (e) {
+    print('Error formatting amount: $e');
+    return 'Rp 0';
+  }
+}
 
 class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
   const ConfirmationTransferView({super.key});
   @override
   Widget build(BuildContext context) {
-    final args = Get.arguments as Map<String, dynamic>;
-    final nomorRekening = args['bankAccount'] as BankAccount;
-    final totalTransfer = args['amount'] as String;
+    final args = Get.arguments as Map<String, dynamic>?;
+
+    if (args == null) {
+      return Center(
+        child: Text(
+          'Data tidak ditemukan!',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+
+    final bankName =
+        args['bankAccount'] as String? ?? 'Nama bank tidak tersedia';
+    final bankNumber =
+        args['bankNumber'] as String? ?? 'Nomor rekening tidak tersedia';
     final String idTransaksi = "#DM110703412";
     var lebar = MediaQuery.of(context).size.width;
+    final totalTransfer = args['amount'] as String? ?? '0';
+
+    final totalTransferFormatted = formatAmount(totalTransfer);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appbar2(
@@ -57,7 +99,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                         height: 21,
                       ),
                       const SizedBox(width: 16),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -65,15 +107,15 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          Text("ELVIS SONATHA"),
+                          Text("${bankName}"),
                         ],
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  _inputCopyTransfer('$nomorRekening', context),
+                  _inputCopyTransfer('${bankNumber}', context),
                   const SizedBox(height: 16),
-                  _inputCopyTransfer(totalTransfer, context),
+                  _inputCopyTransfer(totalTransferFormatted, context),
                   const SizedBox(height: 16),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,

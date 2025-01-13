@@ -104,7 +104,7 @@ class HomeView extends GetView<HomeController> {
                           title: 'Donasi Langsung',
                           actionText: 'Lihat lainnya',
                           onActionPressed: () {
-                            // Handle navigation to "Lihat lainnya"
+                            
                           },
                         ),
                         HorizontalScrollRow(

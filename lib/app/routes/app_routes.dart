@@ -26,6 +26,12 @@ abstract class Routes {
   static const PARTICIPANTS = _Paths.PARTICIPANTS;
   static const DONATION_DETAIL_PAGE = _Paths.DONATION_DETAIL_PAGE;
   static const PARTICIPANT_PAGE = _Paths.PARTICIPANT_PAGE;
+  static const PAYMENT = _Paths.PAYMENT;
+  static const LIST_PAYMENT = _Paths.LIST_PAYMENT;
+  static const PAYMENT_SUCCESS = _Paths.PAYMENT_SUCCESS;
+  static const NOTIFICATION = _Paths.NOTIFICATION;
+  static const CHAT = _Paths.CHAT;
+  static const MESSAGE = _Paths.MESSAGE;
 }
 
 abstract class _Paths {
@@ -53,4 +59,10 @@ abstract class _Paths {
   static const REPORT = '/report';
   static const DONATION_DETAIL_PAGE = '/donation-detail-page';
   static const PARTICIPANT_PAGE = '/participant-page';
+  static const PAYMENT = '/payment';
+  static const LIST_PAYMENT = '/list-payment';
+  static const PAYMENT_SUCCESS = '/payment-success';
+  static const NOTIFICATION = '/notification';
+  static const CHAT = '/chat';
+  static const MESSAGE = '/message';
 }

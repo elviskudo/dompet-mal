@@ -105,7 +105,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     Navigator.pop(context);
 
     // Navigate to home or next screen
-    Get.toNamed(Routes.HOME);
+    Get.toNamed(Routes.PAYMENT_SUCCESS);
   }
 
   @override
