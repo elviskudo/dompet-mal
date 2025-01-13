@@ -33,6 +33,7 @@ class MyDonationView extends GetView<MyDonationController> {
               }
               return BannerKategori(
                 banners: charityController.filteredCharities.value,
+                maxItems: 0,
               );
             },
           ),

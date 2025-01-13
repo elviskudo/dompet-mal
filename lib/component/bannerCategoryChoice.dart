@@ -8,8 +8,8 @@ import 'package:intl/intl.dart';
 
 class BannerKategori extends StatefulWidget {
   final List<CharityByCategory> banners;
-
-  const BannerKategori({super.key, required this.banners});
+ final int maxItems;
+  const BannerKategori({super.key, required this.banners, required this.maxItems});
 
   @override
   State<BannerKategori> createState() => _BannerKategoriState();
@@ -28,11 +28,14 @@ class _BannerKategoriState extends State<BannerKategori> {
 
   @override
   Widget build(BuildContext context) {
+     final displayBanners = widget.maxItems > 0
+      ? widget.banners.take(widget.maxItems).toList()
+      : widget.banners;
     return Column(
         children: List.generate(
-      widget.banners.length,
+       displayBanners.length,
       (index) {
-        final banner = widget.banners[index];
+        final banner = displayBanners[index];
         return GestureDetector(
           onTap: () {
             Get.toNamed("/donation-detail-page", arguments: banner);
@@ -61,13 +64,11 @@ class _BannerKategoriState extends State<BannerKategori> {
                     Container(
                       width: 140,
                       height: 235, // Make image full height
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         borderRadius:
                             BorderRadius.horizontal(left: Radius.circular(10)),
                         image: DecorationImage(
-                          image: NetworkImage(
-                            'https://storage.googleapis.com/a1aa/image/0qqXRyBOOW6DN1p8PQe1fBSNBQ5y3rSnVbuE5LhRhOV3W8CUA.jpg',
-                          ),
+                          image: NetworkImage(banner.imageUrls[0]),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -126,26 +127,15 @@ class _BannerKategoriState extends State<BannerKategori> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  height: 5,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                                Container(
-                                  height: 5,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                    color: basecolor,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                              ],
-                            ),
+                           ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: banner.progress / 100,
+                            backgroundColor: Colors.grey[200],
+                            color: Colors.blue,
+                            minHeight: 6,
+                          ),
+                        ),
                             const SizedBox(height: 4),
                             Text(
                               'Terkumpul',
