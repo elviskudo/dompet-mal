@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 
 class DonationDetailView extends GetView<DonationDetailPageController> {
   @override
+  final RxBool isExpanded = false.obs;
+  final int collapsedLines = 3;
   String formatRupiah(num value) {
     final formatter = NumberFormat.currency(
       locale: 'id_ID',
@@ -17,7 +19,6 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
     );
     return formatter.format(value);
   }
-
 
   Widget build(BuildContext context) {
     CharityByCategory bannerData = Get.arguments;
@@ -219,8 +220,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(bannerData.company.image ?? 'https://placehold.co/40x40'),
+                        backgroundImage: NetworkImage(
+                            bannerData.company.image ??
+                                'https://placehold.co/40x40'),
                         radius: 20,
                       ),
                       SizedBox(width: 12),
@@ -278,33 +280,34 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         ),
                       ),
                       SizedBox(height: 8.0),
-                      Text(
-                        bannerData.description,
-                        style: TextStyle(
-                          // color: Colors.grey[700],
-                          fontSize: 14.0,
-                        ),
-                      ),
+                      Obx(() => Text(
+                            bannerData.description,
+                            style: TextStyle(fontSize: 14.0),
+                            maxLines: isExpanded.value ? null : collapsedLines,
+                            overflow: isExpanded.value
+                                ? TextOverflow.visible
+                                : TextOverflow.ellipsis,
+                          )),
                       SizedBox(height: 24.0),
                       Center(
-                        child: Center(
-                            child: ElevatedButton(
+                        child: ElevatedButton(
                           onPressed: () {
-                            // Tambahkan aksi yang ingin dilakukan saat tombol ditekan
-                            print('Tombol ditekan!');
+                            // Toggle the expanded state
+                            isExpanded.value = !isExpanded.value;
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Color(0xFFD6E1FF), // Warna latar belakang
-                            foregroundColor: Color(0xFF4B76D9), // Warna teks
+                            backgroundColor: Color(0xFFD6E1FF),
+                            foregroundColor: Color(0xFF4B76D9),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  16), // Sesuaikan radius sesuai keinginan
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                            minimumSize: Size(160, 40), // Ukuran tombol
+                            minimumSize: Size(160, 40),
                           ),
-                          child: Text('Baca Selengkapnya'),
-                        )),
+                          // Change button text based on expanded state
+                          child: Obx(() => Text(isExpanded.value
+                              ? 'Tutup'
+                              : 'Baca Selengkapnya')),
+                        ),
                       ),
                       SizedBox(
                         height: 10,
