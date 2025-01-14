@@ -12,7 +12,7 @@ class CategoryView extends GetView<CategoryController> {
 
  void handleCategoryTap(int index) {
   Category selectedCategory = categories[index];
-  Get.toNamed(Routes.ListDonation, arguments: selectedCategory.id);
+  Get.toNamed(Routes.ListDonation, arguments: selectedCategory);
 }
 
   @override

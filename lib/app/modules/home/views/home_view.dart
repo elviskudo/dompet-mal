@@ -84,7 +84,7 @@ class HomeView extends GetView<HomeController> {
                             Get.toNamed(Routes.KONFIRMASI_TRANSFER)),
                   ),
                   Gap(24),
-                  BannerSlider(banners: dummyMorningCharity),
+                  BannerSlider(banners: dummyDataListCategoryBanner),
                   Gap(24),
                   CATEGORYGrid(),
                   Padding(

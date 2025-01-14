@@ -1,9 +1,10 @@
-import 'package:dompet_mal/models/MorningCharity.dart';
+import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:get/get.dart';
 
 class BannerSlider extends StatefulWidget {
-  final List<MorningCharity> banners;
+  final List<CharityByCategory> banners;
 
   const BannerSlider({
     Key? key,
@@ -32,17 +33,18 @@ class _BannerSliderState extends State<BannerSlider> {
                 margin: const EdgeInsets.symmetric(horizontal: 0.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: const Color.fromARGB(255, 141, 203, 254),
+                  color: Colors.transparent,
                 ),
                 child: Stack(
                   children: [
                     // Background image
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: Image.asset(
-                        banner.imageUrl,
+                      child: Image.network(
+                        banner.imageUrls[0],
                         fit: BoxFit.cover,
                         width: double.infinity,
+                        height: 200,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             color: Colors.blue,
@@ -57,46 +59,79 @@ class _BannerSliderState extends State<BannerSlider> {
                         },
                       ),
                     ),
+                    // Gradient overlay
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.black.withOpacity(0.6),
+                            Colors.transparent,
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                        ),
+                      ),
+                    ),
                     // Content overlay
                     Padding(
                       padding: const EdgeInsets.all(18.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
                             banner.title,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 24,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black,
+                                  offset: Offset(1, 1),
+                                  blurRadius: 4,
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 8),
                           Text(
-                            banner.caption,
+                            banner.description,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
+                              color: Colors.white70,
+                              fontSize: 14,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black,
+                                  offset: Offset(1, 1),
+                                  blurRadius: 4,
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 12),
                           ElevatedButton(
                             onPressed: () {
-                              // Handle button press
+                              Get.toNamed(
+                                "/donation-detail-page",
+                                arguments: banner,
+                              );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xffFFA450),
+                              backgroundColor: const Color(0xffFFA450),
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
+                                horizontal: 20,
+                                vertical: 10,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: Text(
-                              banner.buttonTitle,
+                            child: const Text(
+                              "Daftarkan sekarang",
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -111,7 +146,6 @@ class _BannerSliderState extends State<BannerSlider> {
               height: 200,
               viewportFraction: 0.9,
               enlargeCenterPage: true,
-              // autoPlay: true,
               onPageChanged: (index, reason) {
                 setState(() {
                   _currentIndex = index;
@@ -141,3 +175,5 @@ class _BannerSliderState extends State<BannerSlider> {
     );
   }
 }
+
+

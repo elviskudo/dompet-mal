@@ -18,14 +18,14 @@ class CATEGORYGrid extends StatelessWidget {
           ...List.generate(
             categories.take(4).toList().length,
             (index) {
-              final category = categories[index];
+              Category category = categories[index];
               return InkWell(
                 onTap: () {
                   if (category.name == "Lihat Semua") {
                     Get.toNamed(Routes.CATEGORY); // Navigasi ke halaman CATEGORY
                   } else {
                     Get.toNamed(Routes.ListDonation,
-                        arguments: category.id); // Navigasi ke daftar donasi
+                        arguments: category); // Navigasi ke daftar donasi
                   }
                 },
                 child: Column(

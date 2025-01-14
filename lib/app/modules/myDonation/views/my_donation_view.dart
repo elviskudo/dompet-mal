@@ -13,7 +13,9 @@ class MyDonationView extends GetView<MyDonationController> {
   Widget build(BuildContext context) {
     
     return Scaffold(
+      
       appBar: CustomAppBar(
+        
         title: 'Donasi Ku',
         onSortPressed: () {
           controller.showSortDialog(context);
@@ -21,6 +23,7 @@ class MyDonationView extends GetView<MyDonationController> {
         onFilterPressed: () {
           controller.showSearchDialog(context);
         },
+      
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(

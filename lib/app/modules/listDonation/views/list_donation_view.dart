@@ -1,7 +1,7 @@
 import 'package:dompet_mal/app/modules/listDonation/controllers/list_donation_controller.dart';
-import 'package:dompet_mal/app/modules/myDonation/controllers/my_donation_controller.dart';
 import 'package:dompet_mal/component/bannerCategoryChoice.dart';
 import 'package:dompet_mal/component/customAppBarCategory.dart';
+import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,11 +12,11 @@ class ListDonationView extends GetView<ListDonationController> {
 
   @override
   Widget build(BuildContext context) {
-    final categoryId = Get.arguments; // Ambil categoryId dari arguments
+    Category categoryId = Get.arguments;
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Donasi ',
+        title: 'Donasi ${categoryId != null ? categoryId.name : ""}',
         onSortPressed: () {
           charityController.showSortDialog(context);
         },
@@ -33,10 +33,10 @@ class ListDonationView extends GetView<ListDonationController> {
               child: Obx(
                 () {
                   // Filter data berdasarkan categoryId
-                  if (categoryId != null) {
+                  if (categoryId.id != null) {
                     charityController.filteredCharities.value =
                         charityController.charities.where((charity) {
-                      return charity.category.id == categoryId;
+                      return charity.category.id == categoryId.id;
                     }).toList();
                   } else {
                     charityController.filteredCharities.value =

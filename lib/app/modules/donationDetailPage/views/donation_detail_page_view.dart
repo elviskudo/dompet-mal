@@ -2,6 +2,7 @@ import 'package:avatar_stack/avatar_stack.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dompet_mal/app/modules/donationDetailPage/controllers/donation_detail_page_controller.dart';
 import 'package:dompet_mal/app/modules/participantPage/views/participant_page_view.dart';
+import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -74,6 +75,12 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       child: Image.network(
                         item,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Center(
+                            child: Icon(Icons.broken_image,
+                                size: 50, color: Colors.grey),
+                          );
+                        },
                       ),
                     );
                   }).toList(),
@@ -387,7 +394,13 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         width: double.infinity,
                         height: 60,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                                Get.bottomSheet(
+                                  SlidingDonationSheet(kategori: bannerData.category.name,),
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                );
+                              },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff4B76D9),
                             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -395,7 +408,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text(
+                          child:  Text(
                             'Lanjut pembayaran',
                             style: TextStyle(
                               color: Colors.white,

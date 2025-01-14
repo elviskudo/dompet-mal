@@ -83,8 +83,8 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     description:
         "Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri ",
     imageUrls: [
-      "https://picsum.photos/id/237/400/600",
-      "https://picsum.photos/id/237/400/600"
+      "https://picsum.photos/id/235/400/600",
+      "https://picsum.photos/id/235/400/600",
       "https://example.com/image1-2.png"
     ],
     category: Category(
@@ -121,7 +121,7 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     description:
         "Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri ",
     imageUrls: [
-      "https://picsum.photos/id/237/400/600",
+      "https://picsum.photos/id/23/400/600",
       "https://example.com/image1-2.png"
     ],
     category: Category(
@@ -158,8 +158,8 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     description:
         "Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri ",
     imageUrls: [
-      "https://picsum.photos/id/237/400/600",
-      "https://picsum.photos/id/237/400/600"
+      "https://picsum.photos/id/5/400/600",
+      "https://picsum.photos/id/235/400/600",
     ],
     category: Category(
         id: 2, name: "Bencana Alam", categoryImage: "icons/icon_bencana.png"),
@@ -193,8 +193,8 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     description:
         "Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri ",
     imageUrls: [
-      "https://picsum.photos/id/237/400/600",
-      "https://picsum.photos/id/237/400/600"
+      "https://picsum.photos/id/235/400/600",
+      "https://picsum.photos/id/235/400/600",
       "https://example.com/image2-2.png"
     ],
     category: Category(

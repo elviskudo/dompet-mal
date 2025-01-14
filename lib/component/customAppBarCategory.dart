@@ -22,13 +22,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     var lebar = MediaQuery.of(context).size.width;
     return AppBar(
+      // automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
-      elevation: 0,
-      titleSpacing: 0,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.black),
-        onPressed: () => Navigator.pop(context),
-      ),
+      // elevation: 0,
+      // titleSpacing: 0,
+      // leading: IconButton(
+      //   icon: Icon(Icons.arrow_back, color: Colors.black),
+      //   onPressed: () => Navigator.pop(context),
+      // ),
       title: Text(
         title,
         style: TextStyle(
