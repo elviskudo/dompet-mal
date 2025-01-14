@@ -1,18 +1,20 @@
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class MyDonationController extends GetxController {
   //TODO: Implement MyDonationController
 
-  // @override
-  // void onInit() {
-  //   super.onInit();
+  final count = 0.obs;
+  @override
+  void onInit() {
+    super.onInit();
     
-  //   if (dummyDataListCategoryBanner != null) {
-  //     initCharities(dummyDataListCategoryBanner);
-  //   }
-  // }
+    if (dummyDataListCategoryBanner != null) {
+      initCharities(dummyDataListCategoryBanner);
+    }
+  }
 
   @override
   void onReady() {
@@ -24,50 +26,15 @@ class MyDonationController extends GetxController {
     super.onClose();
   }
 
-  // Observable variables
   var charities = <CharityByCategory>[].obs;
   var filteredCharities = <CharityByCategory>[].obs;
   var sortAscending = true.obs;
-  final count = 0.obs;
-  final categoryId = Get.arguments;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // Initialize data only once
-    print('Initializing with category ID: $categoryId');
-
-    initializeData();
+  void initCharities(List<CharityByCategory> initialData) {
+    charities.value = initialData;
+    filteredCharities.value = initialData;
   }
 
-  void initializeData() {
-    charities.value = dummyDataListCategoryBanner;
-
-    // Get category ID from arguments
-    print('Initializing with category ID: $categoryId');
-
-    if (categoryId != null) {
-      // Filter by category if ID is provided
-      filterByCategory(categoryId);
-    } else {
-      // Show all charities if no category ID
-      filteredCharities.value = charities;
-    }
-  }
-
-  void filterByCategory(int categoryId) {
-    print('Filtering for category ID: $categoryId');
-    if (charities.isNotEmpty) {
-      filteredCharities.value = charities.where((charity) {
-        print('Charity ID: ${charity.id}, Category ID: ${charity.category.id}');
-        return charity.category.id == categoryId;
-      }).toList();
-      print(
-          'Found ${filteredCharities.length} charities for category $categoryId');
-    }
-  }
-
-  // Sort functions
   void sortByDate(bool ascending) {
     filteredCharities.sort((a, b) {
       DateTime dateA = DateTime.parse(a.createdAt.toString());
@@ -86,29 +53,15 @@ class MyDonationController extends GetxController {
     filteredCharities.refresh();
   }
 
-  // Search function
   void filterCharities(String query) {
     try {
       if (query.isEmpty) {
-        // If query is empty, show all charities for current category
-        final categoryId = Get.arguments;
-        if (categoryId != null) {
-          filterByCategory(categoryId);
-        } else {
-          filteredCharities.value = charities;
-        }
+        filteredCharities.value = charities;
       } else {
-        // Filter by query within current category
-        final currentCategory = Get.arguments;
-        var filtered = charities.where((charity) =>
-            charity.title.toLowerCase().contains(query.toLowerCase()));
-
-        if (currentCategory != null) {
-          filtered = filtered
-              .where((charity) => charity.category.id == currentCategory);
-        }
-
-        filteredCharities.value = filtered.toList();
+        filteredCharities.value = charities
+            .where((charity) =>
+                charity.title.toLowerCase().contains(query.toLowerCase()))
+            .toList();
       }
     } catch (e) {
       print('Error filtering charities: $e');
@@ -116,18 +69,18 @@ class MyDonationController extends GetxController {
     }
   }
 
-  // Dialog functions
   void showSearchDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: true, // Klik di luar dialog untuk menutup
       builder: (BuildContext context) {
         return Material(
-          type: MaterialType.transparency,
+          // Tambahkan widget Material di sini
+          type: MaterialType.transparency, // Material transparan
           child: Align(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.topCenter, // Posisi di atas
             child: Container(
-              margin: EdgeInsets.only(top: 50),
+              margin: EdgeInsets.only(top: 50), // Jarak dari atas
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -140,7 +93,7 @@ class MyDonationController extends GetxController {
                   ),
                 ],
               ),
-              width: MediaQuery.of(context).size.width * 0.9,
+              width: MediaQuery.of(context).size.width * 0.9, // Lebar 90% layar
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -222,4 +175,5 @@ class MyDonationController extends GetxController {
     );
   }
 
+  void increment() => count.value++;
 }

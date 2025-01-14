@@ -195,7 +195,8 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                             backgroundColor: basecolor,
                             padding: EdgeInsets.all(24),
                           ),
-                          onPressed: () => _showCenteredPopup(context),
+                          onPressed: () =>
+                              _showCenteredPopup(context, idTransaksi),
                           child: const Text(
                             "TRANSFER SEKARANG",
                             style: TextStyle(
@@ -240,7 +241,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
     );
   }
 
-  void _showCenteredPopup(BuildContext context) {
+  void _showCenteredPopup(BuildContext context, String idTransaksi) {
     showDialog(
       context: context,
       barrierDismissible: false, // Popup tidak bisa ditutup dengan klik di luar
@@ -336,7 +337,8 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                         ),
                         onPressed: () {
                           Navigator.pop(context);
-                          Get.toNamed(Routes.SEND_MONEY);
+                          Get.toNamed(Routes.SEND_MONEY,
+                              arguments: {'idTransaksi': idTransaksi});
                         },
                         child: const Text(
                           "SUDAH",

@@ -32,67 +32,107 @@ class NotificationView extends StatelessWidget {
       body: GetBuilder<NotificationController>(
         init: NotificationController(),
         builder: (controller) {
+          // Sorting months in chronological order
+          List<String> sortedMonths =
+              controller.notificationsByMonth.keys.toList()
+                ..sort((a, b) {
+                  DateTime dateA = DateFormat('MMMM yyyy').parse(a);
+                  DateTime dateB = DateFormat('MMMM yyyy').parse(b);
+                  return dateA.compareTo(dateB); // Sorting chronologically
+                });
+
           return ListView.builder(
-            itemCount: controller.notifications.length,
+            itemCount: sortedMonths.length,
             itemBuilder: (context, index) {
-              final notification = controller.notifications[index];
-              return Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundImage: AssetImage(notification['userAvatar']),
+              String monthYear = sortedMonths[index];
+              List<Map<String, dynamic>> monthNotifications =
+                  controller.notificationsByMonth[monthYear]!;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Display month and year header
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    child: Text(
+                      monthYear,
+                      style: GoogleFonts.openSans(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              notification['title'],
-                              style: GoogleFonts.openSans(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              NumberFormat.currency(
-                                locale: 'id',
-                                symbol: 'Rp ',
-                                decimalDigits: 0,
-                              ).format(notification['amount']),
-                              style: GoogleFonts.openSans(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              notification['created_at'],
-                              style: GoogleFonts.openSans(
-                                fontSize: 12,
-                                color: Colors.grey.shade500,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  // Display notifications for this month
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: monthNotifications.length,
+                    itemBuilder: (context, notificationIndex) {
+                      final notification =
+                          monthNotifications[notificationIndex];
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 25,
+                                backgroundImage:
+                                    AssetImage(notification['userAvatar']),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      notification['title'],
+                                      style: GoogleFonts.openSans(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      NumberFormat.currency(
+                                        locale: 'id',
+                                        symbol: 'Rp ',
+                                        decimalDigits: 0,
+                                      ).format(notification['amount']),
+                                      style: GoogleFonts.openSans(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      notification['created_at'],
+                                      style: GoogleFonts.openSans(
+                                        fontSize: 12,
+                                        color: Colors.grey.shade500,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               );
             },
           );
