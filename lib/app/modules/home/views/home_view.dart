@@ -13,6 +13,7 @@ import 'package:dompet_mal/component/logo.dart';
 import 'package:dompet_mal/component/notifcation.dart';
 import 'package:dompet_mal/component/search.dart';
 import 'package:dompet_mal/component/sectionHeader.dart';
+import 'package:dompet_mal/component/shareButton.dart';
 import 'package:dompet_mal/models/HelpDonationCharity.dart';
 import 'package:dompet_mal/models/MorningCharity.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
@@ -65,7 +66,12 @@ class HomeView extends GetView<HomeController> {
                         Logo(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [notification(), Gap(14), chat()],
+                          children: [
+                            notification(),
+                            Gap(14),
+                            chat(),
+                           
+                          ],
                         )
                       ],
                     ),

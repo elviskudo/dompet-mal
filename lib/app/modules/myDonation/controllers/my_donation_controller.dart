@@ -1,55 +1,63 @@
+import 'package:dompet_mal/app/modules/routes/app_pages.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class MyDonationController extends GetxController {
-  //TODO: Implement MyDonationController
-
   final count = 0.obs;
+  var charities = <CharityByCategory>[].obs;
+  var filteredCharities = <CharityByCategory>[].obs;
+  var selectedSortOption = 'Terbaru'.obs;
+
+  // List of sorting options
+  final List<String> sortOptions = [
+    'Terbaru',
+    'Terlama',
+    'Terbesar',
+    'Terbanyak',
+    'Progress'
+  ];
+
   @override
   void onInit() {
     super.onInit();
-    
     if (dummyDataListCategoryBanner != null) {
       initCharities(dummyDataListCategoryBanner);
     }
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  var charities = <CharityByCategory>[].obs;
-  var filteredCharities = <CharityByCategory>[].obs;
-  var sortAscending = true.obs;
 
   void initCharities(List<CharityByCategory> initialData) {
     charities.value = initialData;
     filteredCharities.value = initialData;
   }
 
-  void sortByDate(bool ascending) {
-    filteredCharities.sort((a, b) {
-      DateTime dateA = DateTime.parse(a.createdAt.toString());
-      DateTime dateB = DateTime.parse(b.createdAt.toString());
-      return ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
-    });
-    filteredCharities.refresh();
-  }
+  void sortCharities(String option) {
+    selectedSortOption.value = option;
 
-  void sortByTitle(bool ascending) {
-    filteredCharities.sort((a, b) {
-      return ascending
-          ? a.title.compareTo(b.title)
-          : b.title.compareTo(a.title);
-    });
+    switch (option) {
+      case 'Terbaru':
+        filteredCharities.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        break;
+
+      case 'Terlama':
+        filteredCharities.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+        break;
+
+      case 'Terbesar':
+        filteredCharities.sort((a, b) =>
+            b.targetCharityDonation.compareTo(a.targetCharityDonation));
+        break;
+
+      case 'Terbanyak':
+        filteredCharities
+            .sort((a, b) => b.totalCharities.compareTo(a.totalCharities));
+        break;
+
+      case 'Progress':
+        filteredCharities.sort((a, b) => b.progress.compareTo(a.progress));
+        break;
+    }
+
     filteredCharities.refresh();
   }
 
@@ -63,24 +71,86 @@ class MyDonationController extends GetxController {
                 charity.title.toLowerCase().contains(query.toLowerCase()))
             .toList();
       }
+      sortCharities(selectedSortOption.value);
     } catch (e) {
       print('Error filtering charities: $e');
       filteredCharities.value = charities;
     }
   }
 
+  void showSortDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (BuildContext bc) {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: EdgeInsets.only(bottom: 16),
+                width: 40,
+                child: Divider(
+                  thickness: 4,
+                  color: Colors.grey[300],
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      'Urutkan',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(),
+              ...sortOptions
+                  .map((option) => ListTile(
+                        leading: Obx(() => Radio<String>(
+                              value: option,
+                              groupValue: selectedSortOption.value,
+                              onChanged: (value) {
+                                if (value != null) {
+                                  sortCharities(value);
+                                  Get.back();
+                                }
+                              },
+                            )),
+                        title: Text(option),
+                        onTap: () {
+                          sortCharities(option);
+                          Get.back();
+                        },
+                      ))
+                  .toList(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void showSearchDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: true, // Klik di luar dialog untuk menutup
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Material(
-          // Tambahkan widget Material di sini
-          type: MaterialType.transparency, // Material transparan
+          type: MaterialType.transparency,
           child: Align(
-            alignment: Alignment.topCenter, // Posisi di atas
+            alignment: Alignment.topCenter,
             child: Container(
-              margin: EdgeInsets.only(top: 50), // Jarak dari atas
+              margin: EdgeInsets.only(top: 50),
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -93,14 +163,12 @@ class MyDonationController extends GetxController {
                   ),
                 ],
               ),
-              width: MediaQuery.of(context).size.width * 0.9, // Lebar 90% layar
+              width: MediaQuery.of(context).size.width * 0.9,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
-                    onChanged: (value) {
-                      filterCharities(value);
-                    },
+                    onChanged: filterCharities,
                     decoration: InputDecoration(
                       labelText: 'Cari Donasi',
                       prefixIcon: Icon(Icons.search),
@@ -113,10 +181,14 @@ class MyDonationController extends GetxController {
                       shrinkWrap: true,
                       itemCount: filteredCharities.length,
                       itemBuilder: (context, index) {
+                        final charity = filteredCharities[index];
                         return ListTile(
-                          title: Text(filteredCharities[index].title),
+                          title: Text(charity.title),
                           onTap: () {
-                            Get.back();
+                            Get.back(); // Tutup dialog search
+                            // Navigasi ke halaman detail dengan data charity yang dipilih
+                            Get.toNamed(Routes.DONATION_DETAIL_PAGE,
+                                arguments: charity);
                           },
                         );
                       },
@@ -126,50 +198,6 @@ class MyDonationController extends GetxController {
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void showSortDialog(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext bc) {
-        return Wrap(
-          children: <Widget>[
-            ListTile(
-              title: Text('Urutkan'),
-              tileColor: Colors.grey[200],
-            ),
-            ListTile(
-                leading: Icon(Icons.arrow_upward),
-                title: Text('Tanggal Terbaru'),
-                onTap: () {
-                  sortByDate(false);
-                  Get.back();
-                }),
-            ListTile(
-                leading: Icon(Icons.arrow_downward),
-                title: Text('Tanggal Terlama'),
-                onTap: () {
-                  sortByDate(true);
-                  Get.back();
-                }),
-            ListTile(
-                leading: Icon(Icons.sort_by_alpha),
-                title: Text('Nama A-Z'),
-                onTap: () {
-                  sortByTitle(true);
-                  Get.back();
-                }),
-            ListTile(
-                leading: Icon(Icons.sort_by_alpha),
-                title: Text('Nama Z-A'),
-                onTap: () {
-                  sortByTitle(false);
-                  Get.back();
-                }),
-          ],
         );
       },
     );

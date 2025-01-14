@@ -1,22 +1,20 @@
 import 'package:dompet_mal/app/modules/category/bindings/category_binding.dart';
 import 'package:dompet_mal/app/modules/category/views/category_view.dart';
+import 'package:dompet_mal/app/modules/donationDetailPage/views/donation_detail_page_view.dart';
 import 'package:dompet_mal/app/modules/listDonation/bindings/list_donation_binding.dart';
 import 'package:dompet_mal/app/modules/listDonation/views/list_donation_view.dart';
 import 'package:dompet_mal/app/modules/sendMoney2/bindings/send_money2_binding.dart';
 import 'package:dompet_mal/app/modules/sendMoney2/views/send_money2_view.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../Report/bindings/report_binding.dart';
 import '../Report/views/report_view.dart';
-import 'package:get/get.dart';
 
 import '../aggrement/bindings/aggrement_binding.dart';
 import '../aggrement/views/aggrement_view.dart';
 import '../confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
 import '../confirmationTransfer/views/konfirmasi_transfer_view.dart';
 import '../donationDetailPage/bindings/donation_detail_page_binding.dart';
-import '../donationDetailPage/views/donation_detail_page_view.dart';
 import '../email_verification/bindings/email_verification_binding.dart';
 import '../email_verification/views/email_verification_view.dart';
 import '../forgot_password/bindings/forgot_password_binding.dart';

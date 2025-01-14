@@ -2,6 +2,7 @@ import 'package:avatar_stack/avatar_stack.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dompet_mal/app/modules/donationDetailPage/controllers/donation_detail_page_controller.dart';
 import 'package:dompet_mal/app/modules/participantPage/views/participant_page_view.dart';
+import 'package:dompet_mal/component/shareButton.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,9 +45,8 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
               print('---- ${bannerData.title}');
             },
           ),
-          IconButton(
-            icon: Icon(Icons.share, color: Colors.black),
-            onPressed: () {},
+          ShareButton(
+            contentToShare: 'Konten yang ingin dibagikan https://example.com',
           ),
           IconButton(
             icon: Icon(Icons.more_vert, color: Colors.black),
