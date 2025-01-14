@@ -1,7 +1,7 @@
 import 'package:dompet_mal/app/modules/home/views/home_view.dart';
+import 'package:dompet_mal/app/modules/listPayment/views/list_payment_view.dart';
 import 'package:dompet_mal/app/modules/myDonation/views/my_donation_view.dart';
 import 'package:dompet_mal/app/modules/myFavorite/views/my_favorite_view.dart';
-import 'package:dompet_mal/app/modules/participants/views/participants_view.dart';
 import 'package:dompet_mal/app/modules/profile/views/profile_view.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +22,7 @@ class NavigationView extends GetView<NavigationController> {
             HomeView(),
             MyDonationView(),
             MyFavoriteView(),
+            ListPaymentView(),
             ProfileView(),
           ],
         ),
@@ -46,6 +47,10 @@ class NavigationView extends GetView<NavigationController> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.favorite_border),
                 label: 'Favorit',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.attach_money),
+                label: 'Pembayaran',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person_outline),

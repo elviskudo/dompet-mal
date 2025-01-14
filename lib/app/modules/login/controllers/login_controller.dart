@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../routes/app_pages.dart';
+import '../../../routes/app_pages.dart';
 
 class LoginController extends GetxController {
   final emailC = TextEditingController();
@@ -58,8 +58,19 @@ class LoginController extends GetxController {
       await prefs.setString('userEmail', emailC.text);
       print('Email yang disimpan: ${emailC.text}');
 
-      Get.snackbar('Sukses', 'Berhasil login',
-          backgroundColor: Colors.green, colorText: Colors.white);
+      Get.snackbar(
+        'Sukses',
+        'Berhasil login',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(20),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 2),
+        snackStyle: SnackStyle.FLOATING,
+        forwardAnimationCurve: Curves.easeOut,
+        reverseAnimationCurve: Curves.easeIn,
+      );
 
       Get.offAllNamed(Routes.NAVIGATION);
     } catch (e) {

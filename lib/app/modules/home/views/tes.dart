@@ -54,7 +54,7 @@ class HomeView extends GetView<HomeController> {
                             totalBudgets: 12000, totalDonaturs: 10000),
                         onAddPressed: () {}),
                     Gap(24),
-                    CATEGORYGridIcon()
+                    // CATEGORYGridIcon()
                   ],
                 )),
               ),

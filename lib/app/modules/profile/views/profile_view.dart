@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
+
   @override
   Widget build(BuildContext context) {
+    TextEditingController nameController =
+        TextEditingController(text: controller.userName.value);
+    TextEditingController phoneController =
+        TextEditingController(text: controller.userPhone.value);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -35,8 +39,7 @@ class ProfileView extends GetView<ProfileController> {
                     fontWeight: FontWeight.w600)),
             Gap(8),
             TextFormField(
-              controller:
-                  TextEditingController(text: controller.userName.value),
+              controller: nameController,
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Masukan nama lengkap';
@@ -125,8 +128,7 @@ class ProfileView extends GetView<ProfileController> {
                 Gap(8),
                 Expanded(
                   child: TextFormField(
-                    controller:
-                        TextEditingController(text: controller.userPhone.value),
+                    controller: phoneController,
                     keyboardType: TextInputType.phone,
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -165,10 +167,23 @@ class ProfileView extends GetView<ProfileController> {
                 ),
               ),
               onPressed: () {
-                controller.updateProfile(
-                  name: controller.userName.value,
-                  phone: controller.userPhone.value,
-                );
+                String newName = nameController.text.trim();
+                String newPhone = phoneController.text.trim();
+
+                if (newName != controller.userName.value ||
+                    newPhone != controller.userPhone.value) {
+                  controller.updateProfile(
+                    name: newName,
+                    phone: newPhone,
+                  );
+                } else {
+                  Get.snackbar(
+                    'Info',
+                    'Tidak ada perubahan yang dibuat pada profil',
+                    backgroundColor: Colors.blue,
+                    colorText: Colors.white,
+                  );
+                }
               },
               child: Padding(
                 padding:

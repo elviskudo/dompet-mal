@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'package:dompet_mal/app/modules/routes/app_pages.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
 import 'package:dompet_mal/models/BankAccountModel.dart';
@@ -81,6 +82,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
         args['bankAccount'] as String? ?? 'Nama bank tidak tersedia';
     final bankNumber =
         args['bankNumber'] as String? ?? 'Nomor rekening tidak tersedia';
+    // final String idTransaksi = "#DM110703412";
     var lebar = MediaQuery.of(context).size.width;
     final totalTransfer = args['amount'] as String? ?? '0';
     final namaKategori = args['kategori'] as String? ?? 'haha';

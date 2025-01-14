@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/login_controller.dart';
-import 'package:dompet_mal/app/modules/routes/app_pages.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
 
 class LoginView extends GetView<LoginController> {
   const LoginView({super.key});

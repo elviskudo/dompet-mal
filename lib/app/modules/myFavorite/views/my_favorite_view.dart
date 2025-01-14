@@ -34,6 +34,7 @@ class MyFavoriteView extends GetView<MyFavoriteController> {
               }
               return BannerKategori(
                 banners: charityController.filteredCharities.value,
+                maxItems: 0,
               );
             },
           ),

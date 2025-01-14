@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:dompet_mal/app/modules/routes/app_pages.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/app/modules/sendMoney2/controllers/send_money2_controller.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:flutter/material.dart';
@@ -207,6 +207,9 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     _showSuccessDialog(context);
     await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
+
+    // Navigate to home or next screen
+    Get.toNamed(Routes.PAYMENT_SUCCESS);
     Get.toNamed(Routes.HOME);
   }
 
