@@ -20,7 +20,16 @@ class ProfileController extends GetxController {
     required String name,
     required String phone,
   }) async {
-    // Cek apakah data baru sama dengan data lama
+    if (name.isEmpty || phone.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Semua bidang harus diisi',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     if (name == userName.value && phone == userPhone.value) {
       Get.snackbar(
         'Gagal',

@@ -69,19 +69,9 @@ class ProfileView extends GetView<ProfileController> {
                     fontWeight: FontWeight.w600)),
             Gap(8),
             TextFormField(
-              keyboardType: TextInputType.emailAddress,
               controller:
                   TextEditingController(text: controller.userEmail.value),
               readOnly: true,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Email tidak boleh kosong';
-                }
-                if (!GetUtils.isEmail(value)) {
-                  return 'Email tidak valid';
-                }
-                return null;
-              },
               decoration: InputDecoration(
                 hintText: 'Masukan email',
                 hintStyle: GoogleFonts.montserratAlternates(
@@ -167,21 +157,13 @@ class ProfileView extends GetView<ProfileController> {
                 ),
               ),
               onPressed: () {
-                String newName = nameController.text.trim();
-                String newPhone = phoneController.text.trim();
+                if (controller.formKey.currentState!.validate()) {
+                  String newName = nameController.text.trim();
+                  String newPhone = phoneController.text.trim();
 
-                if (newName != controller.userName.value ||
-                    newPhone != controller.userPhone.value) {
                   controller.updateProfile(
                     name: newName,
                     phone: newPhone,
-                  );
-                } else {
-                  Get.snackbar(
-                    'Info',
-                    'Tidak ada perubahan yang dibuat pada profil',
-                    backgroundColor: Colors.blue,
-                    colorText: Colors.white,
                   );
                 }
               },
@@ -203,3 +185,4 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 }
+

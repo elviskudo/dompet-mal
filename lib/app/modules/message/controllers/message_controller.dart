@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class MessageController extends GetxController {
   // Daftar pesan yang akan ditampilkan
-  final List<Map<String, dynamic>> messages = [
+  RxList<Map<String, dynamic>> messages = <Map<String, dynamic>>[
     {
       "username": "John Doe",
       "avatar": "assets/images/avatar1.png",
@@ -29,22 +30,30 @@ class MessageController extends GetxController {
     }
   ].obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    sortMessages();
+  }
+
   // Fungsi untuk menambah pesan baru
-  void addMessage(String username, String avatar, String body, String createdAt) {
+  void addMessage(
+      String username, String avatar, String body, String createdAt) {
     messages.add({
       "username": username,
       "avatar": avatar,
       "body": body,
       "created_at": createdAt
     });
-    update(); // Memperbarui tampilan
+    sortMessages(); // Urutkan pesan setelah menambahkan
+    update();
   }
 
   // Fungsi untuk menghapus pesan berdasarkan index
   void deleteMessage(int index) {
     if (index >= 0 && index < messages.length) {
       messages.removeAt(index);
-      update(); // Memperbarui tampilan
+      update();
     }
   }
 
@@ -53,6 +62,32 @@ class MessageController extends GetxController {
     if (index >= 0 && index < messages.length) {
       return messages[index];
     }
-    return {}; // Mengembalikan objek kosong jika index tidak valid
+    return {};
+  }
+
+  // Fungsi untuk mengurutkan pesan dari yang terbaru
+  void sortMessages() {
+    messages.sort((a, b) {
+      DateTime dateA = DateFormat("yyyy-MM-dd hh:mm a").parse(a["created_at"]);
+      DateTime dateB = DateFormat("yyyy-MM-dd hh:mm a").parse(b["created_at"]);
+      return dateB.compareTo(dateA);
+    });
+  }
+
+  List<Map<String, dynamic>> getOldestMessages() {
+    // Urutkan pesan berdasarkan tanggal dan ambil pesan terakhir (terlama)
+    messages.sort((a, b) {
+      DateTime dateA = DateFormat("yyyy-MM-dd hh:mm a").parse(a["created_at"]);
+      DateTime dateB = DateFormat("yyyy-MM-dd hh:mm a").parse(b["created_at"]);
+      return dateA.compareTo(dateB); // Urutkan berdasarkan tanggal terlama
+    });
+    return [messages.first]; // Mengembalikan pesan pertama setelah diurutkan
+  }
+
+  // Fungsi untuk memfilter pesan berdasarkan username
+  List<Map<String, dynamic>> filterMessages(String username) {
+    return messages
+        .where((message) => message["username"] == username)
+        .toList();
   }
 }

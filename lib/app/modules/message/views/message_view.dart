@@ -1,11 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../controllers/message_controller.dart';
 
-class MessageView extends StatelessWidget {
+class MessageView extends StatefulWidget {
   const MessageView({super.key});
+
+  @override
+  _MessageViewState createState() => _MessageViewState();
+}
+
+class _MessageViewState extends State<MessageView> {
+  late MessageController controller;
+  bool isNewestFirst = true; // Menentukan apakah ingin filter pesan terbaru
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(MessageController());
+  }
+
+  // Fungsi untuk mengubah urutan filter (terbaru atau terlama)
+  void toggleSortOrder() {
+    setState(() {
+      isNewestFirst = !isNewestFirst;
+    });
+
+    // Mengubah urutan pesan berdasarkan status isNewestFirst
+    if (isNewestFirst) {
+      controller.sortMessages(); // Urutkan pesan terbaru
+    } else {
+      controller.messages.sort((a, b) {
+        DateTime dateA =
+            DateFormat("yyyy-MM-dd hh:mm a").parse(a["created_at"]);
+        DateTime dateB =
+            DateFormat("yyyy-MM-dd hh:mm a").parse(b["created_at"]);
+        return dateA.compareTo(dateB); // Urutkan pesan terlama
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +58,16 @@ class MessageView extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.black),
-            onPressed: () {},
+            icon: Icon(
+              isNewestFirst ? Icons.sort : Icons.sort_outlined,
+              color: Colors.black,
+            ),
+            onPressed:
+                toggleSortOrder, // Menambahkan aksi saat ikon sort di-klik
           ),
         ],
       ),
       body: GetBuilder<MessageController>(
-        init: MessageController(),
         builder: (controller) {
           return ListView.builder(
             itemCount: controller.messages.length,
