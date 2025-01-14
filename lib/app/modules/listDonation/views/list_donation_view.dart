@@ -16,7 +16,7 @@ class ListDonationView extends GetView<ListDonationController> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Donasi Ku',
+        title: 'Donasi ',
         onSortPressed: () {
           charityController.showSortDialog(context);
         },

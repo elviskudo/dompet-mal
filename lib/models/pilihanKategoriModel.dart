@@ -81,7 +81,7 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     uuid: "uuid-1",
     title: "Sedekah Jariyah 10.000 Quran ke seluruh negeri",
     description:
-        "Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri ",
+        "Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeriSedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri Sedekah Jariyah 10.000 Quran ke seluruh negeri ",
     imageUrls: [
       "https://picsum.photos/id/237/400/600",
       "https://picsum.photos/id/237/400/600"
@@ -224,7 +224,7 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
   ),
 ];
  final List<Category> categories = [
-    Category(id: 2, name: 'Bencana Alam', categoryImage: 'icons/icon_bencana.png'),
+    Category(id: 2, name: 'Bencana Alam', categoryImage: 'assets/icons/icon_bencana.png'),
     Category(id: 3, name: 'Balita & Anak Sakit', categoryImage: 'icons/bayi.png'),
     Category(id: 4, name: 'Bantuan Medis & Kesehatan', categoryImage: 'icons/icon_medis.png'),
     Category(id: 5, name: 'Bantuan Pendidikan', categoryImage: 'icons/tas.png'),

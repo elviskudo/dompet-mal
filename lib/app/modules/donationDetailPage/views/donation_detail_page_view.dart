@@ -48,10 +48,10 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
             icon: Icon(Icons.share, color: Colors.black),
             onPressed: () {},
           ),
-          IconButton(
-            icon: Icon(Icons.more_vert, color: Colors.black),
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.more_vert, color: Colors.black),
+          //   onPressed: () {},
+          // ),
         ],
       ),
       extendBodyBehindAppBar: true,
