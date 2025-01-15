@@ -95,7 +95,7 @@ class HomeView extends GetView<HomeController> {
                   Gap(24),
                   CATEGORYGrid(),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding:  EdgeInsets.symmetric(horizontal: 8.0),
                     child: BannerDanaOperasional(),
                   ),
                   Gap(26),
