@@ -1,7 +1,9 @@
 import 'package:avatar_stack/avatar_stack.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dompet_mal/app/modules/donationDetailPage/controllers/donation_detail_page_controller.dart';
+import 'package:dompet_mal/app/modules/myFavorite/views/my_favorite_view.dart';
 import 'package:dompet_mal/app/modules/participantPage/views/participant_page_view.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/component/shareButton.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
@@ -44,6 +46,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
             onPressed: () {
               print('---- ${bannerData}');
               print('---- ${bannerData.title}');
+              Get.to(MyFavoriteView());
             },
           ),
           ShareButton(
@@ -395,12 +398,14 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         height: 60,
                         child: ElevatedButton(
                           onPressed: () {
-                                Get.bottomSheet(
-                                  SlidingDonationSheet(kategori: bannerData.category.name,),
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                );
-                              },
+                            Get.bottomSheet(
+                              SlidingDonationSheet(
+                                kategori: bannerData.category.name,
+                              ),
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff4B76D9),
                             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -408,7 +413,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child:  Text(
+                          child: Text(
                             'Lanjut pembayaran',
                             style: TextStyle(
                               color: Colors.white,

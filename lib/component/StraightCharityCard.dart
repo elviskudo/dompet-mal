@@ -1,4 +1,6 @@
+import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
@@ -28,7 +30,7 @@ class StraightCharityComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 304,
+      height: 340,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: banners.length,
@@ -39,7 +41,7 @@ class StraightCharityComponent extends StatelessWidget {
               Get.toNamed("/donation-detail-page", arguments: banner);
             },
             child: Container(
-              width: 180,
+              width: 230,
               margin: const EdgeInsets.only(right: 12),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -118,6 +120,28 @@ class StraightCharityComponent extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+                        Gap(8),
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10)),
+                          width: double.infinity,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Get.bottomSheet(
+                                  SlidingDonationSheet(
+                                    kategori: banner.category.name,
+                                  ),
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  backgroundColor: const Color(0xff4B76D9),
+                                  foregroundColor: Colors.white),
+                              child: const Text("Donasi")),
+                        )
                       ],
                     ),
                   ),

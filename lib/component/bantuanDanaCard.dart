@@ -1,4 +1,5 @@
 import 'package:avatar_stack/avatar_stack.dart';
+import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
@@ -58,7 +59,7 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
 
           // Cards section
           SizedBox(
-            height: 380, // Adjust the height to fit the cards
+            height: 420, // Adjust the height to fit the cards
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,
@@ -229,6 +230,28 @@ class EmergencyFundCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  Gap(8),
+                  Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Get.bottomSheet(
+                            SlidingDonationSheet(
+                              kategori: fund.category.name,
+                            ),
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            backgroundColor: const Color(0xff4B76D9),
+                            foregroundColor: Colors.white),
+                        child: const Text("Donasi")),
+                  )
                 ],
               ),
             ),

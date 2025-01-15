@@ -11,6 +11,55 @@ class ShareButton extends StatelessWidget {
     required this.contentToShare,
   }) : super(key: key);
 
+  String _formatContentForClipboard(String content) {
+    return '''بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+Selamat Datang di Dompet Mal,
+
+Berikut rincian [dana operasional aplikasi yang dibutuhkan untuk pengembangan dan pemeliharaan]: (contoh lain, donasi Sedekah Jariyah yang dibutuhkan)
+
+
+💻 Infrastruktur & Hosting
+- Server & Cloud Hosting
+- Penyimpanan & Bandwidth
+
+👥 Pengembangan & Pemeliharaan
+- Gaji Pengembang & Desainer
+- Pembaruan & Perbaikan Fitur
+
+🔒 Keamanan & Perlindungan Data
+- Keamanan Data & Enkripsi
+- Penyimpanan Cadangan
+
+📱 Lisensi & Perangkat Lunak
+- Lisensi Perangkat Lunak & API
+- Alat Pengembangan
+
+📢 Pemasaran & Akuisisi Pengguna
+- Iklan Digital & SEO
+- Media Sosial & Kampanye Afiliasi
+
+💳 Biaya Transaksi & Pembayaran
+- Biaya Platform Pembayaran
+- Biaya Transaksi In-App
+
+🛠 Pengelolaan & Administrasi
+- Gaji Manajer & Dukungan Pelanggan
+- Biaya Administrasi & Legal
+
+
+Penyelenggara: [CV. OPTIMIS]
+Total Anggaran: Rp [Total Anggaran]
+Total Dana Masuk: Rp [Total Dana Masuk]
+Tanggal Target Penyelesaian: [Tanggal Terakhir]
+
+Silakan hubungi admin Dompet Mal di 085218056736
+
+Terima kasih atas perhatian dan kerjasamanya!
+Salam Dompet Mal,
+
+وَعَلَيْكُمُ السَّلاَمُ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ''';
+  }
+
   void _showShareOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -42,7 +91,8 @@ class ShareButton extends StatelessWidget {
                       label: 'WhatsApp',
                       color: Colors.green,
                       onTap: () {
-                        _shareToWhatsApp(contentToShare);
+                        _shareToWhatsApp(
+                            _formatContentForClipboard(contentToShare));
                         Navigator.pop(context);
                       },
                     ),
@@ -51,7 +101,8 @@ class ShareButton extends StatelessWidget {
                       label: 'Telegram',
                       color: Colors.blue,
                       onTap: () {
-                        _shareToTelegram(contentToShare);
+                        _shareToTelegram(
+                            _formatContentForClipboard(contentToShare));
                         Navigator.pop(context);
                       },
                     ),
@@ -60,7 +111,8 @@ class ShareButton extends StatelessWidget {
                       label: 'Facebook',
                       color: Colors.indigo,
                       onTap: () {
-                        _shareToFacebook(contentToShare);
+                        _shareToFacebook(
+                            _formatContentForClipboard(contentToShare));
                         Navigator.pop(context);
                       },
                     ),
@@ -68,14 +120,16 @@ class ShareButton extends StatelessWidget {
                       icon: Icons.copy,
                       label: 'Copy Link',
                       color: Colors.grey,
-                      onTap: () => _copyToClipboard(context, contentToShare),
+                      onTap: () => _copyToClipboard(
+                          context, _formatContentForClipboard(contentToShare)),
                     ),
                     _ShareOption(
                       icon: Icons.more_horiz,
                       label: 'More',
                       color: Colors.orange,
                       onTap: () {
-                        _shareWithDefault(contentToShare);
+                        _shareWithDefault(
+                            _formatContentForClipboard(contentToShare));
                         Navigator.pop(context);
                       },
                     ),
@@ -137,7 +191,7 @@ class ShareButton extends StatelessWidget {
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Link berhasil disalin!'),
+        content: Text('Berhasil disalin ke clipboard!'),
         duration: Duration(seconds: 2),
       ),
     );

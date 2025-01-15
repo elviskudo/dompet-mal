@@ -15,7 +15,7 @@ class MyFavoriteView extends GetView<MyFavoriteController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Donasi Ku',
+        title: 'Donasi Favorit',
         onSortPressed: () {
           charityController.showSortDialog(context);
         },
