@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 
 class ListDonationController extends GetxController {
   // Observable variables
-  var charities = <CharityByCategory>[].obs;
-  var filteredCharities = <CharityByCategory>[].obs;
+   RxList<CharityByCategory> charities = <CharityByCategory>[].obs;
+  RxList<CharityByCategory> filteredCharities = <CharityByCategory>[].obs;
   var sortAscending = true.obs;
   final count = 0.obs;
   final categoryId = Get.arguments;
@@ -18,6 +18,7 @@ class ListDonationController extends GetxController {
 
     initializeData();
   }
+  
 
   void initializeData() {
     charities.value = dummyDataListCategoryBanner;

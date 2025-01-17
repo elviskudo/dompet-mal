@@ -30,6 +30,9 @@ class ListPaymentController extends GetxController {
         donationDate: DateTime.parse("2024-01-10"),
       ),
     ]);
+
+    // Mengurutkan payments berdasarkan tanggal (terlama ke terbaru)
+    payments.sort((a, b) => a.donationDate.compareTo(b.donationDate));
   }
 
   // Fungsi untuk mendapatkan total donasi

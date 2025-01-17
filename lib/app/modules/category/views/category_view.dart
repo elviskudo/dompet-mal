@@ -11,11 +11,9 @@ class CategoryView extends GetView<CategoryController> {
   CategoryView({super.key});
 
   void handleCategoryTap(int index) {
-    print('catgori: $categories');
-    var selectedCategory = categories[index];
-    print('ini selectedted caegory $selectedCategory ');
-    print('ini selectedted caegory index ${categories[index]} ');
-    print('ini selectedted  index $index ');
+    Category selectedCategory = categories[index];
+    print('dadada ${selectedCategory.id}');
+    print('dadada ${selectedCategory.name}');
     Get.toNamed(Routes.ListDonation, arguments: selectedCategory);
   }
 

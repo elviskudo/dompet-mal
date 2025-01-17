@@ -1,5 +1,6 @@
 import 'package:dompet_mal/app/modules/listDonation/views/list_donation_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,6 +11,18 @@ class SearchBars extends StatelessWidget {
     super.key,
     required this.controller,
   });
+  Category? findCategoryByTitle(String title) {
+    try {
+      // Asumsikan categories adalah list kategori dari model Anda
+      return categories.firstWhere(
+        (category) => category.name.toLowerCase().contains(title.toLowerCase()),
+        orElse: () => throw Exception('Category not found'),
+      );
+    } catch (e) {
+      print('Error finding category: $e');
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +45,24 @@ class SearchBars extends StatelessWidget {
           child: TextField(
             controller: controller,
             onSubmitted: (value) {
-              // Navigate to ListDonationView with search query
-              Get.toNamed(Routes.ListDonation, arguments: value);
+              if (value.isEmpty) return;
+
+              // Cari kategori berdasarkan input
+              final category = findCategoryByTitle(value);
+
+              if (category != null) {
+                // Jika kategori ditemukan, navigasi dengan kategori sebagai argument
+                Get.toNamed(Routes.ListDonation, arguments: category);
+              } else {
+                // Jika kategori tidak ditemukan, tampilkan snackbar
+                Get.snackbar(
+                  'Kategori tidak ditemukan',
+                  'Silakan coba kata kunci lain',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+              }
             },
             decoration: InputDecoration(
               prefixIcon: Padding(

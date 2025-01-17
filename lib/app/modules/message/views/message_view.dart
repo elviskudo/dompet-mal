@@ -14,12 +14,13 @@ class MessageView extends StatefulWidget {
 
 class _MessageViewState extends State<MessageView> {
   late MessageController controller;
-  bool isNewestFirst = true; // Menentukan apakah ingin filter pesan terbaru
+  bool isNewestFirst = true;
 
   @override
   void initState() {
     super.initState();
     controller = Get.put(MessageController());
+    controller.sortMessages();
   }
 
   // Fungsi untuk mengubah urutan filter (terbaru atau terlama)
@@ -28,16 +29,15 @@ class _MessageViewState extends State<MessageView> {
       isNewestFirst = !isNewestFirst;
     });
 
-    // Mengubah urutan pesan berdasarkan status isNewestFirst
     if (isNewestFirst) {
-      controller.sortMessages(); // Urutkan pesan terbaru
+      controller.sortMessages(); // Urutkan pesan terbaru (descending)
     } else {
       controller.messages.sort((a, b) {
         DateTime dateA =
             DateFormat("yyyy-MM-dd hh:mm a").parse(a["created_at"]);
         DateTime dateB =
             DateFormat("yyyy-MM-dd hh:mm a").parse(b["created_at"]);
-        return dateA.compareTo(dateB); // Urutkan pesan terlama
+        return dateA.compareTo(dateB); // Urutkan pesan terlama (ascending)
       });
     }
   }
