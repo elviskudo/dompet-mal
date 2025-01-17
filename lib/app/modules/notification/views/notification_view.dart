@@ -22,12 +22,6 @@ class NotificationView extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Get.toNamed(Routes.NAVIGATION),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: GetBuilder<NotificationController>(
         init: NotificationController(),
@@ -38,7 +32,7 @@ class NotificationView extends StatelessWidget {
                 ..sort((a, b) {
                   DateTime dateA = DateFormat('MMMM yyyy').parse(a);
                   DateTime dateB = DateFormat('MMMM yyyy').parse(b);
-                  return dateA.compareTo(dateB); // Sorting chronologically
+                  return dateB.compareTo(dateA); // Diubah menjadi descending
                 });
 
           return ListView.builder(
@@ -47,6 +41,14 @@ class NotificationView extends StatelessWidget {
               String monthYear = sortedMonths[index];
               List<Map<String, dynamic>> monthNotifications =
                   controller.notificationsByMonth[monthYear]!;
+
+              // Mengurutkan notifikasi berdasarkan created_at secara descending
+              monthNotifications.sort((a, b) {
+                DateTime dateA = DateTime.parse(a['created_at']);
+                DateTime dateB = DateTime.parse(b['created_at']);
+                return dateB.compareTo(dateA);
+              });
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -84,10 +86,18 @@ class NotificationView extends StatelessWidget {
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             children: [
-                              CircleAvatar(
-                                radius: 25,
-                                backgroundImage:
-                                    AssetImage(notification['userAvatar']),
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade100,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.attach_money,
+                                  color: Colors.green,
+                                  size: 30,
+                                ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
