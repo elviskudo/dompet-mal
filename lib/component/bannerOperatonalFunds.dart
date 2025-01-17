@@ -37,7 +37,8 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
             onTap: () {
               // Handle tap
               //  Get.
-              Get.toNamed("/donation-detail-page", arguments: dummyDataListCategoryBanner[4]);
+              Get.toNamed("/donation-detail-page",
+                  arguments: dummyDataListCategoryBanner[4]);
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -45,8 +46,8 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
                 children: [
                   // Icon container
                   Container(
-                    width: 60,
-                    height: 60,
+                    width: 35,
+                    height: 32,
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.blue[50],
@@ -68,7 +69,7 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
                         Text(
                           "Bantu Dana Operasional",
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.blue[600],
                           ),
@@ -77,7 +78,7 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
                         Text(
                           "Kebaikan mu membantu kami",
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             color: Colors.grey[600],
                             fontWeight: FontWeight.w300,
                           ),
@@ -91,7 +92,6 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
                     size: 32,
                     color: Colors.grey[800],
                   ),
-                  
                 ],
               ),
             ),

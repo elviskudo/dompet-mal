@@ -22,7 +22,8 @@ class CATEGORYGrid extends StatelessWidget {
               return InkWell(
                 onTap: () {
                   if (category.name == "Lihat Semua") {
-                    Get.toNamed(Routes.CATEGORY); // Navigasi ke halaman CATEGORY
+                    Get.toNamed(
+                        Routes.CATEGORY); // Navigasi ke halaman CATEGORY
                   } else {
                     Get.toNamed(Routes.ListDonation,
                         arguments: category); // Navigasi ke daftar donasi
@@ -32,26 +33,30 @@ class CATEGORYGrid extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(12),
+                      padding: EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.1), // Warna latar belakang
-                        borderRadius: BorderRadius.circular(12), // Sudut melengkung
+                        color: Colors.blue
+                            .withOpacity(0.1), // Warna latar belakang
+                        borderRadius:
+                            BorderRadius.circular(12), // Sudut melengkung
                       ),
                       child: Image.asset(
                         category.categoryImage, // Gambar kategori
-                        width: 24,
-                        height: 24,
+                        width: 30,
+                        height: 30,
                       ),
                     ),
                     SizedBox(height: 8),
                     Container(
-                      width: 65,
+                      width: 55,
                       child: Text(
+                        maxLines: 3,
                         category.name, // Nama kategori
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 12,
-                          height: 1.2,
+                          fontSize: 10,
+                          overflow: TextOverflow.ellipsis,
+                          height: 1.4,
                         ),
                       ),
                     ),
@@ -82,12 +87,12 @@ class CATEGORYGrid extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Container(
-                  width: 65,
+                  width: 55,
                   child: Text(
                     "Lihat Semua", // Nama untuk ikon
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 10,
                       height: 1.2,
                     ),
                   ),

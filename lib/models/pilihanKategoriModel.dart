@@ -318,7 +318,7 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     progress: 50,
     totalCharities: 98234562,
     targetCharityDonation: 150000000.0,
-    company: Company(
+    company: Company(  
       id: 3,
       uuid: "company-uuid-2",
       companyName: "Dusun Web",

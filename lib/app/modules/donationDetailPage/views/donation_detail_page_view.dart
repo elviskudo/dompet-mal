@@ -50,6 +50,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
             },
           ),
           ShareButton(
+            title: bannerData.title,
             contentToShare: 'Konten yang ingin dibagikan https://example.com',
           ),
           // IconButton(

@@ -12,10 +12,10 @@ class ListDonationView extends GetView<ListDonationController> {
 
   @override
   Widget build(BuildContext context) {
-    Category? categoryId = Get.arguments as Category?;
+    Category category = Get.arguments as Category;
     return Scaffold(
       appBar: CustomAppBar(
-        title:  categoryId != null ? 'Donasi ${categoryId.name}' : 'Donasi',
+        title: category != null ? 'Donasi ${category.name}' : 'Donasi',
         onSortPressed: () {
           charityController.showSortDialog(context);
         },
@@ -32,10 +32,10 @@ class ListDonationView extends GetView<ListDonationController> {
               child: Obx(
                 () {
                   // Filter data berdasarkan categoryId
-                  if (categoryId?.id != null) {
+                  if (category.id != null) {
                     charityController.filteredCharities.value =
                         charityController.charities.where((charity) {
-                      return charity.category.id == categoryId?.id;
+                      return charity.category.id == category.id;
                     }).toList();
                   } else {
                     charityController.filteredCharities.value =

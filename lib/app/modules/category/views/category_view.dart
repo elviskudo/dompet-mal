@@ -10,10 +10,14 @@ import '../controllers/category_controller.dart';
 class CategoryView extends GetView<CategoryController> {
   CategoryView({super.key});
 
- void handleCategoryTap(int index) {
-  Category selectedCategory = categories[index];
-  Get.toNamed(Routes.ListDonation, arguments: selectedCategory);
-}
+  void handleCategoryTap(int index) {
+    print('catgori: $categories');
+    var selectedCategory = categories[index];
+    print('ini selectedted caegory $selectedCategory ');
+    print('ini selectedted caegory index ${categories[index]} ');
+    print('ini selectedted  index $index ');
+    Get.toNamed(Routes.ListDonation, arguments: selectedCategory);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,10 @@ class CategoryView extends GetView<CategoryController> {
             mainAxisSize: MainAxisSize.min,
             children: [
               InkWell(
-                onTap: () => handleCategoryTap(index),
+                onTap: () {
+                  Get.toNamed(Routes.ListDonation,
+                      arguments: categories[index]);
+                },
                 child: Container(
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -56,9 +63,12 @@ class CategoryView extends GetView<CategoryController> {
               Text(
                 categories[index].name,
                 textAlign: TextAlign.center,
+                maxLines: 2,
                 style: TextStyle(
-                  fontSize: 12,
-                  height: 1.2,
+                  fontSize: 10,
+                  overflow: TextOverflow.ellipsis,
+
+                  // height: 1.2,
                 ),
               ),
             ],

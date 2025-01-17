@@ -1,3 +1,4 @@
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,7 +11,7 @@ class MyDonationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    
+
     if (dummyDataListCategoryBanner != null) {
       initCharities(dummyDataListCategoryBanner);
     }
@@ -69,18 +70,24 @@ class MyDonationController extends GetxController {
     }
   }
 
+  void navigateToCharity(CharityByCategory charity) {
+    // Navigasi ke halaman detail donasi
+    Get.toNamed(Routes.DONATION_DETAIL_PAGE, arguments: charity);
+    // atau jika menggunakan Routes
+    // Get.toNamed(Routes.DONATION_DETAIL, arguments: charity);
+  }
+
   void showSearchDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: true, // Klik di luar dialog untuk menutup
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Material(
-          // Tambahkan widget Material di sini
-          type: MaterialType.transparency, // Material transparan
+          type: MaterialType.transparency,
           child: Align(
-            alignment: Alignment.topCenter, // Posisi di atas
+            alignment: Alignment.topCenter,
             child: Container(
-              margin: EdgeInsets.only(top: 50), // Jarak dari atas
+              margin: EdgeInsets.only(top: 50),
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -93,14 +100,14 @@ class MyDonationController extends GetxController {
                   ),
                 ],
               ),
-              width: MediaQuery.of(context).size.width * 0.9, // Lebar 90% layar
+              width: MediaQuery.of(context).size.width * 0.9,
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.7),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
-                    onChanged: (value) {
-                      filterCharities(value);
-                    },
+                    onChanged: filterCharities,
                     decoration: InputDecoration(
                       labelText: 'Cari Donasi',
                       prefixIcon: Icon(Icons.search),
@@ -108,20 +115,31 @@ class MyDonationController extends GetxController {
                     ),
                   ),
                   SizedBox(height: 16),
-                  Obx(
-                    () => ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: filteredCharities.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(filteredCharities[index].title),
-                          onTap: () {
-                            Get.back();
+                  Expanded(
+                    child: Obx(() => ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: filteredCharities.length,
+                          itemBuilder: (context, index) {
+                            final charity = filteredCharities[index];
+                            return ListTile(
+                              title: Text(charity.title),
+                              onTap: () {
+                                Get.back(); // Tutup dialog
+                                navigateToCharity(
+                                    charity); // Navigasi ke detail
+                              },
+                            );
                           },
-                        );
-                      },
-                    ),
+                        )),
                   ),
+                  if (filteredCharities.isEmpty)
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'Tidak ada hasil yang ditemukan',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -175,5 +193,5 @@ class MyDonationController extends GetxController {
     );
   }
 
-  void increment() => count.value++;
+  // void increment() => count.value++;
 }

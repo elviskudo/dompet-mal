@@ -5,17 +5,19 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ShareButton extends StatelessWidget {
   final String contentToShare;
+  final String title;
 
   const ShareButton({
     Key? key,
     required this.contentToShare,
+    required this.title,
   }) : super(key: key);
 
   String _formatContentForClipboard(String content) {
     return '''بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
 Selamat Datang di Dompet Mal,
 
-Berikut rincian [dana operasional aplikasi yang dibutuhkan untuk pengembangan dan pemeliharaan]: (contoh lain, donasi Sedekah Jariyah yang dibutuhkan)
+Berikut rincian dana operasional aplikasi yang dibutuhkan untuk pengembangan dan pemeliharaan donasi ${title} yang dibutuhkan
 
 
 💻 Infrastruktur & Hosting
@@ -48,9 +50,9 @@ Berikut rincian [dana operasional aplikasi yang dibutuhkan untuk pengembangan da
 
 
 Penyelenggara: [CV. OPTIMIS]
-Total Anggaran: Rp [Total Anggaran]
-Total Dana Masuk: Rp [Total Dana Masuk]
-Tanggal Target Penyelesaian: [Tanggal Terakhir]
+Total Anggaran: Rp 150.000.000
+Total Dana Masuk: Rp 150.000.000
+Tanggal Target Penyelesaian: 2026-03-13
 
 Silakan hubungi admin Dompet Mal di 085218056736
 
