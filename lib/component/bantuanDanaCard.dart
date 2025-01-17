@@ -1,4 +1,5 @@
 import 'package:avatar_stack/avatar_stack.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -46,7 +47,7 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Navigate to the full list
+                    Get.toNamed(Routes.ListDonation);
                   },
                   child: const Text(
                     'Lihat Lainnya',
