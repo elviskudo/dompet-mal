@@ -29,6 +29,7 @@ class StraightCharityComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var lebar = MediaQuery.of(context).size.width;
     return Container(
       height: 340,
       child: ListView.builder(
@@ -41,7 +42,7 @@ class StraightCharityComponent extends StatelessWidget {
               Get.toNamed("/donation-detail-page", arguments: banner);
             },
             child: Container(
-              width: 230,
+              width: lebar * 0.49,
               margin: const EdgeInsets.only(right: 12),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -59,7 +60,7 @@ class StraightCharityComponent extends StatelessWidget {
                     ),
                     child: Image.network(
                       banner.imageUrls[0],
-                      width: 180,
+                      width: lebar * 0.49,
                       height: 120,
                       fit: BoxFit.cover,
                     ),
@@ -73,7 +74,7 @@ class StraightCharityComponent extends StatelessWidget {
                         Text(
                           banner.title,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                             height: 1.2,
                           ),
@@ -84,7 +85,7 @@ class StraightCharityComponent extends StatelessWidget {
                         Text(
                           banner.category.name,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 11,
                             color: Colors.grey[800],
                           ),
                         ),
@@ -92,7 +93,7 @@ class StraightCharityComponent extends StatelessWidget {
                         const Text(
                           'Dana yang disetorkan',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 11,
                             color: Colors.black54,
                           ),
                         ),
@@ -100,7 +101,7 @@ class StraightCharityComponent extends StatelessWidget {
                         Text(
                           formatCurrency(banner.totalCharities),
                           style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -108,7 +109,7 @@ class StraightCharityComponent extends StatelessWidget {
                         const Text(
                           'Waktu Penyerahan',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 11,
                             color: Colors.black54,
                           ),
                         ),
@@ -116,7 +117,7 @@ class StraightCharityComponent extends StatelessWidget {
                         Text(
                           formatDate(banner.createdAt),
                           style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

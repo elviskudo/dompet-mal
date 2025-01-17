@@ -1,4 +1,3 @@
-
 import 'package:dompet_mal/app/modules/listDonation/views/list_donation_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/CategoryGridIcon.dart';
@@ -29,6 +28,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     var lebar = MediaQuery.of(context).size.width;
+    var tinggi = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color(0xfff2f2f2),
       body: SingleChildScrollView(
@@ -48,7 +48,7 @@ class HomeView extends GetView<HomeController> {
                 ),
                 Container(
                   width: lebar,
-                  height: 500,
+                  height: tinggi * 0.6,
                   color: Colors.white,
                 )
               ],
@@ -70,7 +70,6 @@ class HomeView extends GetView<HomeController> {
                             notification(),
                             Gap(14),
                             chat(),
-                           
                           ],
                         )
                       ],
@@ -95,10 +94,10 @@ class HomeView extends GetView<HomeController> {
                   Gap(24),
                   CATEGORYGrid(),
                   Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: EdgeInsets.only(top: 40),
                     child: BannerDanaOperasional(),
                   ),
-                  Gap(26),
+                  Gap(18),
 
                   // Donasi Langsung
 
@@ -110,7 +109,6 @@ class HomeView extends GetView<HomeController> {
                           title: 'Donasi Langsung',
                           actionText: 'Lihat lainnya',
                           onActionPressed: () {
-                            
                             Get.toNamed(Routes.ListDonation);
                           },
                         ),
@@ -121,24 +119,25 @@ class HomeView extends GetView<HomeController> {
                   ),
 
                   //Bantuan Dana Darurat
-                  Container(
-                    height: 10,
-                    color: Color(0xfff2f2f2),
-                    width: lebar,
-                  ),
 
-                   EmergencyFundSection(banners: dummyDataListCategoryBanner, maxItems: 3,),
+                  EmergencyFundSection(
+                    banners: dummyDataListCategoryBanner,
+                    maxItems: 3,
+                  ),
 
                   // Pilihan CATEGORY
                   Container(
                     height: 10,
-                    color: Color(0xfff2f2f2),
+                    color: Color(0xfff7f7f7),
                     width: lebar,
                   ),
                   Gap(0),
                   Container(
-                    padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 24, vertical: 16),
+                    padding: EdgeInsetsDirectional.only(
+                      start: 24,
+                      end: 24,
+                      bottom: 16,
+                    ),
                     color: Colors.white,
                     child: Column(
                       children: [
@@ -149,19 +148,24 @@ class HomeView extends GetView<HomeController> {
                             // Handle navigation to "Lihat lainnya"
                           },
                         ),
-                        BannerKategori(banners: dummyDataListCategoryBanner, maxItems: 4,),
-                        SizedBox(height: 16,),
+                        BannerKategori(
+                          banners: dummyDataListCategoryBanner,
+                          maxItems: 4,
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
                         Container(
                           width: 190,
                           height: 40,
-                          child: ElevatedButton(onPressed: () {
-                            Get.to(ListDonationView());
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xffD6E1FF),
-                            foregroundColor: Color(0xff4B76D9)
-                          ),
-                           child: Text("Lihat lainnya")),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Get.to(ListDonationView());
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xffD6E1FF),
+                                  foregroundColor: Color(0xff4B76D9)),
+                              child: Text("Lihat lainnya")),
                         )
                       ],
                     ),

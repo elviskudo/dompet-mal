@@ -23,15 +23,15 @@ class SectionHeader extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
           TextButton(
             onPressed: onActionPressed,
             child: Text(
               actionText,
-              style: const TextStyle(color: Colors.blue),
+              style: const TextStyle(fontSize: 12, color: Colors.blue),
             ),
           ),
         ],

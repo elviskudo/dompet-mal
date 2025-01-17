@@ -53,7 +53,7 @@ class TotalDanaDonasi extends StatelessWidget {
                     const Text(
                       'Total dana donasi langsung',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         color: Colors.black87,
                       ),
                     ),
@@ -64,7 +64,7 @@ class TotalDanaDonasi extends StatelessWidget {
                   formatCurrency(danaDonasiLangsung.totalBudgets),
                   style: const TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),
                 ),
@@ -74,14 +74,14 @@ class TotalDanaDonasi extends StatelessWidget {
                     Text(
                       '${NumberFormat.decimalPattern('id_ID').format(danaDonasiLangsung.totalDonaturs)} ',
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 11,
                         color: Colors.black,
                       ),
                     ),
                     Text(
                       'penyumbang',
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 11,
                         color: Colors.black54,
                       ),
                     ),
@@ -100,7 +100,7 @@ class TotalDanaDonasi extends StatelessWidget {
                 child: const Icon(
                   Icons.add,
                   color: Colors.white,
-                  size: 45,
+                  size: 30,
                 ),
               ),
             ),

@@ -16,7 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onFilterPressed,
   });
   @override
-  Size get preferredSize => Size.fromHeight(120);
+  Size get preferredSize => Size.fromHeight(100);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(60),
+        preferredSize: Size.fromHeight(40),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
@@ -76,15 +76,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             Image.asset(
               img, // Path gambar PNG Anda
-              width: 24,
-              height: 24,
+              width: 18,
+              height: 18,
             ),
             SizedBox(width: 8), // Jarak antara gambar dan teks
             Text(
               name,
               style: TextStyle(
                 color: secondary,
-                fontSize: 16,
+                fontSize: 14,
               ),
             ),
           ],

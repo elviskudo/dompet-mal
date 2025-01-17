@@ -37,8 +37,7 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
             onTap: () {
               // Handle tap
               //  Get.
-              Get.toNamed("/donation-detail-page",
-                  arguments: dummyDataListCategoryBanner[4]);
+              Get.toNamed("/donation-detail-page", arguments: dummyDataListCategoryBanner[4]);
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -47,7 +46,7 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
                   // Icon container
                   Container(
                     width: 35,
-                    height: 32,
+                    height: 34,
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.blue[50],
@@ -92,6 +91,7 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
                     size: 32,
                     color: Colors.grey[800],
                   ),
+                  
                 ],
               ),
             ),

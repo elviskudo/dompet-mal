@@ -8,8 +8,9 @@ import 'package:intl/intl.dart';
 
 class BannerKategori extends StatefulWidget {
   final List<CharityByCategory> banners;
- final int maxItems;
-  const BannerKategori({super.key, required this.banners, required this.maxItems});
+  final int maxItems;
+  const BannerKategori(
+      {super.key, required this.banners, required this.maxItems});
 
   @override
   State<BannerKategori> createState() => _BannerKategoriState();
@@ -28,12 +29,12 @@ class _BannerKategoriState extends State<BannerKategori> {
 
   @override
   Widget build(BuildContext context) {
-     final displayBanners = widget.maxItems > 0
-      ? widget.banners.take(widget.maxItems).toList()
-      : widget.banners;
+    final displayBanners = widget.maxItems > 0
+        ? widget.banners.take(widget.maxItems).toList()
+        : widget.banners;
     return Column(
         children: List.generate(
-       displayBanners.length,
+      displayBanners.length,
       (index) {
         final banner = displayBanners[index];
         return GestureDetector(
@@ -42,7 +43,7 @@ class _BannerKategoriState extends State<BannerKategori> {
           },
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: 235,
+            height: 210,
             margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -62,8 +63,8 @@ class _BannerKategoriState extends State<BannerKategori> {
                 Stack(
                   children: [
                     Container(
-                      width: 140,
-                      height: 235, // Make image full height
+                      width: 120,
+                      height: 210, // Make image full height
                       decoration: BoxDecoration(
                         borderRadius:
                             BorderRadius.horizontal(left: Radius.circular(10)),
@@ -108,7 +109,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             Text(
                               banner.title,
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
@@ -119,6 +120,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             Text(
                               banner.category.name,
                               style: TextStyle(
+                                fontSize: 12,
                                 color: Colors.grey[800],
                               ),
                             ),
@@ -127,19 +129,20 @@ class _BannerKategoriState extends State<BannerKategori> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                           ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: banner.progress / 100,
-                            backgroundColor: Colors.grey[200],
-                            color: Colors.blue,
-                            minHeight: 6,
-                          ),
-                        ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: LinearProgressIndicator(
+                                value: banner.progress / 100,
+                                backgroundColor: Colors.grey[200],
+                                color: Colors.blue,
+                                minHeight: 6,
+                              ),
+                            ),
                             const SizedBox(height: 4),
                             Text(
                               'Terkumpul',
                               style: TextStyle(
+                                fontSize: 12,
                                 color: Colors.grey[600],
                               ),
                             ),
@@ -147,8 +150,8 @@ class _BannerKategoriState extends State<BannerKategori> {
                             Text(
                               formatRupiah(banner.totalCharities),
                               style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.black,
                               ),
                             ),
@@ -170,6 +173,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             Text(
                               '${banner.contributors.length} penyumbang',
                               style: TextStyle(
+                                fontSize: 12,
                                 color: Colors.grey[600],
                               ),
                             ),
@@ -185,7 +189,9 @@ class _BannerKategoriState extends State<BannerKategori> {
                           child: ElevatedButton(
                               onPressed: () {
                                 Get.bottomSheet(
-                                  SlidingDonationSheet(kategori: banner.category.name,),
+                                  SlidingDonationSheet(
+                                    kategori: banner.category.name,
+                                  ),
                                   isScrollControlled: true,
                                   backgroundColor: Colors.transparent,
                                 );
@@ -193,9 +199,14 @@ class _BannerKategoriState extends State<BannerKategori> {
                               style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8)),
-                                  backgroundColor: const Color(0xff4B76D9),
+                                  backgroundColor: Color(0xff4B76D9),
                                   foregroundColor: Colors.white),
-                              child: const Text("Donasi")),
+                              child: Text(
+                                "Donasi",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              )),
                         )
                       ],
                     ),

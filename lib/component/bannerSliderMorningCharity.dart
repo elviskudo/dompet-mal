@@ -84,7 +84,7 @@ class _BannerSliderState extends State<BannerSlider> {
                             banner.title,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               shadows: [
                                 Shadow(
@@ -102,7 +102,7 @@ class _BannerSliderState extends State<BannerSlider> {
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               color: Colors.white70,
-                              fontSize: 14,
+                              fontSize: 12,
                               shadows: [
                                 Shadow(
                                   color: Colors.black,
@@ -124,7 +124,6 @@ class _BannerSliderState extends State<BannerSlider> {
                               backgroundColor: const Color(0xffFFA450),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 20,
-                                vertical: 10,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -132,7 +131,8 @@ class _BannerSliderState extends State<BannerSlider> {
                             ),
                             child: const Text(
                               "Daftarkan sekarang",
-                              style: TextStyle(color: Colors.white),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 13),
                             ),
                           ),
                         ],
@@ -175,5 +175,3 @@ class _BannerSliderState extends State<BannerSlider> {
     );
   }
 }
-
-

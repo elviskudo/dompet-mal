@@ -1,6 +1,7 @@
 import 'package:avatar_stack/avatar_stack.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
+import 'package:dompet_mal/component/sectionHeader.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
@@ -34,27 +35,13 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
         children: [
           // Header section
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Bantuan Dana Darurat',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Get.toNamed(Routes.ListDonation);
-                  },
-                  child: const Text(
-                    'Lihat Lainnya',
-                    style: TextStyle(color: secondary),
-                  ),
-                ),
-              ],
+            padding: const EdgeInsets.only(left: 16, right: 6),
+            child: SectionHeader(
+              title: 'Bantuan Dana Darurat',
+              actionText: 'Lihat lainnya',
+              onActionPressed: () {
+                Get.toNamed(Routes.ListDonation);
+              },
             ),
           ),
 
@@ -150,7 +137,7 @@ class EmergencyFundCard extends StatelessWidget {
                   Text(
                     fund.title,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                     maxLines: 2,
@@ -180,11 +167,11 @@ class EmergencyFundCard extends StatelessWidget {
                               color: Colors.grey,
                             ),
                           ),
+                          Gap(2),
                           Text(
                             formatCurrency(fund.totalCharities),
                             style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontWeight: FontWeight.w600, fontSize: 12),
                           ),
                         ],
                       ),
@@ -198,10 +185,12 @@ class EmergencyFundCard extends StatelessWidget {
                               color: Colors.grey,
                             ),
                           ),
+                          Gap(2),
                           Text(
                             '35',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
                           ),
                         ],
@@ -227,6 +216,7 @@ class EmergencyFundCard extends StatelessWidget {
                         '${fund.contributors.length} penyumbang',
                         style: TextStyle(
                           color: Colors.grey[600],
+                          fontSize: 12
                         ),
                       ),
                     ],
