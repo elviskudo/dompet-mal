@@ -54,6 +54,8 @@ import '../modules/paymentSuccess/bindings/payment_success_binding.dart';
 import '../modules/paymentSuccess/views/payment_success_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/quran/bindings/quran_binding.dart';
+import '../modules/quran/views/quran_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/reset_pass/bindings/reset_pass_binding.dart';
@@ -219,6 +221,11 @@ class AppPages {
       name: _Paths.MESSAGE,
       page: () => MessageView(),
       binding: MessageBinding(),
+    ),
+    GetPage(
+      name: _Paths.QURAN,
+      page: () => const QuranView(),
+      binding: QuranBinding(),
     ),
   ];
 }

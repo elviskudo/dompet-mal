@@ -1,7 +1,10 @@
 import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
+
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EmailVerificationController extends GetxController {
   final userEmail = ''.obs;
@@ -15,12 +18,62 @@ class EmailVerificationController extends GetxController {
   final isLoading = false.obs;
   Timer? _timer;
   final dummyOTP = '123456';
+  final supabase = Supabase.instance.client;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     startCountdown();
     userEmail.value = Get.arguments?['email'] ?? 'email@gmail.com';
+    // sendOTP(userEmail.value);
+    _sendOtp(userEmail.value);
+    print('email sent');
+  }
+
+   Future<void> handlePaste(String? value) async {
+    if (value == null || value.length != 6 || !RegExp(r'^\d+$').hasMatch(value)) {
+      return;
+    }
+
+    // Isi semua field dengan angka yang di-paste
+    for (int i = 0; i < 6; i++) {
+      otpControllers[i].text = value[i];
+    }
+    
+    // Update nilai OTP
+    updateOTPValue();
+  }
+
+  void handleInput(int index, String value) {
+    if (value.isEmpty) return;
+    
+    // Jika panjang input > 1, mungkin ini adalah paste
+    if (value.length > 1) {
+      handlePaste(value);
+      return;
+    }
+
+    // Untuk input single digit
+    if (value.length == 1 && RegExp(r'[0-9]').hasMatch(value)) {
+      otpControllers[index].text = value;
+      if (index < 5) {
+        otpFocusNodes[index + 1].requestFocus();
+      }
+    }
+    
+    updateOTPValue();
+  }
+
+  void _sendOtp(String email) async {
+    try {
+      final response = await Supabase.instance.client.auth.signInWithOtp(
+        email: email,
+      );
+
+      print('Magic Link sent to email');
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   @override
@@ -50,6 +103,7 @@ class EmailVerificationController extends GetxController {
 
   void resendOTP() {
     startCountdown();
+    _sendOtp(userEmail.value);
   }
 
   void updateOTPValue() {
@@ -58,23 +112,80 @@ class EmailVerificationController extends GetxController {
   }
 
   void verifyOTP() async {
-    print('Fungsi verifyOTP dipanggil');
-
     if (otpValue.value.length != 6) {
       Get.snackbar('Error', 'Silakan masukkan kode OTP lengkap');
       return;
     }
 
-    print('OTP yang benar: $dummyOTP');
-    print('OTP yang dimasukkan: ${otpValue.value}');
+    try {
+      // Tampilkan loading dialog
+      _showLoadingDialog();
 
-    if (otpValue.value != dummyOTP) {
-      Get.snackbar('Error', 'Kode OTP tidak valid');
-      return;
+      // Verifikasi OTP menggunakan Supabase
+      final response = await Supabase.instance.client.auth.verifyOTP(
+        email:
+            userEmail.value, // Email yang digunakan saat mengirim OTP
+        token: otpValue.value, // Kode OTP yang diinput user
+        type: OtpType.email,
+      );
+
+      // Cek hasil verifikasi
+      if (response.session != null) {
+        // Verifikasi berhasil
+        // Tutup dialog loading
+        Get.back();
+
+        // Tampilkan dialog sukses
+        Get.dialog(
+          WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      color: Colors.blue,
+                      size: 50,
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      'Verifikasi berhasil',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          barrierDismissible: false,
+        );
+        Get.back();
+
+        // Redirect ke halaman utama
+        Get.toNamed(Routes.NAVIGATION);
+      } else {
+        // Jika gagal
+        Get.back(); // Tutup dialog loading
+        Get.snackbar('Error', 'Kode OTP tidak valid');
+      }
+    } catch (e) {
+      // Handle error
+      Get.back(); // Tutup dialog loading
+      Get.snackbar('Error', 'Gagal memverifikasi OTP: ${e.toString()}');
     }
+  }
 
-    print('Memverifikasi OTP: ${otpValue.value}');
-
+  void _showLoadingDialog() {
     Get.dialog(
       WillPopScope(
         onWillPop: () async => false,
@@ -107,50 +218,41 @@ class EmailVerificationController extends GetxController {
       ),
       barrierDismissible: false,
     );
+  }
 
-    try {
-      await Future.delayed(Duration(seconds: 2));
-      Get.back();
-
-      Get.dialog(
-        WillPopScope(
-          onWillPop: () async => false,
-          child: Dialog(
-            shape: RoundedRectangleBorder(
+  Future<void> _showSuccessDialog() async {
+    return Get.dialog(
+      WillPopScope(
+        onWillPop: () async => false,
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.check_circle,
-                    color: Colors.blue,
-                    size: 50,
-                  ),
-                  SizedBox(height: 15),
-                  Text(
-                    'Verifikasi berhasil',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.blue,
+                  size: 50,
+                ),
+                SizedBox(height: 15),
+                Text(
+                  'Verifikasi berhasil',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ),
           ),
         ),
-        barrierDismissible: false,
-      );
-
-      await Future.delayed(Duration(milliseconds: 800));
-      Get.offAllNamed(Routes.NAVIGATION);
-    } catch (e) {
-      Get.back();
-      Get.snackbar('Error', 'Gagal memverifikasi OTP');
-    }
+      ),
+      barrierDismissible: false,
+    );
   }
 }

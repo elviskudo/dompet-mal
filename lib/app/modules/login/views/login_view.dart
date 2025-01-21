@@ -77,7 +77,7 @@ class LoginView extends GetView<LoginController> {
                           side: BorderSide(color: Colors.grey.shade300),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () => controller.signInWithGoogle(),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 16, horizontal: 37),

@@ -4,6 +4,7 @@ import 'package:dompet_mal/app/modules/myDonation/views/my_donation_view.dart';
 import 'package:dompet_mal/app/modules/myFavorite/views/my_favorite_view.dart';
 import 'package:dompet_mal/app/modules/navigation/controllers/navigation_controller.dart';
 import 'package:dompet_mal/app/modules/profile/views/profile_view.dart';
+import 'package:dompet_mal/app/modules/quran/views/quran_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +19,7 @@ class NavigationView extends GetView<NavigationController> {
           index: controller.tabIndex.value,
           children: [
             HomeView(),
+            QuranView(),
             MyDonationView(),
             MyFavoriteView(),
             ListPaymentView(),
@@ -40,15 +42,11 @@ class NavigationView extends GetView<NavigationController> {
           child: Row(
             children: [
               _buildNavItem(0, 'icons/home.png', 'Beranda'),
-              _buildNavItem(1, 'icons/bookmark.png', 'Donasiku'),
-              Container(
-                width: 1,
-                height: 30,
-                color: Colors.grey.withOpacity(0.3),
-              ),
-              _buildNavItem(2, 'icons/heart.png', 'Favorit'),
-              _buildNavItem(3, 'icons/dompet.png', 'Pembayaran'),
-              _buildNavItem(4, 'icons/user.png', 'Profile'),
+              _buildNavItem(1, 'icons/home.png', 'al-Quran'),
+              _buildNavItem(2, 'icons/bookmark.png', 'Donasiku'),
+              _buildNavItem(3, 'icons/heart.png', 'Favorit'),
+              _buildNavItem(4, 'icons/dompet.png', 'Pembayaran'),
+              _buildNavItem(5, 'icons/user.png', 'Profile'),
             ],
           ),
         ),

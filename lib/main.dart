@@ -1,3 +1,4 @@
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -9,6 +10,11 @@ void main() async {
   await initializeDateFormatting('id_ID', null);
 
   try {
+    EmailOTP.config(
+      appName: 'Dompet Mal',
+      otpType: OTPType.numeric,
+      emailTheme: EmailTheme.v1,
+    );
     await Supabase.initialize(
       url: 'https://clvoxiwvogfbditaqpdy.supabase.co',
       anonKey:
@@ -18,12 +24,15 @@ void main() async {
     // Cek koneksi dengan mencoba query sederhana
     final supabase = Supabase.instance.client;
 
-    var users = await supabase.from('users').select().limit(1);
+    var users = await supabase.from('users').select().limit(10);
     print('users: $users');
-    for (var user in users) {
-      String name = user['name'];
-      print('Name: $name');
-    }
+    print('============================================================');
+    var roles = await supabase.from('roles').select().limit(10);
+    print('role: $roles');
+    print('============================================================');
+
+    var user_roles = await supabase.from('user_roles').select().limit(10);
+    print('user roles: $user_roles');
 
     print('Database connection successful!');
 

@@ -1,3 +1,4 @@
+import 'package:dompet_mal/component/OTPTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -81,46 +82,11 @@ class EmailVerificationView extends GetView<EmailVerificationController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(
                   6,
-                  (index) => Container(
-                    width: (lebar - 32 - 50) / 6,
-                    height: (lebar - 32 - 50) / 6,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Colors.grey.shade300,
-                        width: 1,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: TextField(
-                      controller: controller.otpControllers[index],
-                      focusNode: controller.otpFocusNodes[index],
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      maxLength: 1,
-                      style: GoogleFonts.openSans(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      decoration: InputDecoration(
-                        counterText: "",
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      onChanged: (value) {
-                        if (value.length == 1 && index < 5) {
-                          controller.otpFocusNodes[index + 1].requestFocus();
-                        }
-                        controller.updateOTPValue();
-                      },
-                    ),
+                  (index) => OTPTextField(
+                    controller: controller.otpControllers[index],
+                    focusNode: controller.otpFocusNodes[index],
+                    index: index,
+                    parentController: controller,
                   ),
                 ),
               ),
