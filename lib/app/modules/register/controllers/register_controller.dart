@@ -1,14 +1,11 @@
-import 'dart:math';
-
 import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/helper/PasswordHasher.dart';
 import 'package:email_auth/email_auth.dart';
 import 'package:flutter_bcrypt/flutter_bcrypt.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:crypto/crypto.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:convert';
 
 class RegisterController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -26,19 +23,11 @@ class RegisterController extends GetxController {
   final formattedPhone = ''.obs;
   final storage = GetStorage();
   final supabase = Supabase.instance.client;
-  late EmailAuth emailAuth;
-
-  Future<String> _hashPassword(String password) async {
-    final passwordBytes = utf8.encode(password);
-
-    final digest = sha256.convert(passwordBytes);
-
-    return digest.toString();
-  }
 
   @override
   void onInit() {
     super.onInit();
+
     initializePage();
     phoneController.addListener(() {
       if (phoneController.text.isNotEmpty) {
@@ -47,6 +36,7 @@ class RegisterController extends GetxController {
     });
 
     /// Configuring the remote server
+    // deleteUser('7102d17a-0ce7-4d3c-94eb-e47b93905f70');
   }
 
   Future<void> initializePage() async {
@@ -142,7 +132,8 @@ class RegisterController extends GetxController {
       if (res.user == null) throw 'Gagal membuat akun';
 
       // Insert data ke table users
-      final hashedPassword = await _hashPassword(passwordController.text);
+      final hashedPassword =
+          await PasswordHasher.hashPassword(passwordController.text);
       final userData = {
         'id': res.user!.id,
         'name': namaController.text,

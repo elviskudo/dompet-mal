@@ -10,11 +10,6 @@ void main() async {
   await initializeDateFormatting('id_ID', null);
 
   try {
-    EmailOTP.config(
-      appName: 'Dompet Mal',
-      otpType: OTPType.numeric,
-      emailTheme: EmailTheme.v1,
-    );
     await Supabase.initialize(
       url: 'https://clvoxiwvogfbditaqpdy.supabase.co',
       anonKey:

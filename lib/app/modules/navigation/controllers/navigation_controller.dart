@@ -19,7 +19,7 @@ class NavigationController extends GetxController {
     super.onClose();
   }
 
-   var tabIndex = 0.obs;
+  var tabIndex = 0.obs;
 
   void changeTabIndex(int index) {
     tabIndex.value = index;

@@ -1,7 +1,9 @@
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -150,6 +152,28 @@ class ProfileView extends GetView<ProfileController> {
             Gap(20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 255, 51, 19),
+                minimumSize: Size(double.infinity, 45),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onPressed: () => controller.logout(),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 139),
+                child: Text(
+                  'Logout',
+                  style: GoogleFonts.openSans(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+            Gap(16),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4B76D9),
                 minimumSize: Size(double.infinity, 45),
                 shape: RoundedRectangleBorder(
@@ -185,4 +209,3 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 }
-

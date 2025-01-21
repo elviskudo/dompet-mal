@@ -2,18 +2,62 @@ import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileController extends GetxController {
   final formKey = GlobalKey<FormState>();
+  RxString userId = ''.obs;
   RxString userEmail = ''.obs;
   RxString userName = ''.obs;
   RxString userPhone = ''.obs;
   RxBool isLoading = false.obs;
+  final supabase = Supabase.instance.client;
 
   @override
   void onInit() {
     super.onInit();
     loadUserData();
+  }
+
+  Future<void> logout() async {
+    try {
+      isLoading.value = true;
+
+      // Sign out from Supabase
+      await supabase.auth.signOut();
+
+      // Clear SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear(); // Clears all data
+      // Or clear specific keys if you prefer:
+      // await prefs.setBool('isLoggedIn', false);
+      // await prefs.remove('userEmail');
+      // await prefs.remove('userName');
+      // await prefs.remove('userPhone');
+      // await prefs.remove('userId');
+      // await prefs.remove('accessToken');
+
+      Get.snackbar(
+        'Sukses',
+        'Berhasil logout',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      // Navigate to login page
+      Get.offAllNamed(Routes.LOGIN);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Gagal logout: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> updateProfile({
@@ -87,6 +131,7 @@ class ProfileController extends GetxController {
       String? email = prefs.getString('userEmail');
       String? name = prefs.getString('userName');
       String? phone = prefs.getString('userPhone');
+      String? id = prefs.getString('userId');
 
       if (email != null && email.isNotEmpty) {
         userEmail.value = email;

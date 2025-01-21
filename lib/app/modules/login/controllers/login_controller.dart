@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bcrypt/flutter_bcrypt.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../helper/PasswordHasher.dart';
 import '../../../routes/app_pages.dart';
 import 'package:crypto/crypto.dart';
 
@@ -17,7 +17,7 @@ class LoginController extends GetxController {
   RxString email = ''.obs;
   RxString password = ''.obs;
   final supabase = Supabase.instance.client;
-  String MEMBER_ROLE_ID = '3b762a72-a685-4020-841e-db8f86ba71e3';
+  // String MEMBER_ROLE_ID = '3b762a72-a685-4020-841e-db8f86ba71e3';
 
   @override
   void onInit() {
@@ -34,46 +34,164 @@ class LoginController extends GetxController {
     isPasswordHidden.value = !isPasswordHidden.value;
   }
 
-  Future<String> _hashPassword(String password) async {
-    // Convert the password to bytes
-    final passwordBytes = utf8.encode(password);
-
-    // Create a SHA-256 hash of the password
-    final digest = sha256.convert(passwordBytes);
-
-    // Return the hexadecimal string of the hash
-    return digest.toString();
+  Future<bool> _verifyPassword(String password, String hashedPassword) async {
+    try {
+      // Using BCrypt to verify the password
+      final bool passwordMatch = await FlutterBcrypt.verify(
+        password: password,
+        hash: hashedPassword,
+      );
+      return passwordMatch;
+    } catch (e) {
+      print('Error verifying password: $e');
+      return false;
+    }
   }
 
   Future<void> signInWithGoogle() async {
-    const webClientId = 'my-web.apps.googleusercontent.com';
+    // try {
+    //   isLoading.value = true;
 
-    /// TODO: update the iOS client ID with your own.
-    ///
-    /// iOS Client ID that you registered with Google Cloud.
-    const iosClientId = 'my-ios.apps.googleusercontent.com';
+    //   // Trigger the Google OAuth sign in flow
+    //   final bool success = await supabase.auth.signInWithOAuth(
+    //     OAuthProvider.google,
+    //     redirectTo: 'io.supabase.flutter://login-callback/',
+    //   );
 
-    final GoogleSignIn googleSignIn = GoogleSignIn(
-      clientId: iosClientId,
-      serverClientId: webClientId,
-    );
-    final googleUser = await googleSignIn.signIn();
-    final googleAuth = await googleUser!.authentication;
-    final accessToken = googleAuth.accessToken;
-    final idToken = googleAuth.idToken;
+    //   if (success) {
+    //     // Wait for the session to be available
+    //     final Session? session = supabase.auth.currentSession;
+    //     final User? user = session?.user;
 
-    if (accessToken == null) {
-      throw 'No Access Token found.';
-    }
-    if (idToken == null) {
-      throw 'No ID Token found.';
-    }
+    //     if (user != null) {
+    //       try {
+    //         // Get user details from Supabase
+    //         final userData = await supabase
+    //             .from('users')
+    //             .select()
+    //             .eq('email', user)
+    //             .single();
 
-    await supabase.auth.signInWithIdToken(
-      provider: OAuthProvider.google,
-      idToken: idToken,
-      accessToken: accessToken,
-    );
+    //         final DateTime now = DateTime.now();
+
+    //         // If user doesn't exist in your users table, create them
+    //         if (userData == null) {
+    //           // Insert new user
+    //           final String userId = await supabase
+    //               .from('users')
+    //               .insert({
+    //                 'name': user.userMetadata?['full_name'] ?? '',
+    //                 'email': user.email,
+    //                 'password': '', // Empty for Google Sign In
+    //                 'phone_number': '',
+    //                 'access_token': session?.accessToken ?? '',
+    //                 'created_at': now.toIso8601String(),
+    //                 'updated_at': now.toIso8601String(),
+    //               })
+    //               .select('id')
+    //               .single()
+    //               .then((response) => response['id']);
+
+    //           // Assign member role to new user
+    //           await supabase.from('user_roles').insert({
+    //             'user_id': userId,
+    //             'role_id': MEMBER_ROLE_ID,
+    //             'created_at': now.toIso8601String(),
+    //             'updated_at': now.toIso8601String(),
+    //           });
+
+    //           // Store user session details
+    //           final prefs = await SharedPreferences.getInstance();
+    //           await prefs.setBool('isLoggedIn', true);
+    //           await prefs.setString('userEmail', user.email ?? '');
+    //           await prefs.setString('userId', userId);
+    //           await prefs.setString(
+    //               'userName', user.userMetadata?['full_name'] ?? '');
+    //           await prefs.setString('accessToken', session?.accessToken ?? '');
+    //           await prefs.setString('userRole', 'member');
+    //         } else {
+    //           // Update existing user's access token
+    //           await supabase.from('users').update({
+    //             'access_token': session?.accessToken ?? '',
+    //             'updated_at': now.toIso8601String(),
+    //           }).eq('id', userData['id']);
+
+    //           // Get user's role
+    //           final userRole = await supabase
+    //               .from('user_roles')
+    //               .select('roles (name)')
+    //               .eq('user_id', userData['id'])
+    //               .single();
+
+    //           // Store user session details
+    //           final prefs = await SharedPreferences.getInstance();
+    //           await prefs.setBool('isLoggedIn', true);
+    //           await prefs.setString('userEmail', userData['email']);
+    //           await prefs.setString('userId', userData['id']);
+    //           await prefs.setString('userName', userData['name']);
+    //           await prefs.setString('accessToken', session?.accessToken ?? '');
+    //           await prefs.setString('userRole', userRole['roles']['name']);
+    //         }
+
+    //         // Show success message
+    //         Get.snackbar(
+    //           'Sukses',
+    //           'Berhasil login dengan Google',
+    //           backgroundColor: Colors.green,
+    //           colorText: Colors.white,
+    //           margin: EdgeInsets.all(20),
+    //           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    //           snackPosition: SnackPosition.BOTTOM,
+    //           duration: Duration(seconds: 2),
+    //           snackStyle: SnackStyle.FLOATING,
+    //           forwardAnimationCurve: Curves.easeOut,
+    //           reverseAnimationCurve: Curves.easeIn,
+    //         );
+
+    //         // Navigate to main screen
+    //         Get.offAllNamed(Routes.NAVIGATION);
+    //       } catch (e) {
+    //         print('Error processing user data: $e');
+    //         Get.snackbar(
+    //           'Error',
+    //           'Terjadi kesalahan saat memproses data pengguna',
+    //           backgroundColor: Colors.red,
+    //           colorText: Colors.white,
+    //         );
+    //       }
+    //     } else {
+    //       Get.snackbar(
+    //         'Error',
+    //         'Gagal mendapatkan data pengguna',
+    //         backgroundColor: Colors.red,
+    //         colorText: Colors.white,
+    //       );
+    //     }
+    //   } else {
+    //     Get.snackbar(
+    //       'Error',
+    //       'Gagal login dengan Google',
+    //       backgroundColor: Colors.red,
+    //       colorText: Colors.white,
+    //     );
+    //   }
+    // } on AuthException catch (error) {
+    //   Get.snackbar(
+    //     'Error',
+    //     error.message,
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //   );
+    // } catch (error) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Terjadi kesalahan saat login dengan Google: $error',
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //   );
+    // } finally {
+    //   isLoading.value = false;
+    // }
   }
 
   Future<void> login() async {
@@ -109,9 +227,12 @@ class LoginController extends GetxController {
       final String storedHashedPassword = response['password'];
 
       // Hash the entered password and compare it with the stored hashed password
-      final hashedEnteredPassword = await _hashPassword(passC.text);
+      final bool passwordMatch = await PasswordHasher.verifyPassword(
+        passC.text,
+        storedHashedPassword,
+      );
 
-      if (hashedEnteredPassword != storedHashedPassword) {
+      if (!passwordMatch) {
         Get.snackbar(
           'Error',
           'Password salah',
@@ -120,50 +241,60 @@ class LoginController extends GetxController {
         );
         return;
       }
-
       isLoading.value = true;
+      String passFinal = await PasswordHasher.hashPassword(passC.text);
+      print('pass final $passFinal');
 
-      final AuthResponse res = await supabase.auth.signInWithPassword(
-        email: emailC.text,
-        password: passC.text,
+      final user = await supabase
+          .from('users')
+          .select()
+          .eq('email', emailC.text)
+          .single();
+
+      final userRole = await supabase
+          .from('user_roles')
+          .select()
+          .eq('user_id', user['id'])
+          .single();
+
+      final roles = await supabase
+          .from('roles')
+          .select()
+          .eq('id', userRole['role_id'])
+          .single();
+
+      final roleUsers = roles['name'] ?? 'member';
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('userEmail', emailC.text);
+      await prefs.setString('userId', user['id']);
+      await prefs.setString('userName', user['name']);
+      await prefs.setString('userPhone', user['phone_number']);
+      await prefs.setString('userRole', roleUsers);
+
+      print('user role : $roleUsers');
+      // await prefs.setString('accessToken', res.session!.accessToken);
+      // print(
+      //     'email : ${emailC.text}, hser id ${res.user!.id}, nama : ${user['name']}, token : ${res.session!.accessToken}');
+      Get.snackbar(
+        'Sukses',
+        'Berhasil login',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(20),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 2),
+        snackStyle: SnackStyle.FLOATING,
+        forwardAnimationCurve: Curves.easeOut,
+        reverseAnimationCurve: Curves.easeIn,
       );
-      if (res.session != null) {
-        // Log user session details
-        print('User logged in: ${res.user?.email}');
+
+      if (roleUsers == 'admin') {
+        Get.offAllNamed(Routes.LIST_USER); // Halaman untuk admin
       } else {
-        Get.snackbar('Error', 'Gagal mendapatkan sesi login.',
-            backgroundColor: Colors.red, colorText: Colors.white);
-      }
-      if (res.session != null) {
-        final user = await supabase
-            .from('users')
-            .select()
-            .eq('email', emailC.text)
-            .single();
-
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('isLoggedIn', true);
-        await prefs.setString('userEmail', emailC.text);
-        await prefs.setString('userId', res.user!.id);
-        await prefs.setString('userName', user['name']);
-        await prefs.setString('accessToken', res.session!.accessToken);
-        print(
-            'email : ${emailC.text}, hser id ${res.user!.id}, nama : ${user['name']}, token : ${res.session!.accessToken}');
-        Get.snackbar(
-          'Sukses',
-          'Berhasil login',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          margin: EdgeInsets.all(20),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 2),
-          snackStyle: SnackStyle.FLOATING,
-          forwardAnimationCurve: Curves.easeOut,
-          reverseAnimationCurve: Curves.easeIn,
-        );
-
-        Get.offAllNamed(Routes.NAVIGATION);
+        Get.offAllNamed(Routes.NAVIGATION); // Halaman untuk member
       }
     } on AuthException catch (e) {
       print('eeee ${e}');

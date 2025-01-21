@@ -33,6 +33,7 @@ abstract class Routes {
   static const CHAT = _Paths.CHAT;
   static const MESSAGE = _Paths.MESSAGE;
   static const QURAN = _Paths.QURAN;
+  static const LIST_USER = _Paths.LIST_USER;
 }
 
 abstract class _Paths {
@@ -67,4 +68,5 @@ abstract class _Paths {
   static const CHAT = '/chat';
   static const MESSAGE = '/message';
   static const QURAN = '/quran';
+  static const LIST_USER = '/list-user';
 }
