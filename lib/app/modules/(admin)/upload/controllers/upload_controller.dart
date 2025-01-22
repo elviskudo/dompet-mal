@@ -20,11 +20,26 @@ class UploadController extends GetxController {
   final cloudName = 'dcthljxbl';
   final uploadPreset = 'dompet-mal';
   final RxList<FileModel> fileList = <FileModel>[].obs;
+  final RxList<String> moduleClasses =
+      <String>['users', 'categories', 'all'].obs; // Contoh data module class
+  final RxList<FileModel> filteredFileList = <FileModel>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     fetchFiles();
+  }
+
+  void filterFiles() {
+    if (selectedModuleClass.value.isEmpty ||
+        selectedModuleClass.value == 'all') {
+      filteredFileList.value =
+          fileList; // Show all files when no filter is selected
+    } else {
+      filteredFileList.value = fileList
+          .where((file) => file.moduleClass == selectedModuleClass.value)
+          .toList();
+    }
   }
 
   Future<List<FileModel>> fetchFiles() async {
@@ -36,15 +51,33 @@ class UploadController extends GetxController {
       List<FileModel> files = [];
 
       for (final file in data) {
+        final moduleClass = file['module_class'] as String;
+        final moduleId = file['module_id'] as String;
+        String? moduleName;
+
+        final userResponse = await supabase
+            .from(moduleClass)
+            .select('name')
+            .eq('id', moduleId)
+            .single();
+        moduleName = userResponse['name'] as String;
+
+        // Tambahkan data ke dalam list files
         files.add(FileModel(
-          id: file['id'] as String,
-          moduleClass: file['module_class'] as String,
-          moduleId: file['module_id'] as String,
+          id: file['id'] as String?,
+          moduleClass: moduleClass,
+          moduleId: moduleId,
+          moduleName: moduleName ?? 'Unknown', // Nama module atau default
           fileName: file['file_name'] as String,
           fileType: file['file_type'] as String,
+          createdAt: file['created_at'] != null
+              ? DateTime.parse(file['created_at'] as String)
+              : null,
         ));
       }
       fileList.value = files;
+      filteredFileList.value = files;
+      filterFiles();
       return files;
     } catch (e) {
       Get.snackbar(

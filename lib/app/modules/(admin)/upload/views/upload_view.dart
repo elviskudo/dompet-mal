@@ -2,6 +2,7 @@
 import 'package:dompet_mal/component/UploadDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/upload_controller.dart';
@@ -16,13 +17,44 @@ class UploadView extends GetView<UploadController> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('UploadView'),
-            IconButton(
-              icon: const Icon(Icons.upload),
-              tooltip: 'Upload Foto',
-              onPressed: () {
-                Get.dialog(UploadDialog());
-              },
+            Row(
+              children: [
+                Text('UploadView'),
+                Gap(8),
+                IconButton(
+                  icon: const Icon(Icons.upload),
+                  tooltip: 'Upload Foto',
+                  onPressed: () {
+                    Get.dialog(UploadDialog());
+                  },
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Obx(() {
+                return DropdownButton<String>(
+                  value: controller.selectedModuleClass.value.isNotEmpty
+                      ? controller.selectedModuleClass.value
+                      : 'all',
+                  // hint: const Text('Select Module Class'),
+
+                  onChanged: (newValue) {
+                    if (newValue != null) {
+                      controller.selectedModuleClass.value = newValue;
+                      controller.filterFiles(); // Apply filter
+                    }
+                  },
+                  items: controller.moduleClasses
+                      .map<DropdownMenuItem<String>>(
+                        (moduleClass) => DropdownMenuItem<String>(
+                          value: moduleClass,
+                          child: Text(moduleClass),
+                        ),
+                      )
+                      .toList(),
+                );
+              }),
             ),
           ],
         ),
@@ -36,14 +68,14 @@ class UploadView extends GetView<UploadController> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (controller.fileList.isEmpty) {
+              if (controller.filteredFileList.isEmpty) {
                 return const Center(child: Text('No files available'));
               }
 
               return ListView.builder(
-                itemCount: controller.fileList.length,
+                itemCount: controller.filteredFileList.length,
                 itemBuilder: (context, index) {
-                  final file = controller.fileList[index];
+                  final file = controller.filteredFileList[index];
                   return ListTile(
                     title: Row(
                       children: [
@@ -63,8 +95,9 @@ class UploadView extends GetView<UploadController> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Type: ${file.fileType ?? 'Unknown'}'),
-                        Text('Module class: ${file.moduleClass ?? 'Unknown'}'),
+                        Text(
+                            'Module Name: ${file.moduleName} (${file.moduleClass})'),
+                        Text('Type: ${file.fileType}'),
                       ],
                     ),
                     trailing: IconButton(

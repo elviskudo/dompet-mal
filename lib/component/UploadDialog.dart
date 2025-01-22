@@ -64,7 +64,7 @@ class UploadDialog extends StatelessWidget {
                   }).toList(),
                   onChanged: (value) {
                     uploadController.selectedModuleId.value = value ?? '';
-                    uploadController.checkExistingFile();
+                    
                   },
                 );
               }

@@ -6,12 +6,16 @@ import '../modules/(admin)/categories/bindings/categories_binding.dart';
 import '../modules/(admin)/categories/views/categories_view.dart';
 import '../modules/(admin)/list_user/bindings/list_user_binding.dart';
 import '../modules/(admin)/list_user/views/list_user_view.dart';
+import '../modules/(admin)/upload/bindings/upload_binding.dart';
+import '../modules/(admin)/upload/views/upload_view.dart';
 import '../modules/Report/bindings/report_binding.dart';
 import '../modules/Report/views/report_view.dart';
 import '../modules/aggrement/bindings/aggrement_binding.dart';
 import '../modules/aggrement/views/aggrement_view.dart';
 import '../modules/category/bindings/category_binding.dart';
 import '../modules/category/views/category_view.dart';
+import '../modules/(admin)/companies/bindings/companies_binding.dart';
+import '../modules/(admin)/companies/views/companies_view.dart';
 import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
 import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
 import '../modules/donationDetailPage/bindings/donation_detail_page_binding.dart';
@@ -60,8 +64,6 @@ import '../modules/sendMoney2/bindings/send_money2_binding.dart';
 import '../modules/sendMoney2/views/send_money2_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
-import '../modules/(admin)/upload/bindings/upload_binding.dart';
-import '../modules/(admin)/upload/views/upload_view.dart';
 
 part 'app_routes.dart';
 
@@ -235,6 +237,11 @@ class AppPages {
       name: _Paths.UPLOAD,
       page: () => const UploadView(),
       binding: UploadBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMPANIES,
+      page: () =>  CompaniesView(),
+      binding: CompaniesBinding(),
     ),
   ];
 }

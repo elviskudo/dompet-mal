@@ -1,6 +1,7 @@
 import 'package:dompet_mal/app/modules/(admin)/admin_panel/controllers/admin_panel_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/categories/views/categories_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/companies/views/companies_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/views/list_user_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/upload/controllers/upload_controller.dart';
@@ -176,6 +177,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
         _buildMenuItem(0, 'Dashboard', Icons.dashboard),
         _buildMenuItem(1, 'Category', Icons.people),
         _buildMenuItem(2, 'Upload', Icons.camera),
+        _buildMenuItem(3, 'Companies', Icons.compare_rounded),
       ],
     );
   }
@@ -211,6 +213,8 @@ class AdminPanelView extends GetView<AdminPanelController> {
         return const CategoriesView();
       case 2:
         return const UploadView();
+      case 3:
+        return CompaniesView();
       default:
         return ListUserView();
     }

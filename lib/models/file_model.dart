@@ -7,12 +7,14 @@ class FileModel {
   String fileName;
   String fileType;
   DateTime? createdAt;
+  String? moduleName;
 
   FileModel({
     this.id,
     required this.moduleClass,
     required this.moduleId,
     required this.fileName,
+    this.moduleName,
     required this.fileType,
     this.createdAt,
   });
@@ -23,6 +25,7 @@ class FileModel {
       id: json['id'] as String?,
       moduleClass: json['module_class'] as String,
       moduleId: json['module_id'] as String,
+      moduleName: json['module_name'] as String,
       fileName: json['file_name'] as String,
       fileType: json['file_type'] as String,
       createdAt: json['created_at'] != null

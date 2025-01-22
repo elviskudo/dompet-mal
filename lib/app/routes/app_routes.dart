@@ -37,6 +37,7 @@ abstract class Routes {
   static const CATEGORIES = _Paths.CATEGORIES;
   static const ADMIN_PANEL = _Paths.ADMIN_PANEL;
   static const UPLOAD = _Paths.UPLOAD;
+  static const COMPANIES = _Paths.COMPANIES;
 }
 
 abstract class _Paths {
@@ -75,4 +76,5 @@ abstract class _Paths {
   static const CATEGORIES = '/categories';
   static const ADMIN_PANEL = '/admin-panel';
   static const UPLOAD = '/upload';
+  static const COMPANIES = '/companies';
 }
