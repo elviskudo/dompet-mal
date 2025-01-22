@@ -3,14 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../middleware/middleware.dart';
+import '../modules/(admin)/admin_panel/bindings/admin_panel_binding.dart';
+import '../modules/(admin)/admin_panel/views/admin_panel_view.dart';
 import '../modules/(admin)/categories/bindings/categories_binding.dart';
 import '../modules/(admin)/categories/views/categories_view.dart';
 import '../modules/(admin)/list_user/bindings/list_user_binding.dart';
 import '../modules/(admin)/list_user/views/list_user_view.dart';
 import '../modules/Report/bindings/report_binding.dart';
 import '../modules/Report/views/report_view.dart';
-import '../modules/(admin)/admin_panel/bindings/admin_panel_binding.dart';
-import '../modules/(admin)/admin_panel/views/admin_panel_view.dart';
 import '../modules/aggrement/bindings/aggrement_binding.dart';
 import '../modules/aggrement/views/aggrement_view.dart';
 import '../modules/category/bindings/category_binding.dart';
@@ -75,6 +75,8 @@ import '../modules/sendMoney2/views/send_money2_view.dart';
 import '../modules/sendMoney2/views/send_money2_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
+import '../modules/(admin)/upload/bindings/upload_binding.dart';
+import '../modules/(admin)/upload/views/upload_view.dart';
 
 part 'app_routes.dart';
 
@@ -248,6 +250,11 @@ class AppPages {
       name: _Paths.ADMIN_PANEL,
       page: () => const AdminPanelView(),
       binding: AdminPanelBinding(),
+    ),
+    GetPage(
+      name: _Paths.UPLOAD,
+      page: () => const UploadView(),
+      binding: UploadBinding(),
     ),
   ];
 }

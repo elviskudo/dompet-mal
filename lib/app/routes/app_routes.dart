@@ -36,6 +36,7 @@ abstract class Routes {
   static const LIST_USER = _Paths.LIST_USER;
   static const CATEGORIES = _Paths.CATEGORIES;
   static const ADMIN_PANEL = _Paths.ADMIN_PANEL;
+  static const UPLOAD = _Paths.UPLOAD;
 }
 
 abstract class _Paths {
@@ -73,4 +74,5 @@ abstract class _Paths {
   static const LIST_USER = '/list-user';
   static const CATEGORIES = '/categories';
   static const ADMIN_PANEL = '/admin-panel';
+  static const UPLOAD = '/upload';
 }
