@@ -32,13 +32,6 @@ class ListUserView extends GetView<ListUserController> {
               children: [
                 const Text('User List'),
                 Gap(20),
-                InkWell(
-                  onTap: () => controller.logout(),
-                  child: const Text(
-                    'Logout',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
               ],
             ),
           ),
@@ -55,10 +48,12 @@ class ListUserView extends GetView<ListUserController> {
                   itemBuilder: (context, index) {
                     final user = controller.usersList[index];
                     // Check if this is the current user
-                    final isCurrentUser = user.id == controller.currentUserId.value;
+                    final isCurrentUser =
+                        user.id == controller.currentUserId.value;
                     return ListTile(
                       title: Text(
-                        '${user.name} (${user.role})${isCurrentUser ? ' (You)' : ''}' ?? 'No Name',
+                        '${user.name} (${user.role})${isCurrentUser ? ' (You)' : ''}' ??
+                            'No Name',
                       ),
                       subtitle: Text(user.email ?? 'No Email'),
                       trailing: Row(
@@ -72,15 +67,15 @@ class ListUserView extends GetView<ListUserController> {
                           IconButton(
                             icon: Icon(Icons.delete),
                             // Disable delete button for current user
-                            onPressed: isCurrentUser 
-                              ? null  // This will gray out the button
-                              : () async {
-                                  final confirm = await controller
-                                      .showConfirmationDialog(context);
-                                  if (confirm) {
-                                    await controller.deleteUser(user.id);
-                                  }
-                                },
+                            onPressed: isCurrentUser
+                                ? null // This will gray out the button
+                                : () async {
+                                    final confirm = await controller
+                                        .showConfirmationDialog(context);
+                                    if (confirm) {
+                                      await controller.deleteUser(user.id);
+                                    }
+                                  },
                           ),
                         ],
                       ),

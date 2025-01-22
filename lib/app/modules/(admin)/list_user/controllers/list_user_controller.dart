@@ -178,40 +178,7 @@ class ListUserController extends GetxController {
     }
   }
 
-  Future<void> logout() async {
-    try {
-      isLoading.value = true;
-
-      // Sign out from Supabase
-      await supabase.auth.signOut();
-
-      // Clear SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.clear();
-
-      Get.snackbar(
-        'Success',
-        'Successfully logged out',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        duration: Duration(seconds: 2),
-        snackPosition: SnackPosition.BOTTOM,
-      );
-
-      // Navigate to login page
-      Get.offAllNamed(Routes.LOGIN);
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to logout: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
+ 
   Future<List<Map<String, String>>> fetchRoles() async {
     try {
       // Ambil semua role dari tabel `roles`

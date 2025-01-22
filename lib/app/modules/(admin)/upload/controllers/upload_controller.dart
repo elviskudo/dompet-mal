@@ -1,7 +1,5 @@
 // File: app/controllers/upload_controller.dart
-import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
 import 'package:dompet_mal/models/file_model.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart' as dio;
@@ -13,12 +11,37 @@ class UploadController extends GetxController {
   final isLoading = false.obs;
   final selectedModuleClass = ''.obs;
   final selectedModuleId = ''.obs;
+  final existingFileId = ''.obs;
   final imageUrl = ''.obs;
   final selectedImage = Rxn<XFile>();
   final fileType = ''.obs;
 
   final cloudName = 'dcthljxbl';
   final uploadPreset = 'dompet-mal';
+
+  Future<void> checkExistingFile() async {
+    try {
+      final response = await supabase
+          .from('files')
+          .select()
+          .eq('module_class', selectedModuleClass.value)
+          .eq('module_id', selectedModuleId.value)
+          .single(); // Get single record if exists
+
+      if (response != null) {
+        existingFileId.value = response['id'];
+        imageUrl.value = response['file_name'];
+        fileType.value = response['file_type'];
+      } else {
+        existingFileId.value = '';
+        imageUrl.value = '';
+        fileType.value = '';
+      }
+    } catch (e) {
+      existingFileId.value = '';
+      print('No existing file found: $e');
+    }
+  }
 
   Future<void> uploadFileToCloudinary(XFile file) async {
     try {
@@ -54,22 +77,47 @@ class UploadController extends GetxController {
   Future<void> saveFileInfo() async {
     try {
       isLoading.value = true;
-      await supabase.from('files').insert(
-            FileModel(
-              moduleClass: selectedModuleClass.value,
-              moduleId: selectedModuleId.value,
-              fileName: imageUrl.value,
-              fileType: fileType.value,
-            ).toJson(),
-          );
-      Get.snackbar('Success', 'File saved successfully');
-      Get.back(); // Close dialog after successful save
+
+      final fileData = FileModel(
+        moduleClass: selectedModuleClass.value,
+        moduleId: selectedModuleId.value,
+        fileName: imageUrl.value,
+        fileType: fileType.value,
+      ).toJson();
+
+      if (existingFileId.value.isNotEmpty) {
+        // Update existing file
+        await supabase
+            .from('files')
+            .update(fileData)
+            .eq('id', existingFileId.value);
+        await resetForm();
+        Get.back();
+        Get.snackbar('Success', 'File updated successfully');
+      } else {
+        // Insert new file
+        await supabase.from('files').insert(fileData);
+        await resetForm();
+        Get.back();
+        Get.snackbar('Success', 'File saved successfully');
+      }
+
+      // Close dialog after successful save
     } catch (e) {
       print('Error saving file info: $e');
       Get.snackbar('Error', 'Failed to save file information');
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> resetForm() async {
+    selectedModuleClass.value = '';
+    selectedModuleId.value = '';
+    existingFileId.value = '';
+    imageUrl.value = '';
+    fileType.value = '';
+    selectedImage.value = null;
   }
 }
 
