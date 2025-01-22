@@ -34,27 +34,30 @@ class AdminPanelView extends GetView<AdminPanelController> {
             left: 28,
             child: Row(
               children: [
-                InkWell(
-                  onTap: controller.toggleSidebar,
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white, // Warna latar belakang
-                      borderRadius:
-                          BorderRadius.circular(8), // Membuat sudut membulat
-                      boxShadow: [
-                        BoxShadow(
-                          color:
-                              Colors.black.withOpacity(0.2), // Warna bayangan
-                          blurRadius: 6, // Tingkat blur bayangan
-                          offset: const Offset(0, 3), // Offset bayangan
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.menu, // Ikon hamburger (garis tiga)
-                      size: 28,
-                      color: Colors.black87, // Warna ikon
+                Tooltip(
+                  message: 'Menu',
+                  child: InkWell(
+                    onTap: controller.toggleSidebar,
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white, // Warna latar belakang
+                        borderRadius:
+                            BorderRadius.circular(8), // Membuat sudut membulat
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                Colors.black.withOpacity(0.2), // Warna bayangan
+                            blurRadius: 6, // Tingkat blur bayangan
+                            offset: const Offset(0, 3), // Offset bayangan
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.menu, // Ikon hamburger (garis tiga)
+                        size: 28,
+                        color: Colors.black87, // Warna ikon
+                      ),
                     ),
                   ),
                 ),
@@ -76,26 +79,29 @@ class AdminPanelView extends GetView<AdminPanelController> {
           Positioned(
             top: 20,
             right: 28, // Menggunakan posisi dari kanan
-            child: InkWell(
-              onTap: controller.logout, // Fungsi logout
-              child: Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.white, // Warna latar belakang
-                  borderRadius:
-                      BorderRadius.circular(8), // Membuat sudut membulat
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2), // Warna bayangan
-                      blurRadius: 6, // Tingkat blur bayangan
-                      offset: const Offset(0, 3), // Offset bayangan
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.logout, // Ikon logout
-                  size: 28,
-                  color: Colors.black87, // Warna ikon
+            child: Tooltip(
+              message: 'Logout',
+              child: InkWell(
+                onTap: controller.logout, // Fungsi logout
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Warna latar belakang
+                    borderRadius:
+                        BorderRadius.circular(8), // Membuat sudut membulat
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Warna bayangan
+                        blurRadius: 6, // Tingkat blur bayangan
+                        offset: const Offset(0, 3), // Offset bayangan
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.logout, // Ikon logout
+                    size: 28,
+                    color: Colors.black87, // Warna ikon
+                  ),
                 ),
               ),
             ),

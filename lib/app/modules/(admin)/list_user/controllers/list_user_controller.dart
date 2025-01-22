@@ -178,7 +178,6 @@ class ListUserController extends GetxController {
     }
   }
 
- 
   Future<List<Map<String, String>>> fetchRoles() async {
     try {
       // Ambil semua role dari tabel `roles`

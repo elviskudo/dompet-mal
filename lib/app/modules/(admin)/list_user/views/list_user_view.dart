@@ -60,11 +60,14 @@ class ListUserView extends GetView<ListUserController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
+                            tooltip: 'edit',
                             icon: Icon(Icons.edit),
                             onPressed: () =>
                                 controller.showEditDialog(context, user),
                           ),
                           IconButton(
+                            tooltip: 'delete',
+
                             icon: Icon(Icons.delete),
                             // Disable delete button for current user
                             onPressed: isCurrentUser

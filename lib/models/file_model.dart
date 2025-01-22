@@ -17,6 +17,21 @@ class FileModel {
     this.createdAt,
   });
 
+  // Method to convert JSON to Dart object
+  factory FileModel.fromJson(Map<String, dynamic> json) {
+    return FileModel(
+      id: json['id'] as String?,
+      moduleClass: json['module_class'] as String,
+      moduleId: json['module_id'] as String,
+      fileName: json['file_name'] as String,
+      fileType: json['file_type'] as String,
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+    );
+  }
+
+  // Method to convert Dart object to JSON
   Map<String, dynamic> toJson() => {
         "id": id ?? const Uuid().v4(),
         "module_class": moduleClass,

@@ -41,11 +41,13 @@ class CategoriesView extends GetView<CategoriesController> {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.edit),
+                          tooltip: 'edit',
                           onPressed: () =>
                               _showCategoryDialog(context, category: category),
                         ),
                         IconButton(
                           icon: const Icon(Icons.delete),
+                          tooltip: 'delete',
                           onPressed: () =>
                               _showDeleteConfirmation(category.id!),
                         ),

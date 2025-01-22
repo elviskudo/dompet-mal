@@ -1,5 +1,6 @@
 // File: app/controllers/upload_controller.dart
 import 'package:dompet_mal/models/file_model.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart' as dio;
@@ -18,6 +19,43 @@ class UploadController extends GetxController {
 
   final cloudName = 'dcthljxbl';
   final uploadPreset = 'dompet-mal';
+  final RxList<FileModel> fileList = <FileModel>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchFiles();
+  }
+
+  Future<List<FileModel>> fetchFiles() async {
+    try {
+      // isLoading.value = true;
+      final response = await supabase.from('files').select('*');
+      final data = response as List<dynamic>;
+
+      List<FileModel> files = [];
+
+      for (final file in data) {
+        files.add(FileModel(
+          id: file['id'] as String,
+          moduleClass: file['module_class'] as String,
+          moduleId: file['module_id'] as String,
+          fileName: file['file_name'] as String,
+          fileType: file['file_type'] as String,
+        ));
+      }
+      fileList.value = files;
+      return files;
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to fetch files: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return [];
+    }
+  }
 
   Future<void> checkExistingFile() async {
     try {
