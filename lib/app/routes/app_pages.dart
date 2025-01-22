@@ -1,10 +1,16 @@
-import 'package:dompet_mal/middleware/middleware.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:get/get.dart';
 
+import '../../middleware/middleware.dart';
+import '../modules/(admin)/categories/bindings/categories_binding.dart';
+import '../modules/(admin)/categories/views/categories_view.dart';
+import '../modules/(admin)/list_user/bindings/list_user_binding.dart';
+import '../modules/(admin)/list_user/views/list_user_view.dart';
 import '../modules/Report/bindings/report_binding.dart';
 import '../modules/Report/views/report_view.dart';
+import '../modules/(admin)/admin_panel/bindings/admin_panel_binding.dart';
+import '../modules/(admin)/admin_panel/views/admin_panel_view.dart';
 import '../modules/aggrement/bindings/aggrement_binding.dart';
 import '../modules/aggrement/views/aggrement_view.dart';
 import '../modules/category/bindings/category_binding.dart';
@@ -29,8 +35,6 @@ import '../modules/listDonation/views/list_donation_view.dart';
 import '../modules/listDonation/views/list_donation_view.dart';
 import '../modules/listPayment/bindings/list_payment_binding.dart';
 import '../modules/listPayment/views/list_payment_view.dart';
-import '../modules/list_user/bindings/list_user_binding.dart';
-import '../modules/list_user/views/list_user_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
@@ -234,6 +238,16 @@ class AppPages {
       name: _Paths.LIST_USER,
       page: () => ListUserView(),
       binding: ListUserBinding(),
+    ),
+    GetPage(
+      name: _Paths.CATEGORIES,
+      page: () => const CategoriesView(),
+      binding: CategoriesBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMIN_PANEL,
+      page: () => const AdminPanelView(),
+      binding: AdminPanelBinding(),
     ),
   ];
 }

@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../helper/PasswordHasher.dart';
 import '../../../routes/app_pages.dart';
-import 'package:crypto/crypto.dart';
 
 class LoginController extends GetxController {
   final emailC = TextEditingController();
@@ -277,7 +276,7 @@ class LoginController extends GetxController {
       );
 
       if (roleUsers == 'admin') {
-        Get.offAllNamed(Routes.LIST_USER); // Halaman untuk admin
+        Get.offAllNamed(Routes.ADMIN_PANEL); // Halaman untuk admin
       } else {
         Get.offAllNamed(Routes.NAVIGATION); // Halaman untuk member
       }
