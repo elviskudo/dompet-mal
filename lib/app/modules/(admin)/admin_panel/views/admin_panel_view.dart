@@ -1,11 +1,11 @@
 import 'package:dompet_mal/app/modules/(admin)/admin_panel/controllers/admin_panel_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/categories/views/categories_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/views/list_user_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/upload/controllers/upload_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/upload/views/upload_view.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 class AdminPanelView extends GetView<AdminPanelController> {
@@ -15,6 +15,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
   Widget build(BuildContext context) {
     Get.put(ListUserController());
     Get.put(UploadController());
+    Get.put(CategoriesController());
     return Scaffold(
       body: Stack(
         children: [
@@ -96,6 +97,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
         _buildMenuItem(0, 'Dashboard', Icons.dashboard),
         _buildMenuItem(1, 'Category', Icons.people),
         _buildMenuItem(2, 'Upload', Icons.camera),
+        _buildMenuItem(1, 'Category', Icons.category),
       ],
     );
   }
