@@ -1,7 +1,6 @@
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/helper/PasswordHasher.dart';
 import 'package:email_auth/email_auth.dart';
-import 'package:flutter_bcrypt/flutter_bcrypt.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
