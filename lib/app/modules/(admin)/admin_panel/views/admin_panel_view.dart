@@ -3,6 +3,10 @@ import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories
 import 'package:dompet_mal/app/modules/(admin)/categories/views/categories_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/views/list_user_view.dart';
+import 'package:dompet_mal/app/modules/charityAdmin/controllers/charity_admin_controller.dart';
+import 'package:dompet_mal/app/modules/charityAdmin/views/charity_admin_view.dart';
+import 'package:dompet_mal/app/modules/contributorAdmin/controllers/contributor_admin_controller.dart';
+import 'package:dompet_mal/app/modules/contributorAdmin/views/contributor_admin_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +17,8 @@ class AdminPanelView extends GetView<AdminPanelController> {
   Widget build(BuildContext context) {
     Get.put(ListUserController());
     Get.put(CategoriesController());
+    Get.put(ContributorAdminController());
+    Get.put(CharityAdminController());
     return Scaffold(
       body: Stack(
         children: [
@@ -93,6 +99,8 @@ class AdminPanelView extends GetView<AdminPanelController> {
         const SizedBox(height: 30),
         _buildMenuItem(0, 'Dashboard', Icons.dashboard),
         _buildMenuItem(1, 'Category', Icons.category),
+        _buildMenuItem(3, 'Contributor', Icons.shape_line),
+        _buildMenuItem(4, 'Charity', Icons.health_and_safety_sharp),
       ],
     );
   }
@@ -126,8 +134,13 @@ class AdminPanelView extends GetView<AdminPanelController> {
         return ListUserView();
       case 1:
         return const CategoriesView();
+        case 3:
+        return ContributorAdminView();
+        case 4:
+        return CharityAdminView();
       default:
         return ListUserView();
+        
     }
   }
 }

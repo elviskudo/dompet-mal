@@ -1,20 +1,23 @@
-
 import 'package:get/get.dart';
 
+import '../modules/(admin)/admin_panel/bindings/admin_panel_binding.dart';
+import '../modules/(admin)/admin_panel/views/admin_panel_view.dart';
 import '../modules/(admin)/categories/bindings/categories_binding.dart';
 import '../modules/(admin)/categories/views/categories_view.dart';
 import '../modules/(admin)/list_user/bindings/list_user_binding.dart';
 import '../modules/(admin)/list_user/views/list_user_view.dart';
 import '../modules/Report/bindings/report_binding.dart';
 import '../modules/Report/views/report_view.dart';
-import '../modules/(admin)/admin_panel/bindings/admin_panel_binding.dart';
-import '../modules/(admin)/admin_panel/views/admin_panel_view.dart';
 import '../modules/aggrement/bindings/aggrement_binding.dart';
 import '../modules/aggrement/views/aggrement_view.dart';
 import '../modules/category/bindings/category_binding.dart';
 import '../modules/category/views/category_view.dart';
+import '../modules/charityAdmin/bindings/charity_admin_binding.dart';
+import '../modules/charityAdmin/views/charity_admin_view.dart';
 import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
 import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
+import '../modules/contributorAdmin/bindings/contributor_admin_binding.dart';
+import '../modules/contributorAdmin/views/contributor_admin_view.dart';
 import '../modules/donationDetailPage/bindings/donation_detail_page_binding.dart';
 import '../modules/donationDetailPage/views/donation_detail_page_view.dart';
 import '../modules/email_verification/bindings/email_verification_binding.dart';
@@ -239,6 +242,16 @@ class AppPages {
       name: _Paths.ADMIN_PANEL,
       page: () => const AdminPanelView(),
       binding: AdminPanelBinding(),
+    ),
+    GetPage(
+      name: _Paths.CONTRIBUTOR_ADMIN,
+      page: () => const ContributorAdminView(),
+      binding: ContributorAdminBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHARITY_ADMIN,
+      page: () => const CharityAdminView(),
+      binding: CharityAdminBinding(),
     ),
   ];
 }
