@@ -1,10 +1,9 @@
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/helper/PasswordHasher.dart';
-import 'package:email_auth/email_auth.dart';
-import 'package:flutter_bcrypt/flutter_bcrypt.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RegisterController extends GetxController {
@@ -162,6 +161,12 @@ class RegisterController extends GetxController {
         'email': emailController.text,
         'name': namaController.text,
       });
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userEmail', userData['email'] ?? '');
+      await prefs.setString('userId', userData['id'] ?? '');
+      await prefs.setString('userName', userData['name'] ?? '');
+      await prefs.setString('userPhone', userData['phone_number'] ?? '');
 
       Get.snackbar(
         'Sukses',

@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bcrypt/flutter_bcrypt.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../helper/PasswordHasher.dart';
 import '../../../routes/app_pages.dart';
-import 'package:crypto/crypto.dart';
 
 class LoginController extends GetxController {
   final emailC = TextEditingController();
@@ -32,20 +30,6 @@ class LoginController extends GetxController {
 
   void togglePasswordVisibility() {
     isPasswordHidden.value = !isPasswordHidden.value;
-  }
-
-  Future<bool> _verifyPassword(String password, String hashedPassword) async {
-    try {
-      // Using BCrypt to verify the password
-      final bool passwordMatch = await FlutterBcrypt.verify(
-        password: password,
-        hash: hashedPassword,
-      );
-      return passwordMatch;
-    } catch (e) {
-      print('Error verifying password: $e');
-      return false;
-    }
   }
 
   Future<void> signInWithGoogle() async {
@@ -292,7 +276,7 @@ class LoginController extends GetxController {
       );
 
       if (roleUsers == 'admin') {
-        Get.offAllNamed(Routes.LIST_USER); // Halaman untuk admin
+        Get.offAllNamed(Routes.ADMIN_PANEL); // Halaman untuk admin
       } else {
         Get.offAllNamed(Routes.NAVIGATION); // Halaman untuk member
       }

@@ -34,6 +34,8 @@ abstract class Routes {
   static const MESSAGE = _Paths.MESSAGE;
   static const QURAN = _Paths.QURAN;
   static const LIST_USER = _Paths.LIST_USER;
+  static const CATEGORIES = _Paths.CATEGORIES;
+  static const ADMIN_PANEL = _Paths.ADMIN_PANEL;
 }
 
 abstract class _Paths {
@@ -69,4 +71,6 @@ abstract class _Paths {
   static const MESSAGE = '/message';
   static const QURAN = '/quran';
   static const LIST_USER = '/list-user';
+  static const CATEGORIES = '/categories';
+  static const ADMIN_PANEL = '/admin-panel';
 }

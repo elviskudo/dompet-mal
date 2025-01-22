@@ -51,11 +51,13 @@ class ListUserController extends GetxController {
     try {
       isLoading.value = true;
 
+      await supabase.from('user_roles').delete().eq('user_id', userId);
       // Hapus pengguna dari tabel `users`
       await supabase.from('users').delete().eq('id', userId);
 
+      await fetchUsers();
+
       // Hapus entri dari tabel `user_roles`
-      await supabase.from('user_roles').delete().eq('user_id', userId);
 
       Get.snackbar(
         'Success',
