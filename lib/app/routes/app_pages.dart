@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
 
 import 'package:get/get.dart';
 
-import '../../middleware/middleware.dart';
 import '../modules/(admin)/categories/bindings/categories_binding.dart';
 import '../modules/(admin)/categories/views/categories_view.dart';
 import '../modules/(admin)/list_user/bindings/list_user_binding.dart';
@@ -14,8 +12,6 @@ import '../modules/(admin)/admin_panel/views/admin_panel_view.dart';
 import '../modules/aggrement/bindings/aggrement_binding.dart';
 import '../modules/aggrement/views/aggrement_view.dart';
 import '../modules/category/bindings/category_binding.dart';
-import '../modules/category/bindings/category_binding.dart';
-import '../modules/category/views/category_view.dart';
 import '../modules/category/views/category_view.dart';
 import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
 import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
@@ -193,11 +189,6 @@ class AppPages {
       name: _Paths.SEND_MONEY2,
       page: () => const SendMoney2View(),
       binding: SendMoney2Binding(),
-    ),
-    GetPage(
-      name: _Paths.CATEGORY,
-      page: () => CategoryView(),
-      binding: CategoryBinding(),
     ),
     GetPage(
       name: _Paths.DONATION_DETAIL_PAGE,
