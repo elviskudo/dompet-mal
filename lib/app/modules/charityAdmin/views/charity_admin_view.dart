@@ -169,12 +169,11 @@ void _showAddCharityBottomSheet(BuildContext context) {
 
 // Metode untuk menampilkan bottom sheet edit charity  
 void _showEditCharityBottomSheet(BuildContext context, Charity charity) {
-  controller.title.value = charity.title;
-  controller.description.value = charity.description;
-  controller.progress.value = charity.progress;
-  // controller.total.value = charity.total;
-  controller.targetTotal.value = charity.targetTotal;
-  controller.targetDate.value = charity.targetDate;
+  controller.titleController.text = charity.title;
+  controller.descriptionController.text = charity.description;
+  controller.progressController.text = charity.progress.toString();
+  controller.targetTotalController.text = charity.targetTotal.toString();
+  controller.targetDateController.text = charity.targetDate.toIso8601String();
   controller.selectedCategoryId.value = charity.categoryId;
   controller.selectedCompanyId.value = charity.companyId;
 
