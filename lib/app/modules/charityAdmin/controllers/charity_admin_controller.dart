@@ -49,7 +49,14 @@ final TextEditingController targetDateController = TextEditingController();
     fetchCategories();
     fetchCompanies();
   }
-
+ void onClose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    progressController.dispose();
+    targetTotalController.dispose();
+    targetDateController.dispose();
+    super.onClose();
+  }
   // Fetch charities
   Future<void> fetchCharities() async {
     try {
@@ -220,7 +227,9 @@ Future<void> updateCharity(String charityId) async {
   progress.value = 0;
   total.value = 0;
   targetTotal.value = 0;
-  targetDateController.clear(); // Reset tanggal
+  targetDateController.clear();
+  targetTotalController.clear();
+   // Reset tanggal
 }
 
 

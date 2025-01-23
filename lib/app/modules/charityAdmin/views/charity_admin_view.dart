@@ -139,6 +139,7 @@ class CharityAdminView extends GetView<CharityAdminController> {
   // Metode untuk menampilkan bottom sheet tambah charity  
 // Metode untuk menampilkan bottom sheet tambah charity  
 void _showAddCharityBottomSheet(BuildContext context) {
+  controller.resetFormFields();
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -169,6 +170,7 @@ void _showAddCharityBottomSheet(BuildContext context) {
 
 // Metode untuk menampilkan bottom sheet edit charity  
 void _showEditCharityBottomSheet(BuildContext context, Charity charity) {
+  // controller.resetFormFields();
   controller.titleController.text = charity.title;
   controller.descriptionController.text = charity.description;
   controller.progressController.text = charity.progress.toString();
