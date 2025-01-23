@@ -8,10 +8,12 @@ import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transact
 import 'package:dompet_mal/app/modules/(admin)/transactions/views/transactions_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/upload/controllers/upload_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/upload/views/upload_view.dart';
-import 'package:dompet_mal/app/modules/charityAdmin/controllers/charity_admin_controller.dart';
-import 'package:dompet_mal/app/modules/charityAdmin/views/charity_admin_view.dart';
-import 'package:dompet_mal/app/modules/contributorAdmin/controllers/contributor_admin_controller.dart';
-import 'package:dompet_mal/app/modules/contributorAdmin/views/contributor_admin_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/bankAdmin/controllers/bank_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/bankAdmin/views/bank_admin_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/views/charity_admin_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/views/contributor_admin_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,6 +29,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
     Get.put(ContributorAdminController());
     Get.put(TransactionsController());
     Get.put(CharityAdminController());
+    Get.put(BankAdminController());
     return Scaffold(
       body: Stack(
         children: [
@@ -190,6 +193,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
         _buildMenuItem(4, 'Contributor', Icons.shape_line),
         _buildMenuItem(5, 'Charity', Icons.health_and_safety_sharp),
         _buildMenuItem(6, 'Transaction', Icons.wallet),
+        _buildMenuItem(7, 'Bank Account', Icons.branding_watermark_rounded),
       ],
     );
   }
@@ -233,6 +237,8 @@ class AdminPanelView extends GetView<AdminPanelController> {
         return CharityAdminView();
       case 6:
         return TransactionsView();
+        case 7:
+        return BankAdminView();
       default:
         return ListUserView();
     }

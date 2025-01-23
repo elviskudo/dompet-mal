@@ -2,7 +2,7 @@
 import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/companies/controllers/companies_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
-import 'package:dompet_mal/app/modules/charityAdmin/controllers/charity_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/component/UploadDialog.dart';
 import 'package:dompet_mal/models/file_model.dart';
 import 'package:flutter/material.dart';

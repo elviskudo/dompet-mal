@@ -1,4 +1,4 @@
-import 'package:dompet_mal/app/modules/email_verification/controllers/email_verification_controller.dart';
+import 'package:dompet_mal/app/modules/(home)/email_verification/controllers/email_verification_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

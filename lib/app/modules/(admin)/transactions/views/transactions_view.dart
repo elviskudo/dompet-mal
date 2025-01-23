@@ -1,9 +1,12 @@
+import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/models/BankModel.dart';
 import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:dompet_mal/models/TransactionModel.dart';
+import 'package:dompet_mal/models/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class TransactionsView extends GetView<TransactionsController> {
   const TransactionsView({super.key});
@@ -39,7 +42,7 @@ class TransactionsView extends GetView<TransactionsController> {
                           icon: const Icon(Icons.edit),
                           tooltip: 'edit',
                           onPressed: () => _showTransactionDialog(context,
-                              transaction: transaction),
+                              transaction: transaction, id: transaction.id),
                         ),
                         IconButton(
                           icon: const Icon(Icons.delete),
@@ -57,7 +60,7 @@ class TransactionsView extends GetView<TransactionsController> {
   }
 
   void _showTransactionDialog(BuildContext context,
-      {Transaction? transaction}) {
+      {Transaction? transaction, String id = ''}) {
     final transactionNumberController =
         TextEditingController(text: transaction?.transactionNumber);
     final donationPriceController = TextEditingController(
@@ -67,60 +70,94 @@ class TransactionsView extends GetView<TransactionsController> {
     // Reactive variables for bank and charity selection
     final RxString selectedBankId = (transaction?.bankId ?? '').obs;
     final RxString selectedCharityId = (transaction?.charityId ?? '').obs;
+    final RxString selectedUserId = (transaction?.userId ?? '').obs;
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     Get.dialog(
       AlertDialog(
         title:
             Text(transaction == null ? 'Add Transaction' : 'Edit Transaction'),
         content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: transactionNumberController,
-                decoration:
-                    const InputDecoration(labelText: 'Transaction Number'),
-              ),
-              TextField(
-                controller: donationPriceController,
-                decoration: const InputDecoration(labelText: 'Donation Price'),
-                keyboardType: TextInputType.number,
-              ),
-              // Bank Dropdown
-              Obx(() => DropdownButtonFormField(
-                    value: selectedBankId.value.isNotEmpty
-                        ? selectedBankId.value
-                        : null,
-                    decoration: const InputDecoration(labelText: 'Bank'),
-                    items:
-                        controller.banks.map<DropdownMenuItem<String>>((bank) {
-                      return DropdownMenuItem(
-                        value: bank.id,
-                        child: Text(bank.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) => selectedBankId.value = value ?? '',
-                  )),
-              // Charity Dropdown
-              Obx(() => DropdownButtonFormField<String>(
-                    value: selectedCharityId.value.isNotEmpty
-                        ? selectedCharityId.value
-                        : null,
-                    decoration: const InputDecoration(labelText: 'Charity'),
-                    items: controller.charities
-                        .map<DropdownMenuItem<String>>((charity) {
-                      return DropdownMenuItem(
-                        value: charity.id,
-                        child: Text(charity.title),
-                      );
-                    }).toList(),
-                    onChanged: (value) => selectedCharityId.value = value ?? '',
-                  )),
-              TextField(
-                controller: userIdController,
-                decoration: const InputDecoration(labelText: 'User ID'),
-              ),
-            ],
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: transactionNumberController,
+                  decoration:
+                      const InputDecoration(labelText: 'Transaction Number'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Transaction Number is required';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: donationPriceController,
+                  decoration:
+                      const InputDecoration(labelText: 'Donation Price'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Donation Price is required';
+                    }
+                    return null;
+                  },
+                ),
+                // Bank Dropdown
+                Obx(() => DropdownButtonFormField(
+                      value: selectedBankId.value.isNotEmpty
+                          ? selectedBankId.value
+                          : null,
+                      decoration: const InputDecoration(labelText: 'Bank'),
+                      items: controller.banks
+                          .map<DropdownMenuItem<String>>((bank) {
+                        return DropdownMenuItem(
+                          value: bank.id,
+                          child: Text(bank.name),
+                        );
+                      }).toList(),
+                      onChanged: (value) => selectedBankId.value = value ?? '',
+                    )),
+                // Charity Dropdown
+                Obx(() => DropdownButtonFormField<String>(
+                      value: selectedCharityId.value.isNotEmpty
+                          ? selectedCharityId.value
+                          : null,
+                      decoration: const InputDecoration(labelText: 'Charity'),
+                      items: controller.charities
+                          .map<DropdownMenuItem<String>>((charity) {
+                        return DropdownMenuItem(
+                          value: charity.id,
+                          child: Text(charity.title),
+                        );
+                      }).toList(),
+                      onChanged: (value) =>
+                          selectedCharityId.value = value ?? '',
+                    )),
+
+                Obx(() => DropdownButtonFormField<String>(
+                      value: selectedUserId.value.isNotEmpty
+                          ? selectedUserId.value
+                          : null,
+                      decoration: const InputDecoration(labelText: 'User'),
+                      items: controller.users
+                          .map<DropdownMenuItem<String>>((user) {
+                        return DropdownMenuItem(
+                          value: user.id,
+                          child: Text(user.name),
+                        );
+                      }).toList(),
+                      onChanged: (value) => selectedUserId.value = value ?? '',
+                    )),
+                // TextField(
+                //   controller: userIdController,
+                //   decoration: const InputDecoration(labelText: 'User ID'),
+                // ),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -131,19 +168,26 @@ class TransactionsView extends GetView<TransactionsController> {
           TextButton(
             onPressed: () {
               final newTransaction = Transaction(
-                id: transaction?.id,
                 transactionNumber: transactionNumberController.text,
                 donationPrice: double.tryParse(donationPriceController.text),
-                bankId: selectedBankId.value,
-                charityId: selectedCharityId.value,
-                userId: userIdController.text,
+                bankId:
+                    selectedBankId.value.isEmpty ? null : selectedBankId.value,
+                charityId: selectedCharityId.value.isEmpty
+                    ? null
+                    : selectedCharityId.value,
+                userId:
+                    selectedUserId.value.isEmpty ? null : selectedUserId.value,
                 updatedAt: DateTime.now(),
               );
 
               if (transaction == null) {
                 controller.addTransaction(newTransaction);
+                print(
+                    'newTransaction ${newTransaction.id} ===== ${newTransaction.bankId}');
               } else {
-                controller.updateTransaction(newTransaction);
+                controller.updateTransaction(newTransaction, id);
+                print(
+                    'newTransaction ${newTransaction.id} ===== ${newTransaction.bankId}');
               }
               Get.back();
             },

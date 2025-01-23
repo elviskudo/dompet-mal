@@ -1,4 +1,4 @@
-import 'package:dompet_mal/app/modules/home/controllers/home_controller.dart';
+import 'package:dompet_mal/app/modules/(home)/home/controllers/home_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/models/BankAccountModel.dart';
 import 'package:flutter/material.dart';

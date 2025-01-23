@@ -1,4 +1,4 @@
-import 'package:dompet_mal/app/modules/listDonation/views/list_donation_view.dart';
+import 'package:dompet_mal/app/modules/(home)/listDonation/views/list_donation_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
