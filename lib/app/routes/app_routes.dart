@@ -40,6 +40,7 @@ abstract class Routes {
   static const CHARITY_ADMIN = _Paths.CHARITY_ADMIN;
   static const UPLOAD = _Paths.UPLOAD;
   static const COMPANIES = _Paths.COMPANIES;
+  static const BANK_ADMIN = _Paths.BANK_ADMIN;
 }
 
 abstract class _Paths {
@@ -81,4 +82,5 @@ abstract class _Paths {
   static const CHARITY_ADMIN = '/charity-admin';
   static const UPLOAD = '/upload';
   static const COMPANIES = '/companies';
+  static const BANK_ADMIN = '/bank-admin';
 }

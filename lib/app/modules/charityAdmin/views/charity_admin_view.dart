@@ -172,7 +172,7 @@ void _showEditCharityBottomSheet(BuildContext context, Charity charity) {
   controller.title.value = charity.title;
   controller.description.value = charity.description;
   controller.progress.value = charity.progress;
-  controller.total.value = charity.total;
+  // controller.total.value = charity.total;
   controller.targetTotal.value = charity.targetTotal;
   controller.targetDate.value = charity.targetDate;
   controller.selectedCategoryId.value = charity.categoryId;
@@ -228,12 +228,12 @@ Widget _buildCharityForm(BuildContext context, {required bool isEdit, String? ch
           keyboardType: TextInputType.number,
         ),
         const SizedBox(height: 16),
-        TextField(
-          controller: controller.totalController,
-          decoration: const InputDecoration(labelText: 'Total'),
-          keyboardType: TextInputType.number,
-        ),
-        const SizedBox(height: 16),
+        // TextField(
+        //   controller: controller.totalController,
+        //   decoration: const InputDecoration(labelText: 'Total'),
+        //   keyboardType: TextInputType.number,
+        // ),
+        // const SizedBox(height: 16),
         TextField(
           controller: controller.targetTotalController,
           decoration: const InputDecoration(labelText: 'Target Total'),

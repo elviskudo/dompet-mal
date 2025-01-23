@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:dompet_mal/models/userModel.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -32,7 +34,7 @@ class ContributorAdminController extends GetxController {
     try {
       final response = await supabase
           .from('contributors')
-          .select('*, users:user_id(*)')
+          .select('*, users:user_id(*), charities:charity_id(*)')
           .order('created_at');
       
       contributors.value = (response as List).map((data) {
@@ -98,34 +100,111 @@ class ContributorAdminController extends GetxController {
     }
   }
 
-  Future<void> addContributor() async {
-    if (selectedUserId.isEmpty || selectedCharityId.isEmpty) {
-      Get.snackbar('Error', 'Please select both a user and a charity');
+  Future<void> updateContributor(String contributorId) async {
+  if (selectedUserId.isEmpty || selectedCharityId.isEmpty) {
+    Get.snackbar('Error', 'Please select both a user and a charity');
+    return;
+  }
+
+  try {
+    // Check for existing contributor with same user and charity
+    final existingContributor = await checkExistingContributor(
+      selectedUserId.value, 
+      selectedCharityId.value
+    );
+
+    if (existingContributor != null) {
+      Get.snackbar(
+        'Error', 
+        'This user has already been assigned to this charity',
+        backgroundColor: Colors.red,
+        colorText: Colors.white
+      );
       return;
     }
 
-    try {
-      final now = DateTime.now();
-      final newContributor = {
-        "user_id": selectedUserId.value,
-        "charity_id": selectedCharityId.value,
-        "created_at": now.toIso8601String(),
-        "updated_at": now.toIso8601String(),
-      };
+    final now = DateTime.now();
+    final updatedContributor = {
+      "user_id": selectedUserId.value,
+      "charity_id": selectedCharityId.value,
+      "updated_at": now.toIso8601String(),
+    };
 
-      await supabase
-          .from('contributors')
-          .insert(newContributor);
-      
-      Get.snackbar('Success', 'Contributor added successfully');
-      fetchContributors();
-      selectedUserId.value = '';
-      selectedCharityId.value = '';
-    } catch (e) {
-      print('Error adding contributor: $e');
-      Get.snackbar('Error', 'Failed to add contributor: $e');
-    }
+    await supabase
+        .from('contributors')
+        .update(updatedContributor)
+        .match({'id': contributorId});
+    
+    Get.snackbar('Success', 'Contributor updated successfully');
+    fetchContributors();
+    selectedUserId.value = '';
+    selectedCharityId.value = '';
+  } catch (e) {
+    print('Error updating contributor: $e');
+    Get.snackbar('Error', 'Failed to update contributor: $e');
   }
+}
+
+Future<Map<String, dynamic>?> checkExistingContributor(String userId, String charityId) async {
+  try {
+    final response = await supabase
+        .from('contributors')
+        .select()
+        .eq('user_id', userId)
+        .eq('charity_id', charityId)
+        .maybeSingle();
+    
+    return response;
+  } catch (e) {
+    print('Error checking existing contributor: $e');
+    return null;
+  }
+}
+
+Future<void> addContributor() async {
+  if (selectedUserId.isEmpty || selectedCharityId.isEmpty) {
+    Get.snackbar('Error', 'Please select both a user and a charity');
+    return;
+  }
+
+  try {
+    // Check for existing contributor with same user and charity
+    final existingContributor = await checkExistingContributor(
+      selectedUserId.value, 
+      selectedCharityId.value
+    );
+
+    if (existingContributor != null) {
+      Get.snackbar(
+        'Error', 
+        'This user has already been assigned to this charity',
+        backgroundColor: Colors.red,
+        colorText: Colors.white
+      );
+      return;
+    }
+
+    final now = DateTime.now();
+    final newContributor = {
+      "user_id": selectedUserId.value,
+      "charity_id": selectedCharityId.value,
+      "created_at": now.toIso8601String(),
+      "updated_at": now.toIso8601String(),
+    };
+
+    await supabase
+        .from('contributors')
+        .insert(newContributor);
+    
+    Get.snackbar('Success', 'Contributor added successfully');
+    fetchContributors();
+    selectedUserId.value = '';
+    selectedCharityId.value = '';
+  } catch (e) {
+    print('Error adding contributor: $e');
+    Get.snackbar('Error', 'Failed to add contributor: $e');
+  }
+}
 
   Future<void> deleteContributor(String? id) async {
     if (id == null) return;
@@ -149,7 +228,7 @@ class ContributorAdminController extends GetxController {
       final response = await supabase
           .from('charities')
           .select()
-          .order('created_at');
+          .eq('status', 1);
       
       charities.value = (response).map((data) {
         try {
@@ -176,17 +255,19 @@ class Contributor {
   final String? id;
   final String? userId;
   final String? charityId;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final DateTime? created_at;
+  final DateTime? updated_at;
   final Users? user;
+  final Charity? charity;
 
   Contributor({
     this.id,
     this.userId,
     this.charityId,
-    this.createdAt,
-    this.updatedAt,
+    this.created_at,
+    this.updated_at,
     this.user,
+    this.charity,
   });
 
   factory Contributor.fromRawJson(String str) => 
@@ -200,13 +281,14 @@ class Contributor {
       id: json["id"]?.toString(),
       userId: json["user_id"]?.toString(),
       charityId: json["charity_id"]?.toString(),
-      createdAt: json["created_at"] == null 
+      created_at: json["created_at"] == null 
           ? null 
           : DateTime.parse(json["created_at"].toString()),
-      updatedAt: json["updated_at"] == null 
+      updated_at: json["updated_at"] == null 
           ? null 
           : DateTime.parse(json["updated_at"].toString()),
       user: json["users"] == null ? null : Users.fromJson(json["users"]),
+      charity: json["charities"] == null ? null : Charity.fromJson(json["charities"])
     );
   }
 
@@ -214,7 +296,7 @@ class Contributor {
         "id": id,
         "user_id": userId,
         "charity_id": charityId,
-        "created_at": createdAt?.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
+        "created_at": created_at?.toIso8601String(),
+        "updated_at": updated_at?.toIso8601String(),
       };
 }

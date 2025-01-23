@@ -25,15 +25,6 @@ class CategoriesView extends GetView<CategoriesController> {
                 itemBuilder: (context, index) {
                   final category = controller.categories[index];
                   return ListTile(
-                    // leading: category.icon != null
-                    //     ? Image.network(
-                    //         category.icon!,
-                    //         width: 40,
-                    //         height: 40,
-                    //         errorBuilder: (context, error, stackTrace) =>
-                    //             const Icon(Icons.category),
-                    //       )
-                    //     : const Icon(Icons.category),
                     title: Text(category.name ?? ''),
                     subtitle: Text(category.description ?? ''),
                     trailing: Row(
@@ -64,46 +55,66 @@ class CategoriesView extends GetView<CategoriesController> {
     final nameController = TextEditingController(text: category?.name);
     final descController = TextEditingController(text: category?.description);
 
+    final isFormValid = RxBool(false);
+
+    void validateForm() {
+      isFormValid.value =
+          nameController.text.trim().isNotEmpty &&
+          descController.text.trim().isNotEmpty;
+    }
+
+    nameController.addListener(validateForm);
+    descController.addListener(validateForm);
+
     Get.dialog(
-      AlertDialog(
-        title: Text(category == null ? 'Add Category' : 'Edit Category'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
+      Obx(
+        () => AlertDialog(
+          title: Text(category == null ? 'Add Category' : 'Edit Category'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+              ),
+              TextField(
+                controller: descController,
+                decoration: const InputDecoration(labelText: 'Description'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('Cancel'),
             ),
-            TextField(
-              controller: descController,
-              decoration: const InputDecoration(labelText: 'Description'),
+            TextButton(
+              onPressed: isFormValid.value
+                  ? () {
+                      final newCategory = Category(
+                        id: category?.id,
+                        name: nameController.text,
+                        description: descController.text,
+                        updatedAt: DateTime.now(),
+                      );
+
+                      if (category == null) {
+                        controller.addCategory(newCategory);
+                      } else {
+                        controller.updateCategory(newCategory);
+                      }
+                      Get.back();
+                    }
+                  : null,
+              child: Text(category == null ? 'Add' : 'Update'),
+              style: TextButton.styleFrom(
+                foregroundColor: isFormValid.value
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey,
+              ),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              final newCategory = Category(
-                id: category?.id,
-                name: nameController.text,
-                description: descController.text,
-                updatedAt: DateTime.now(),
-              );
-
-              if (category == null) {
-                controller.addCategory(newCategory);
-              } else {
-                controller.updateCategory(newCategory);
-              }
-              Get.back();
-            },
-            child: Text(category == null ? 'Add' : 'Update'),
-          ),
-        ],
       ),
     );
   }

@@ -1,9 +1,13 @@
+import 'package:dompet_mal/app/modules/bankAdmin/bindings/bank_admin_binding.dart';
+import 'package:dompet_mal/app/modules/bankAdmin/views/bank_admin_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/(admin)/admin_panel/bindings/admin_panel_binding.dart';
 import '../modules/(admin)/admin_panel/views/admin_panel_view.dart';
 import '../modules/(admin)/categories/bindings/categories_binding.dart';
 import '../modules/(admin)/categories/views/categories_view.dart';
+import '../modules/(admin)/companies/bindings/companies_binding.dart';
+import '../modules/(admin)/companies/views/companies_view.dart';
 import '../modules/(admin)/list_user/bindings/list_user_binding.dart';
 import '../modules/(admin)/list_user/views/list_user_view.dart';
 import '../modules/(admin)/upload/bindings/upload_binding.dart';
@@ -16,8 +20,6 @@ import '../modules/category/bindings/category_binding.dart';
 import '../modules/category/views/category_view.dart';
 import '../modules/charityAdmin/bindings/charity_admin_binding.dart';
 import '../modules/charityAdmin/views/charity_admin_view.dart';
-import '../modules/(admin)/companies/bindings/companies_binding.dart';
-import '../modules/(admin)/companies/views/companies_view.dart';
 import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
 import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
 import '../modules/contributorAdmin/bindings/contributor_admin_binding.dart';
@@ -256,6 +258,11 @@ class AppPages {
       name: _Paths.COMPANIES,
       page: () => CompaniesView(),
       binding: CompaniesBinding(),
+    ),
+    GetPage(
+      name: _Paths.BANK_ADMIN,
+      page: () => const BankAdminView(),
+      binding: BankAdminBinding(),
     ),
   ];
 }

@@ -56,11 +56,12 @@ final TextEditingController targetDateController = TextEditingController();
       isCharitiesLoading.value = true;
       errorMessage.value = '';
 
-      final response = await supabase.from('charities').select();
+      final response = await supabase.from('charities').select().eq('status', 1);
       charities.value =
           (response as List).map((e) => Charity.fromJson(e)).toList();
     } catch (e) {
       errorMessage.value = 'Failed to fetch charities: ${e.toString()}';
+      print('Failed to fetch charities: ${e.toString()}');
       Get.snackbar('Error', errorMessage.value,
           snackPosition: SnackPosition.BOTTOM);
     } finally {
@@ -118,11 +119,12 @@ final TextEditingController targetDateController = TextEditingController();
       title: titleController.text,
       description: descriptionController.text,
       progress: int.parse(progressController.text),
-      total: int.parse(totalController.text),
+      // total: int.parse(totalController.text),
       targetTotal: int.parse(targetTotalController.text),
       targetDate: DateTime.parse(targetDateController.text),
       created_at: DateTime.now(),
       updated_at: DateTime.now(),
+      status: 1,
     );
 
     await supabase.from('charities').insert(newCharity.toJson());
@@ -155,11 +157,12 @@ Future<void> updateCharity(String charityId) async {
       title: titleController.text,
       description: descriptionController.text,
       progress: int.parse(progressController.text),
-      total: int.parse(totalController.text),
+      // total: int.parse(totalController.text),
       targetTotal: int.parse(targetTotalController.text),
        targetDate: DateTime.parse(targetDateController.text),
       created_at: DateTime.now(), // Optionally keep the original created_at
       updated_at: DateTime.now(),
+      status: 1,
     );
 
     await supabase
@@ -184,23 +187,29 @@ Future<void> updateCharity(String charityId) async {
 
   // Delete Charity
   Future<void> deleteCharity(String id) async {
-    try {
-      isDeletingCharity.value = true;
-      errorMessage.value = '';
+  try {
+    isDeletingCharity.value = true;
+    errorMessage.value = '';
 
-      await supabase.from('charities').delete().eq('id', id);
-      await fetchCharities();
+    // Update status menjadi 0
+    await supabase
+        .from('charities')
+        .update({'status': 0}) // Mengubah status menjadi 0
+        .eq('id', id);
 
-      Get.snackbar('Success', 'Charity deleted successfully',
-          snackPosition: SnackPosition.BOTTOM);
-    } catch (e) {
-      errorMessage.value = 'Failed to delete charity: ${e.toString()}';
-      Get.snackbar('Error', errorMessage.value,
-          snackPosition: SnackPosition.BOTTOM);
-    } finally {
-      isDeletingCharity.value = false;
-    }
+    await fetchCharities(); // Refresh data
+
+    Get.snackbar('Success', 'Charity status updated successfully',
+        snackPosition: SnackPosition.BOTTOM);
+  } catch (e) {
+    errorMessage.value = 'Failed to update charity status: ${e.toString()}';
+    Get.snackbar('Error', errorMessage.value,
+        snackPosition: SnackPosition.BOTTOM);
+  } finally {
+    isDeletingCharity.value = false;
   }
+}
+
 
   // Reset form fields
   void resetFormFields() {

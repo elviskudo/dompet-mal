@@ -12,7 +12,7 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
       appBar: AppBar(
         title: const Text('Contributor Management'),
         centerTitle: true,
-        backgroundColor: Colors.blue[700],
+        // backgroundColor: Colors.blue[700],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -38,61 +38,94 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                     ),
                     const SizedBox(height: 16),
                     Obx(() => Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () => _showUserSelectionDialog(context),
-                          icon: const Icon(Icons.person_add),
-                          label: Text(
-                            controller.selectedUserId.value.isEmpty
-                                ? 'Select User'
-                                : controller.users
-                                    .firstWhere((user) => user.id == controller.selectedUserId.value)
-                                    .name,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[100],
-                            foregroundColor: Colors.blue[800],
-                            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () =>
+                                  _showUserSelectionDialog(context),
+                              icon: const Icon(Icons.person_add),
+                              label: Text(
+                                controller.selectedUserId.value.isEmpty
+                                    ? 'Select User'
+                                    : controller.users
+                                        .firstWhere((user) =>
+                                            user.id ==
+                                            controller.selectedUserId.value)
+                                        .name,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue[100],
+                                foregroundColor: Colors.blue[800],
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    )),
+                          ],
+                        )),
                     const SizedBox(height: 16),
                     Obx(() => Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () => _showCharitySelectionDialog(context),
-                          icon: const Icon(Icons.heart_broken),
-                          label: Text(
-                            controller.selectedCharityId.value.isEmpty
-                                ? 'Select Charity'
-                                : controller.charities
-                                    .firstWhere((charity) => charity.id == controller.selectedCharityId.value)
-                                    .title,
-                            style: const TextStyle(fontSize: 16),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[100],
-                            foregroundColor: Colors.blue[800],
-                            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () =>
+                                  _showCharitySelectionDialog(context),
+                              icon: const Icon(Icons.heart_broken),
+                              label: Text(
+                                controller.selectedCharityId.value.isEmpty
+                                    ? 'Select Charity'
+                                    : controller.charities
+                                        .firstWhere((charity) =>
+                                            charity.id ==
+                                            controller.selectedCharityId.value)
+                                        .title,
+                                style: const TextStyle(fontSize: 16),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue[100],
+                                foregroundColor: Colors.blue[800],
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    )),
+                          ],
+                        )),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: controller.addContributor,
+                      onPressed: () {
+                        if (controller.selectedUserId.value.isEmpty) {
+                          Get.snackbar(
+                            'Error',
+                            'Please select a user!',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red[700],
+                            colorText: Colors.white,
+                          );
+                          return;
+                        }
+
+                        if (controller.selectedCharityId.value.isEmpty) {
+                          Get.snackbar(
+                            'Error',
+                            'Please select a charity!',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red[700],
+                            colorText: Colors.white,
+                          );
+                          return;
+                        }
+
+                        // Jika semua validasi terpenuhi
+                        controller.addContributor();
+                      },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.blue[700],
@@ -122,6 +155,7 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                   itemBuilder: (context, index) {
                     final contributor = controller.contributors[index];
                     final user = contributor.user;
+                    final charity = contributor.charity;
 
                     return Card(
                       elevation: 3,
@@ -143,16 +177,32 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(user?.email ?? ''),
+                            Text(charity!.title),
                             Text(
-                              'Added: ${contributor.createdAt.toString().split('.')[0]}',
-                              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                              'Added: ${contributor.created_at.toString().split('.')[0]}',
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 12),
                             ),
                           ],
                         ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => controller.deleteContributor(contributor.id),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // IconButton(
+                            //   icon: const Icon(Icons.edit, color: Colors.blue),
+                            //   onPressed: () {
+                            //     // Set selected user and charity for update
+                            //     controller.selectedUserId.value = contributor.userId ?? '';
+                            //     controller.selectedCharityId.value = contributor.charityId ?? '';
+                            //     _showUpdateContributorDialog(context, contributor.id);
+                            //   },
+                            // ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () =>
+                                  controller.deleteContributor(contributor.id),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -175,40 +225,40 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
             borderRadius: BorderRadius.circular(15),
           ),
           child: Obx(() => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search Users',
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search Users',
+                        prefixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onChanged: controller.filterUsers,
                     ),
                   ),
-                  onChanged: controller.filterUsers,
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.filteredUsers.length,
-                  itemBuilder: (context, index) {
-                    final user = controller.filteredUsers[index];
-                    return ListTile(
-                      title: Text(user.name),
-                      subtitle: Text(user.email),
-                      onTap: () {
-                        controller.selectedUserId.value = user.id;
-                        Navigator.of(context).pop();
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.filteredUsers.length,
+                      itemBuilder: (context, index) {
+                        final user = controller.filteredUsers[index];
+                        return ListTile(
+                          title: Text(user.name),
+                          subtitle: Text(user.email),
+                          onTap: () {
+                            controller.selectedUserId.value = user.id;
+                            Navigator.of(context).pop();
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
-              ),
-            ],
-          )),
+                    ),
+                  ),
+                ],
+              )),
         );
       },
     );
@@ -223,40 +273,83 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
             borderRadius: BorderRadius.circular(15),
           ),
           child: Obx(() => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search Charities',
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search Charities',
+                        prefixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onChanged: controller.filterCharities,
                     ),
                   ),
-                  onChanged: controller.filterCharities,
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.filteredCharities.length,
-                  itemBuilder: (context, index) {
-                    final charity = controller.filteredCharities[index];
-                    return ListTile(
-                      title: Text(charity.title),
-                      subtitle: Text(charity.description, maxLines: 1, overflow: TextOverflow.ellipsis),
-                      onTap: () {
-                        controller.selectedCharityId.value = charity.id;
-                        Navigator.of(context).pop();
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.filteredCharities.length,
+                      itemBuilder: (context, index) {
+                        final charity = controller.filteredCharities[index];
+                        return ListTile(
+                          title: Text(charity.title),
+                          subtitle: Text(charity.description,
+                              maxLines: 1, overflow: TextOverflow.ellipsis),
+                          onTap: () {
+                            controller.selectedCharityId.value = charity.id;
+                            Navigator.of(context).pop();
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                ],
+              )),
+        );
+      },
+    );
+  }
+
+  void _showUpdateContributorDialog(
+      BuildContext context, String? contributorId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Update Contributor'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                  'Update contributor details for: ${controller.users.firstWhere((user) => user.id == controller.selectedUserId.value).name}'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => _showUserSelectionDialog(context),
+                child: const Text('Change User'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => _showCharitySelectionDialog(context),
+                child: const Text('Change Charity'),
               ),
             ],
-          )),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                controller.updateContributor(contributorId!);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Update'),
+            ),
+          ],
         );
       },
     );

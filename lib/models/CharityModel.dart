@@ -15,11 +15,12 @@ class Charity {
     String title;
     String description;
     int progress;
-    int total;
+    int? total;
     int targetTotal;
     DateTime targetDate;
     DateTime created_at;
     DateTime updated_at;
+    int status;
 
     Charity({
         required this.id,
@@ -28,11 +29,12 @@ class Charity {
         required this.title,
         required this.description,
         required this.progress,
-        required this.total,
+        this.total,
         required this.targetTotal,
         required this.targetDate,
         required this.created_at,
         required this.updated_at,
+        required this.status,
     });
 
     factory Charity.fromJson(Map<String, dynamic> json) => Charity(
@@ -47,6 +49,7 @@ class Charity {
         targetDate: DateTime.parse(json["target_date"]),
         created_at: DateTime.parse(json["created_at"]),
         updated_at: DateTime.parse(json["updated_at"]),
+        status: json["status"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -61,5 +64,6 @@ class Charity {
         "target_date": "${targetDate.year.toString().padLeft(4, '0')}-${targetDate.month.toString().padLeft(2, '0')}-${targetDate.day.toString().padLeft(2, '0')}",
         "created_at": created_at.toIso8601String(),
         "updated_at": updated_at.toIso8601String(),
+        "status": status,
     };
 }
