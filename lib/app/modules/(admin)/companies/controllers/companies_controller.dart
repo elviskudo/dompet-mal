@@ -22,7 +22,7 @@ class CompaniesController extends GetxController {
       final response = await supabase
           .from('companies')
           .select()
-          .order('created_at', ascending: false);
+          .order('name', ascending: true);
       print('res: $response');
       companiesList.value =
           (response as List).map((item) => Companies.fromJson(item)).toList();

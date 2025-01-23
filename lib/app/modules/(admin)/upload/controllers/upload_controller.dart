@@ -1,4 +1,9 @@
 // File: app/controllers/upload_controller.dart
+import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/companies/controllers/companies_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
+import 'package:dompet_mal/app/modules/charityAdmin/controllers/charity_admin_controller.dart';
+import 'package:dompet_mal/component/UploadDialog.dart';
 import 'package:dompet_mal/models/file_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,8 +25,13 @@ class UploadController extends GetxController {
   final cloudName = 'dcthljxbl';
   final uploadPreset = 'dompet-mal';
   final RxList<FileModel> fileList = <FileModel>[].obs;
-  final RxList<String> moduleClasses =
-      <String>['users', 'categories', 'all'].obs; // Contoh data module class
+  final RxList<String> moduleClasses = <String>[
+    'users',
+    'categories',
+    'companies',
+    'charities',
+    'all'
+  ].obs; // Contoh data module class
   final RxList<FileModel> filteredFileList = <FileModel>[].obs;
 
   @override
@@ -42,6 +52,18 @@ class UploadController extends GetxController {
     }
   }
 
+  void showUploadDialog(BuildContext context) {
+    // Ensure all controllers are initialized before showing dialog
+    Get.put(CategoriesController());
+    Get.put(ListUserController());
+    Get.put(CompaniesController());
+    Get.put(CharityAdminController());
+    Get.put(UploadController());
+
+    // Then show the dialog
+    Get.dialog(UploadDialog());
+  }
+
   Future<List<FileModel>> fetchFiles() async {
     try {
       // isLoading.value = true;
@@ -57,10 +79,12 @@ class UploadController extends GetxController {
 
         final userResponse = await supabase
             .from(moduleClass)
-            .select('name')
+            .select(moduleClass == 'charities' ? 'title' : 'name')
             .eq('id', moduleId)
             .single();
-        moduleName = userResponse['name'] as String;
+        moduleName =
+            userResponse['${moduleClass == 'charities' ? 'title' : 'name'}']
+                as String;
 
         // Tambahkan data ke dalam list files
         files.add(FileModel(

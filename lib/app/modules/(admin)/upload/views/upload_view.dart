@@ -24,9 +24,7 @@ class UploadView extends GetView<UploadController> {
                 IconButton(
                   icon: const Icon(Icons.upload),
                   tooltip: 'Upload Foto',
-                  onPressed: () {
-                    Get.dialog(UploadDialog());
-                  },
+                  onPressed: () => controller.showUploadDialog(context)
                 ),
               ],
             ),
@@ -42,7 +40,7 @@ class UploadView extends GetView<UploadController> {
                   onChanged: (newValue) {
                     if (newValue != null) {
                       controller.selectedModuleClass.value = newValue;
-                      controller.filterFiles(); // Apply filter
+                      // controller.filterFiles(); // Apply filter
                     }
                   },
                   items: controller.moduleClasses

@@ -4,6 +4,8 @@ import '../modules/(admin)/admin_panel/bindings/admin_panel_binding.dart';
 import '../modules/(admin)/admin_panel/views/admin_panel_view.dart';
 import '../modules/(admin)/categories/bindings/categories_binding.dart';
 import '../modules/(admin)/categories/views/categories_view.dart';
+import '../modules/(admin)/companies/bindings/companies_binding.dart';
+import '../modules/(admin)/companies/views/companies_view.dart';
 import '../modules/(admin)/list_user/bindings/list_user_binding.dart';
 import '../modules/(admin)/list_user/views/list_user_view.dart';
 import '../modules/(admin)/upload/bindings/upload_binding.dart';
@@ -16,8 +18,6 @@ import '../modules/category/bindings/category_binding.dart';
 import '../modules/category/views/category_view.dart';
 import '../modules/charityAdmin/bindings/charity_admin_binding.dart';
 import '../modules/charityAdmin/views/charity_admin_view.dart';
-import '../modules/(admin)/companies/bindings/companies_binding.dart';
-import '../modules/(admin)/companies/views/companies_view.dart';
 import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
 import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
 import '../modules/contributorAdmin/bindings/contributor_admin_binding.dart';
@@ -68,6 +68,8 @@ import '../modules/sendMoney2/bindings/send_money2_binding.dart';
 import '../modules/sendMoney2/views/send_money2_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
+import '../modules/(admin)/transactions/bindings/transactions_binding.dart';
+import '../modules/(admin)/transactions/views/transactions_view.dart';
 
 part 'app_routes.dart';
 
@@ -256,6 +258,11 @@ class AppPages {
       name: _Paths.COMPANIES,
       page: () => CompaniesView(),
       binding: CompaniesBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRANSACTIONS,
+      page: () => const TransactionsView(),
+      binding: TransactionsBinding(),
     ),
   ];
 }

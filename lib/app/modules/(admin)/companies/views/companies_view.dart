@@ -32,9 +32,6 @@ class CompaniesView extends StatelessWidget {
           itemBuilder: (context, index) {
             final company = controller.companiesList[index];
             return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(company.logoUrl ?? ""),
-              ),
               title: Text(company.name ?? ""),
               subtitle: Text(company.email ?? ""),
               trailing: Row(
@@ -61,8 +58,8 @@ class CompaniesView extends StatelessWidget {
   void _showAddCompanyDialog(BuildContext context) {
     final nameController = TextEditingController();
     final emailController = TextEditingController();
-    final logoUrlController = TextEditingController();
     final phoneNumberController = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     showDialog(
       context: context,
@@ -70,22 +67,48 @@ class CompaniesView extends StatelessWidget {
         return AlertDialog(
           title: const Text('Add Company'),
           content: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextField(
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
                     controller: nameController,
-                    decoration: const InputDecoration(labelText: 'Name')),
-                TextField(
+                    decoration: const InputDecoration(labelText: 'Name'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Name is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
                     controller: emailController,
-                    decoration: const InputDecoration(labelText: 'Email')),
-                TextField(
-                    controller: logoUrlController,
-                    decoration: const InputDecoration(labelText: 'Logo URL')),
-                TextField(
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Email is required';
+                      }
+                      final emailRegex =
+                          RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                      if (!emailRegex.hasMatch(value)) {
+                        return 'Enter a valid email address';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
                     controller: phoneNumberController,
                     decoration:
-                        const InputDecoration(labelText: 'Phone Number')),
-              ],
+                        const InputDecoration(labelText: 'Phone Number'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Phone NUmber is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -95,15 +118,16 @@ class CompaniesView extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                controller.addCompany(Companies(
-                  name: nameController.text,
-                  logoUrl: logoUrlController.text,
-                  email: emailController.text,
-                  phoneNumber: phoneNumberController.text,
-                  createdAt: DateTime.now(),
-                  updatedAt: DateTime.now(),
-                ));
-                Navigator.of(context).pop();
+                if (formKey.currentState!.validate()) {
+                  controller.addCompany(Companies(
+                    name: nameController.text,
+                    email: emailController.text,
+                    phoneNumber: phoneNumberController.text,
+                    createdAt: DateTime.now(),
+                    updatedAt: DateTime.now(),
+                  ));
+                  Navigator.of(context).pop();
+                }
               },
               child: const Text('Add'),
             ),
@@ -117,7 +141,6 @@ class CompaniesView extends StatelessWidget {
   void _showEditCompanyDialog(BuildContext context, Companies company) {
     final nameController = TextEditingController(text: company.name);
     final emailController = TextEditingController(text: company.email);
-    final logoUrlController = TextEditingController(text: company.logoUrl);
     final phoneNumberController =
         TextEditingController(text: company.phoneNumber);
 
@@ -136,9 +159,6 @@ class CompaniesView extends StatelessWidget {
                     controller: emailController,
                     decoration: const InputDecoration(labelText: 'Email')),
                 TextField(
-                    controller: logoUrlController,
-                    decoration: const InputDecoration(labelText: 'Logo URL')),
-                TextField(
                     controller: phoneNumberController,
                     decoration:
                         const InputDecoration(labelText: 'Phone Number')),
@@ -156,7 +176,6 @@ class CompaniesView extends StatelessWidget {
                   company.id ?? "",
                   Companies(
                     name: nameController.text,
-                    logoUrl: logoUrlController.text,
                     email: emailController.text,
                     phoneNumber: phoneNumberController.text,
                     createdAt: company.createdAt,

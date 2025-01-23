@@ -1,6 +1,10 @@
 import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/companies/controllers/companies_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/upload/controllers/upload_controller.dart';
+import 'package:dompet_mal/app/modules/charityAdmin/controllers/charity_admin_controller.dart';
+import 'package:dompet_mal/models/CharityModel.dart';
+import 'package:dompet_mal/models/Companies.dart';
 import 'package:dompet_mal/models/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +13,8 @@ import 'package:image_picker/image_picker.dart';
 class UploadDialog extends StatelessWidget {
   final CategoriesController categoriesController = Get.find();
   final ListUserController listUserController = Get.find();
+  final CompaniesController companiesController = Get.find();
+  final CharityAdminController charityAdminController = Get.find();
   final UploadController uploadController = Get.put(UploadController());
 
   UploadDialog({Key? key}) : super(key: key);
@@ -34,7 +40,8 @@ class UploadDialog extends StatelessWidget {
                 labelText: 'Module Type',
                 border: OutlineInputBorder(),
               ),
-              items: ['categories', 'users'].map((String value) {
+              items: ['categories', 'users', 'companies', 'charities']
+                  .map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value.capitalizeFirst!),
@@ -64,7 +71,6 @@ class UploadDialog extends StatelessWidget {
                   }).toList(),
                   onChanged: (value) {
                     uploadController.selectedModuleId.value = value ?? '';
-                    
                   },
                 );
               }
@@ -78,6 +84,43 @@ class UploadDialog extends StatelessWidget {
                     return DropdownMenuItem<String>(
                       value: data.id,
                       child: Text(data.name ?? ''),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    uploadController.selectedModuleId.value = value ?? '';
+                    uploadController.checkExistingFile();
+                  },
+                );
+              }
+              if (uploadController.selectedModuleClass.value == 'companies') {
+                return DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    labelText: 'Select Companies',
+                    border: OutlineInputBorder(),
+                  ),
+                  items:
+                      companiesController.companiesList.map((Companies data) {
+                    return DropdownMenuItem<String>(
+                      value: data.id,
+                      child: Text(data.name ?? ''),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    uploadController.selectedModuleId.value = value ?? '';
+                    uploadController.checkExistingFile();
+                  },
+                );
+              }
+              if (uploadController.selectedModuleClass.value == 'charities') {
+                return DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    labelText: 'Select Charities',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: charityAdminController.charities.map((Charity data) {
+                    return DropdownMenuItem<String>(
+                      value: data.id,
+                      child: Text(data.title ?? ''),
                     );
                   }).toList(),
                   onChanged: (value) {

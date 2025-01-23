@@ -77,6 +77,9 @@ class CategoriesView extends GetView<CategoriesController> {
             TextField(
               controller: descController,
               decoration: const InputDecoration(labelText: 'Description'),
+              maxLines: 3, // Allows multiple lines for description
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
             ),
           ],
         ),

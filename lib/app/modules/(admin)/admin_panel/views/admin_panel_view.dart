@@ -4,6 +4,8 @@ import 'package:dompet_mal/app/modules/(admin)/categories/views/categories_view.
 import 'package:dompet_mal/app/modules/(admin)/companies/views/companies_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/views/list_user_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/transactions/views/transactions_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/upload/controllers/upload_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/upload/views/upload_view.dart';
 import 'package:dompet_mal/app/modules/charityAdmin/controllers/charity_admin_controller.dart';
@@ -23,6 +25,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
     Get.put(UploadController());
     Get.put(CategoriesController());
     Get.put(ContributorAdminController());
+    Get.put(TransactionsController());
     Get.put(CharityAdminController());
     return Scaffold(
       body: Stack(
@@ -186,6 +189,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
         _buildMenuItem(3, 'Companies', Icons.compare_rounded),
         _buildMenuItem(4, 'Contributor', Icons.shape_line),
         _buildMenuItem(5, 'Charity', Icons.health_and_safety_sharp),
+        _buildMenuItem(6, 'Transaction', Icons.wallet),
       ],
     );
   }
@@ -223,13 +227,14 @@ class AdminPanelView extends GetView<AdminPanelController> {
         return const UploadView();
       case 3:
         return CompaniesView();
-        case 4:
+      case 4:
         return ContributorAdminView();
-        case 5:
+      case 5:
         return CharityAdminView();
+      case 6:
+        return TransactionsView();
       default:
         return ListUserView();
-        
     }
   }
 }

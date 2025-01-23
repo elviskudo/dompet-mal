@@ -57,7 +57,7 @@ class CategoriesController extends GetxController {
       final response = await supabase
           .from('categories')
           .select()
-          .order('created_at', ascending: false);
+          .order('name', ascending: true);
 
       categories.value =
           (response as List).map((item) => Category.fromJson(item)).toList();
