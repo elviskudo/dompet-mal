@@ -108,7 +108,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
             ),
           ),
           Image.asset(
-            'icons/dompet2.png',
+            'assets/icons/dompet2.png',
             width: 90,
             height: 90,
           ),
@@ -151,7 +151,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
                   );
                 },
                 hoverColor: Colors.white,
-                child: Image.asset('icons/icon_copy.png'),
+                child: Image.asset('assets/icons/icon_copy.png'),
               )
             ],
           ),
@@ -163,7 +163,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
             ),
             child: ListTile(
               leading: Image.asset(
-                'images/foto_bayi_sekarat.png', // Ganti dengan path gambar
+                'assets/images/foto_bayi_sekarat.png', // Ganti dengan path gambar
                 width: 50,
                 height: 50,
               ),

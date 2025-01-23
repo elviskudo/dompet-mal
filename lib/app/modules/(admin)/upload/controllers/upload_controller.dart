@@ -21,6 +21,9 @@ class UploadController extends GetxController {
   final imageUrl = ''.obs;
   final selectedImage = Rxn<XFile>();
   final fileType = ''.obs;
+  final isEditMode = false.obs;
+  final isDeleteMode = false.obs;
+  final selectedFilesForDeletion = <String>{}.obs;
 
   final cloudName = 'dcthljxbl';
   final uploadPreset = 'dompet-mal';
@@ -30,6 +33,7 @@ class UploadController extends GetxController {
     'categories',
     'companies',
     'charities',
+    'bank',
     'all'
   ].obs; // Contoh data module class
   final RxList<FileModel> filteredFileList = <FileModel>[].obs;
@@ -38,6 +42,61 @@ class UploadController extends GetxController {
   void onInit() {
     super.onInit();
     fetchFiles();
+  }
+
+  void toggleEditMode() {
+    isEditMode.value = !isEditMode.value;
+    isDeleteMode.value = false;
+  }
+
+  // Method to toggle delete mode
+  void toggleDeleteMode() {
+    isDeleteMode.value = !isDeleteMode.value;
+    isEditMode.value = false;
+    selectedFilesForDeletion.clear();
+  }
+
+  // Method to select/deselect file for deletion
+  void toggleFileSelection(String fileId) {
+    if (selectedFilesForDeletion.contains(fileId)) {
+      selectedFilesForDeletion.remove(fileId);
+    } else {
+      selectedFilesForDeletion.add(fileId);
+    }
+  }
+
+  Future<void> deleteSelectedFiles() async {
+    try {
+      if (selectedFilesForDeletion.isEmpty) return;
+
+      // Delete files one by one
+      for (var fileId in selectedFilesForDeletion) {
+        await supabase.from('files').delete().eq('id', fileId);
+      }
+
+      // Refresh file list
+      await fetchFiles();
+
+      // Reset delete mode
+      toggleDeleteMode();
+
+      Get.snackbar('Success', 'Selected files deleted successfully');
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to delete files: $e');
+      print('Failed to delete files: $e');
+    }
+  }
+
+  // Method to edit file (will reuse existing upload logic)
+  Future<void> editFile(FileModel file) async {
+    existingFileId.value = file.id ?? '';
+    imageUrl.value = file.fileName ?? '';
+    fileType.value = file.fileType;
+    selectedModuleClass.value = file.moduleClass;
+    selectedModuleId.value = file.moduleId;
+
+    // Show upload dialog to replace file
+    Get.dialog(UploadDialogImage());
   }
 
   void filterFiles() {
@@ -66,11 +125,14 @@ class UploadController extends GetxController {
 
   Future<List<FileModel>> fetchFiles() async {
     try {
-      // isLoading.value = true;
       final response = await supabase.from('files').select('*');
       final data = response as List<dynamic>;
 
       List<FileModel> files = [];
+
+      // Create a set of existing module IDs for quick lookup
+      final existingFileModuleIds =
+          data.map((file) => file['module_id'] as String).toSet();
 
       for (final file in data) {
         final moduleClass = file['module_class'] as String;
@@ -86,14 +148,15 @@ class UploadController extends GetxController {
             userResponse['${moduleClass == 'charities' ? 'title' : 'name'}']
                 as String;
 
-        // Tambahkan data ke dalam list files
+        // Add data to files list with hasFile flag
         files.add(FileModel(
           id: file['id'] as String?,
           moduleClass: moduleClass,
           moduleId: moduleId,
-          moduleName: moduleName ?? 'Unknown', // Nama module atau default
+          moduleName: moduleName ?? 'Unknown',
           fileName: file['file_name'] as String,
           fileType: file['file_type'] as String,
+          hasFile: existingFileModuleIds.contains(moduleId), // New flag
           createdAt: file['created_at'] != null
               ? DateTime.parse(file['created_at'] as String)
               : null,
@@ -161,6 +224,8 @@ class UploadController extends GetxController {
       if (response.statusCode == 200) {
         imageUrl.value = response.data['secure_url'];
       }
+      fetchFiles();
+      filterFiles();
     } catch (e) {
       print('Upload error: $e');
       Get.snackbar('Error', 'Failed to upload file: $e');
@@ -173,31 +238,71 @@ class UploadController extends GetxController {
     try {
       isLoading.value = true;
 
-      final fileData = FileModel(
-        moduleClass: selectedModuleClass.value,
-        moduleId: selectedModuleId.value,
-        fileName: imageUrl.value,
-        fileType: fileType.value,
-      ).toJson();
+      if (selectedModuleClass.value == 'users' &&
+          selectedModuleId.value == 'all') {
+        // Fetch all users and upload file for each
+        final userResponse = await supabase.from('users').select('id');
+        final userIds =
+            (userResponse as List).map((user) => user['id'] as String).toList();
 
-      if (existingFileId.value.isNotEmpty) {
-        // Update existing file
-        await supabase
-            .from('files')
-            .update(fileData)
-            .eq('id', existingFileId.value);
+        for (final userId in userIds) {
+          final fileData = FileModel(
+            moduleClass: 'users',
+            moduleId: userId,
+            fileName: imageUrl.value,
+            fileType: fileType.value,
+          ).toJson();
+
+          // Check if file exists for this user
+          final existingFile = await supabase
+              .from('files')
+              .select()
+              .eq('module_class', 'users')
+              .eq('module_id', userId)
+              .single();
+
+          if (existingFile != null) {
+            // Update existing file
+            await supabase
+                .from('files')
+                .update(fileData)
+                .eq('id', existingFile['id']);
+          } else {
+            // Insert new file
+            await supabase.from('files').insert(fileData);
+          }
+        }
+
         await resetForm();
+
+        await fetchFiles();
+        filterFiles();
         Get.back();
-        Get.snackbar('Success', 'File updated successfully');
+        Get.snackbar('Success', 'Files uploaded for all users');
       } else {
-        // Insert new file
-        await supabase.from('files').insert(fileData);
+        // Existing single file upload logic
+        final fileData = FileModel(
+          moduleClass: selectedModuleClass.value,
+          moduleId: selectedModuleId.value,
+          fileName: imageUrl.value,
+          fileType: fileType.value,
+        ).toJson();
+
+        if (existingFileId.value.isNotEmpty) {
+          // Update existing file
+          await supabase
+              .from('files')
+              .update(fileData)
+              .eq('id', existingFileId.value);
+        } else {
+          // Insert new file
+          await supabase.from('files').insert(fileData);
+        }
+
         await resetForm();
         Get.back();
         Get.snackbar('Success', 'File saved successfully');
       }
-
-      // Close dialog after successful save
     } catch (e) {
       print('Error saving file info: $e');
       Get.snackbar('Error', 'Failed to save file information');

@@ -90,7 +90,7 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     category: Category(
         id: 7,
         name: "Kegiatan Sosial",
-        categoryImage: "icons/icon_kegiatan.png"),
+        categoryImage: "assets/icons/icon_kegiatan.png"),
     progress: 20,
     totalCharities: 151472721,
     targetCharityDonation: 200000000.0,
@@ -127,7 +127,7 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     category: Category(
         id: 7,
         name: "Kegiatan Sosial",
-        categoryImage: "icons/icon_kegiatan.png"),
+        categoryImage: "assets/icons/icon_kegiatan.png"),
     progress: 20,
     totalCharities: 151472721,
     targetCharityDonation: 200000000.0,
@@ -162,7 +162,9 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
       "https://picsum.photos/id/237/400/600"
     ],
     category: Category(
-        id: 2, name: "Bencana Alam", categoryImage: "icons/icon_bencana.png"),
+        id: 2,
+        name: "Bencana Alam",
+        categoryImage: "assets/icons/icon_bencana.png"),
     progress: 50,
     totalCharities: 98234562,
     targetCharityDonation: 150000000.0,
@@ -198,7 +200,9 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
           "https://example.com/image2-2.png"
     ],
     category: Category(
-        id: 2, name: "Bencana alam", categoryImage: "icons/icon_bencana.png"),
+        id: 2,
+        name: "Bencana alam",
+        categoryImage: "assets/icons/icon_bencana.png"),
     progress: 50,
     totalCharities: 98234562,
     targetCharityDonation: 150000000.0,
@@ -234,7 +238,9 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
           "https://example.com/image2-2.png"
     ],
     category: Category(
-        id: 2, name: "Bencana alam", categoryImage: "icons/icon_bencana.png"),
+        id: 2,
+        name: "Bencana alam",
+        categoryImage: "assets/icons/icon_bencana.png"),
     progress: 50,
     totalCharities: 98234562,
     targetCharityDonation: 150000000.0,
@@ -318,7 +324,7 @@ final List<CharityByCategory> dummyDataListCategoryBanner = [
     progress: 50,
     totalCharities: 98234562,
     targetCharityDonation: 150000000.0,
-    company: Company(  
+    company: Company(
       id: 3,
       uuid: "company-uuid-2",
       companyName: "Dusun Web",
@@ -344,35 +350,54 @@ final List<Category> categories = [
       id: 2,
       name: 'Bencana Alam',
       categoryImage: 'assets/icons/icon_bencana.png'),
-  Category(id: 3, name: 'Balita & Anak Sakit', categoryImage: 'icons/bayi.png'),
+  Category(
+      id: 3,
+      name: 'Balita & Anak Sakit',
+      categoryImage: 'assets/icons/bayi.png'),
   Category(
       id: 4,
       name: 'Bantuan Medis & Kesehatan',
-      categoryImage: 'icons/icon_medis.png'),
-  Category(id: 5, name: 'Bantuan Pendidikan', categoryImage: 'icons/tas.png'),
+      categoryImage: 'assets/icons/icon_medis.png'),
   Category(
-      id: 6, name: 'Lingkungan', categoryImage: 'icons/icon_lingkungan.png'),
+      id: 5, name: 'Bantuan Pendidikan', categoryImage: 'assets/icons/tas.png'),
   Category(
-      id: 7, name: 'Kegiatan Sosial', categoryImage: 'icons/icon_kegiatan.png'),
+      id: 6,
+      name: 'Lingkungan',
+      categoryImage: 'assets/icons/icon_lingkungan.png'),
+  Category(
+      id: 7,
+      name: 'Kegiatan Sosial',
+      categoryImage: 'assets/icons/icon_kegiatan.png'),
   Category(
       id: 8,
       name: 'Infrastruktur Umum',
-      categoryImage: 'icons/infrastruktur.png'),
+      categoryImage: 'assets/icons/infrastruktur.png'),
   Category(
       id: 9,
       name: 'Karya Kreatif & Modal Usaha',
-      categoryImage: 'icons/karya_kreatif.png'),
-  Category(id: 10, name: 'Menolong Hewan', categoryImage: 'icons/disable.png'),
+      categoryImage: 'assets/icons/karya_kreatif.png'),
   Category(
-      id: 11, name: 'Rumah Ibadah', categoryImage: 'icons/icon_lainnya.png'),
-  Category(id: 12, name: 'Difabel', categoryImage: 'icons/disable.png'),
-  Category(id: 13, name: 'Zakat', categoryImage: 'icons/zakat.png'),
+      id: 10,
+      name: 'Menolong Hewan',
+      categoryImage: 'assets/icons/disable.png'),
+  Category(
+      id: 11,
+      name: 'Rumah Ibadah',
+      categoryImage: 'assets/icons/icon_lainnya.png'),
+  Category(id: 12, name: 'Difabel', categoryImage: 'assets/icons/disable.png'),
+  Category(id: 13, name: 'Zakat', categoryImage: 'assets/icons/zakat.png'),
   Category(
       id: 14,
       name: 'Panti Asuhan dan Kaum Du\'afa',
-      categoryImage: 'icons/panti_asuhan.png'),
-  Category(id: 15, name: 'Kemanusiaan', categoryImage: 'icons/kemanusiaan.png'),
-  Category(id: 16, name: 'Panti Jompo', categoryImage: 'icons/panti_jompo.png'),
+      categoryImage: 'assets/icons/panti_asuhan.png'),
+  Category(
+      id: 15,
+      name: 'Kemanusiaan',
+      categoryImage: 'assets/icons/kemanusiaan.png'),
+  Category(
+      id: 16,
+      name: 'Panti Jompo',
+      categoryImage: 'assets/icons/panti_jompo.png'),
   Category(
       id: 17,
       name: 'Dana Operasional',

@@ -125,6 +125,7 @@ class RegisterController extends GetxController {
       final AuthResponse res = await supabase.auth.signUp(
         email: emailController.text.toLowerCase(),
         password: passwordController.text,
+        
         // phone: phoneController.text,
       );
 

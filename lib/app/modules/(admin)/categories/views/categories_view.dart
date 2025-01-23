@@ -1,4 +1,5 @@
 import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
+import 'package:dompet_mal/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

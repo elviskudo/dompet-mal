@@ -29,8 +29,10 @@ class EmailVerificationController extends GetxController {
     print('email sent');
   }
 
-   Future<void> handlePaste(String? value) async {
-    if (value == null || value.length != 6 || !RegExp(r'^\d+$').hasMatch(value)) {
+  Future<void> handlePaste(String? value) async {
+    if (value == null ||
+        value.length != 6 ||
+        !RegExp(r'^\d+$').hasMatch(value)) {
       return;
     }
 
@@ -38,14 +40,14 @@ class EmailVerificationController extends GetxController {
     for (int i = 0; i < 6; i++) {
       otpControllers[i].text = value[i];
     }
-    
+
     // Update nilai OTP
     updateOTPValue();
   }
 
   void handleInput(int index, String value) {
     if (value.isEmpty) return;
-    
+
     // Jika panjang input > 1, mungkin ini adalah paste
     if (value.length > 1) {
       handlePaste(value);
@@ -59,7 +61,7 @@ class EmailVerificationController extends GetxController {
         otpFocusNodes[index + 1].requestFocus();
       }
     }
-    
+
     updateOTPValue();
   }
 
@@ -122,8 +124,7 @@ class EmailVerificationController extends GetxController {
 
       // Verifikasi OTP menggunakan Supabase
       final response = await Supabase.instance.client.auth.verifyOTP(
-        email:
-            userEmail.value, // Email yang digunakan saat mengirim OTP
+        email: userEmail.value, // Email yang digunakan saat mengirim OTP
         token: otpValue.value, // Kode OTP yang diinput user
         type: OtpType.email,
       );
@@ -203,7 +204,7 @@ class EmailVerificationController extends GetxController {
               children: [
                 CircleAvatar(
                   backgroundColor: Color(0xFFC5D6FF),
-                  child: Image.asset('icons/dompet.png'),
+                  child: Image.asset('assets/icons/dompet.png'),
                 ),
                 SizedBox(height: 15),
                 Text(

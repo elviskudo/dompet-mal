@@ -9,7 +9,7 @@ class notification extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Get.toNamed(Routes.NOTIFICATION),
-      child: Image.asset('images/notif.png'),
+      child: Image.asset('assets/images/notif.png'),
     );
   }
 }

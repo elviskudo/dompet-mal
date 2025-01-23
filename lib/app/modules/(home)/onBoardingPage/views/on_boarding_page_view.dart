@@ -80,7 +80,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
             top: 50,
             left: 16,
             child: Image.asset(
-              'images/splash.png',
+              'assets/images/splash.png',
               height: 32,
               // color: Colors.white, // Logo menjadi putih agar kontras
             ),
@@ -154,14 +154,16 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                     child: OutlinedButton.icon(
                       onPressed: _navigateToLogin,
                       icon: Image.asset(
-                        'images/google.png',
+                        'assets/images/google.png',
                         height: 24,
                       ),
-                      label: const Text('Masuk dengan akun Google', style: TextStyle(
-                        color: Color(0xff313036),
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600
-                      ),),
+                      label: const Text(
+                        'Masuk dengan akun Google',
+                        style: TextStyle(
+                            color: Color(0xff313036),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600),
+                      ),
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 48),
                         shape: RoundedRectangleBorder(
@@ -175,11 +177,13 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('Belum punya akun?', style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14
-                        ),),
+                        const Text(
+                          'Belum punya akun?',
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14),
+                        ),
                         TextButton(
                           onPressed: _navigateToRegister,
                           child: const Text(

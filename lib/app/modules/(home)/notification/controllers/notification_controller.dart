@@ -17,9 +17,9 @@ class NotificationController extends GetxController {
   void loadNotifications() {
     const jsonData = '''
     [
-      {"title": "Pembayaran Sukses", "userAvatar": "images/avatar1.png", "created_at": "2025-01-13", "amount": 100000},
-      {"title": "Donasi Diterima", "userAvatar": "images/avatar2.png", "created_at": "2025-01-12", "amount": 150000},
-      {"title": "Pembayaran Gagal", "userAvatar": "images/avatar3.png", "created_at": "2025-02-11", "amount": 50000}
+      {"title": "Pembayaran Sukses", "userAvatar": "assets/images/avatar1.png", "created_at": "2025-01-13", "amount": 100000},
+      {"title": "Donasi Diterima", "userAvatar": "assets/images/avatar2.png", "created_at": "2025-01-12", "amount": 150000},
+      {"title": "Pembayaran Gagal", "userAvatar": "assets/images/avatar3.png", "created_at": "2025-02-11", "amount": 50000}
     ]
     ''';
 

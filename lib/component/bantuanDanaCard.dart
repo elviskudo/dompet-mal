@@ -47,7 +47,7 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
 
           // Cards section
           SizedBox(
-            height: 420, // Adjust the height to fit the cards
+            height: MediaQuery.of(context).size.height * 0.48, // Adjust the height to fit the cards
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,

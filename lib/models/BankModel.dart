@@ -12,6 +12,7 @@ class Bank {
   String? id;
   String? name;
   String? accountNumber;
+  String? image;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -19,6 +20,7 @@ class Bank {
     this.id,
     this.name,
     this.accountNumber,
+    this.image,
     this.createdAt,
     this.updatedAt,
   });
@@ -26,6 +28,7 @@ class Bank {
   factory Bank.fromJson(Map<String, dynamic> json) => Bank(
         id: json["id"],
         name: json["name"],
+        image: json["image"],
         accountNumber: json["account_number"],
         createdAt: json["created_at"] == null
             ? null
@@ -38,6 +41,7 @@ class Bank {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "image": image,
         "account_number": accountNumber,
         "created_at":
             createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),

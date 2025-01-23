@@ -23,7 +23,7 @@ class HomeView extends GetView<HomeController> {
             height: 226,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('images/bgbatik.png'),
+                image: AssetImage('assets/images/bgbatik.png'),
                 fit: BoxFit.cover,
               ),
             ),

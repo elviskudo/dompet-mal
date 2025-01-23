@@ -26,7 +26,7 @@ class RegisterView extends GetView<RegisterController> {
                 height: 226,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/bgLogin.png'),
+                    image: AssetImage('assets/images/bgLogin.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -48,7 +48,7 @@ class RegisterView extends GetView<RegisterController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Image.asset('icons/X.png'),
+                        Image.asset('assets/icons/X.png'),
                         TextButton(
                           onPressed: () => Get.toNamed(Routes.LOGIN),
                           child: Text(
@@ -63,7 +63,7 @@ class RegisterView extends GetView<RegisterController> {
                       ],
                     ),
                     Gap(22),
-                    Center(child: Image.asset('images/logoLogin.png')),
+                    Center(child: Image.asset('assets/images/logoLogin.png')),
                     Gap(40),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,7 +232,7 @@ class RegisterView extends GetView<RegisterController> {
                               ),
                               child: Row(
                                 children: [
-                                  Image.asset('icons/flag.png',
+                                  Image.asset('assets/icons/flag.png',
                                       width: 24, height: 16),
                                   Gap(4),
                                   Text('+62',

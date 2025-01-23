@@ -34,7 +34,7 @@ class ForgotpassVerificationView
                 height: 226,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/bgFg.png'),
+                    image: AssetImage('assets/images/bgFg.png'),
                     fit: BoxFit.cover,
                   ),
                 ),

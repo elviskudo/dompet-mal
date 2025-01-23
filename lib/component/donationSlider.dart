@@ -116,7 +116,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.asset(
-                      'images/mandiri.png',
+                      'assets/images/mandiri.png',
                       width: 80,
                       height: 40,
                     ),

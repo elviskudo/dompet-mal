@@ -11,6 +11,7 @@ String charityToJson(Charity data) => json.encode(data.toJson());
 class Charity {
   String? id;
   String? categoryId;
+  String? image;
   String? companyId;
   String? title;
   String? description;
@@ -23,24 +24,26 @@ class Charity {
   int? status;
 
   Charity({
-     this.id,
-     this.categoryId,
-     this.companyId,
-     this.title,
-     this.description,
-     this.progress,
+    this.id,
+    this.categoryId,
+    this.companyId,
+    this.title,
+    this.description,
+    this.progress,
     this.total,
-     this.targetTotal,
-     this.targetDate,
-     this.created_at,
-     this.updated_at,
-     this.status,
+    this.image,
+    this.targetTotal,
+    this.targetDate,
+    this.created_at,
+    this.updated_at,
+    this.status,
   });
 
   factory Charity.fromJson(Map<String, dynamic> json) => Charity(
         id: json["id"],
         categoryId: json["category_id"],
         companyId: json["company_id"],
+        image: json["image"],
         title: json["title"],
         description: json["description"],
         progress: json["progress"],
@@ -62,6 +65,7 @@ class Charity {
         "id": id,
         "category_id": categoryId,
         "company_id": companyId,
+        "image": image,
         "title": title,
         "description": description,
         "progress": progress,

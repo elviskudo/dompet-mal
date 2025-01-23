@@ -82,7 +82,7 @@ class SearchBars extends StatelessWidget {
                     hoverColor: Colors.black45,
                     onTap: () {},
                     child: Image.asset(
-                      'icons/search.png',
+                      'assets/icons/search.png',
                       width: 24,
                       color: Colors.black,
                       height: 24,

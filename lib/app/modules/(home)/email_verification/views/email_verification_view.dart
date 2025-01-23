@@ -24,7 +24,7 @@ class EmailVerificationView extends GetView<EmailVerificationController> {
             height: 226,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('images/bgFg.png'),
+                image: AssetImage('assets/images/bgFg.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -38,9 +38,9 @@ class EmailVerificationView extends GetView<EmailVerificationController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset('icons/X.png'),
+                  Image.asset('assets/icons/X.png'),
                   Image.asset(
-                    'images/logoLogin.png',
+                    'assets/images/logoLogin.png',
                     width: 343,
                     height: 36,
                   ),

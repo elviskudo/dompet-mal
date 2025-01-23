@@ -43,7 +43,7 @@ class _BannerKategoriState extends State<BannerKategori> {
           },
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: 210,
+            height: MediaQuery.of(context).size.height * 0.3,
             margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -64,7 +64,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                   children: [
                     Container(
                       width: 120,
-                      height: 210, // Make image full height
+                      height: MediaQuery.of(context).size.height * 0.3, // Make image full height
                       decoration: BoxDecoration(
                         borderRadius:
                             BorderRadius.horizontal(left: Radius.circular(10)),
@@ -179,9 +179,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 6,
-                        ),
+                     
                         Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10)),

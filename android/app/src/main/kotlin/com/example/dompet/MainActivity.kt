@@ -1,4 +1,4 @@
-package com.example.dompet_mal
+package com.example.dompet
 
 import io.flutter.embedding.android.FlutterActivity
 

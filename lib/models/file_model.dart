@@ -8,6 +8,7 @@ class FileModel {
   String fileType;
   DateTime? createdAt;
   String? moduleName;
+  bool? hasFile;
 
   FileModel({
     this.id,
@@ -16,6 +17,7 @@ class FileModel {
     required this.fileName,
     this.moduleName,
     required this.fileType,
+    this.hasFile = false,
     this.createdAt,
   });
 

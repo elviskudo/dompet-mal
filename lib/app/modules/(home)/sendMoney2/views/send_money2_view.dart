@@ -131,7 +131,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                     color: Color(0xffC5D6FF),
                   ),
                   child: Image.asset(
-                    'icons/dompet.png',
+                    'assets/icons/dompet.png',
                     width: 22,
                     height: 18,
                   ),
@@ -239,7 +239,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
           children: [
             Obx(() => Container(
                   width: double.infinity,
-                  height: tinggi * 0.7,
+                  height: tinggi * 0.6,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(8),

@@ -41,14 +41,14 @@ class HomeView extends GetView<HomeController> {
                   height: 226,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('images/bgbatik.png'),
+                      image: AssetImage('assets/images/bgbatik.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 Container(
                   width: lebar,
-                  height: tinggi * 0.6,
+                  height: tinggi * 0.525,
                   color: Colors.white,
                 )
               ],

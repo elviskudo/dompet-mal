@@ -9,7 +9,7 @@ class chat extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Get.toNamed(Routes.MESSAGE),
-      child: Image.asset('images/chat.png'),
+      child: Image.asset('assets/images/chat.png'),
     );
   }
 }

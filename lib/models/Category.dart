@@ -1,31 +1,27 @@
 import 'package:uuid/uuid.dart';
 
-class Companies {
+class Category {
   String? id;
   String? name;
-  String? email;
-  String? image;
-  String? phoneNumber;
+  String? description;
+  String? imageUrl;  // Add this field to store image URL
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  Companies({
+  Category({
     this.id,
     this.name,
-    this.email,
-    this.image,
-    this.phoneNumber,
+    this.description,
+    this.imageUrl,  // Update constructor
     this.createdAt,
     this.updatedAt,
   });
 
-  // Factory method untuk membuat instance dari JSON
-  factory Companies.fromJson(Map<String, dynamic> json) => Companies(
-        id: json['id'],
-        name: json['name'],
-        email: json['email'],
-        image: json['image'],
-        phoneNumber: json['phone_number'],
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        imageUrl: json["imageUrl"],  // Add this in fromJson
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -34,13 +30,11 @@ class Companies {
             : DateTime.parse(json["updated_at"]),
       );
 
-  // Method untuk mengubah instance menjadi JSON
   Map<String, dynamic> toJson() => {
         "id": id ?? const Uuid().v4(),
-        'name': name,
-        'email': email,
-        'image': image,
-        'phone_number': phoneNumber,
+        "name": name,
+        "description": description,
+        "imageUrl": imageUrl,  // Include in toJson
         "created_at":
             createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),

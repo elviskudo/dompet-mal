@@ -52,7 +52,7 @@ class ReportList extends StatelessWidget {
                       Row(
                         children: [
                           Image.asset(
-                            'icons/dompet.png',
+                            'assets/icons/dompet.png',
                             width: 32,
                           ),
                           SizedBox(width: 6),

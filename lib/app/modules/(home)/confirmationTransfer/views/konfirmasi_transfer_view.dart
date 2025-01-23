@@ -123,7 +123,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                   Row(
                     children: [
                       Image.asset(
-                        'images/mandiri.png', // Ganti dengan path logo bank Anda
+                        'assets/images/mandiri.png', // Ganti dengan path logo bank Anda
                         width: 73,
                         height: 21,
                       ),
@@ -149,7 +149,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset('icons/dashicons_warning.png'),
+                      Image.asset('assets/icons/dashicons_warning.png'),
                       Gap(12),
                       const Text(
                         "Pastikan nominal sesuai hingga 2 digit terakhir",
@@ -271,13 +271,13 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                       Container(
                           width: 80,
                           height: 66,
-                          child: Image.asset('icons/icon_dompet.png')),
+                          child: Image.asset('assets/icons/icon_dompet.png')),
                       Container(
                         width: 50,
                         height: 50,
                         margin: EdgeInsets.only(left: 50, bottom: 40),
                         child: Image.asset(
-                          'icons/icon_ceklis.png',
+                          'assets/icons/icon_ceklis.png',
                           width: 50,
                           height: 50,
                         ),
@@ -291,8 +291,8 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                   'Sudah transfer ke rekening Dompet Mal?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -308,7 +308,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.38,
+                      width: MediaQuery.of(context).size.width * 0.35,
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.all(24),
@@ -329,7 +329,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                       ),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.38,
+                      width: MediaQuery.of(context).size.width * 0.35,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: basecolor,
@@ -383,7 +383,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                   );
                 },
                 hoverColor: Colors.white,
-                child: Image.asset('icons/icon_copy.png'),
+                child: Image.asset('assets/icons/icon_copy.png'),
               )
             ],
           ),
@@ -395,7 +395,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
             ),
             child: ListTile(
               leading: Image.asset(
-                'images/foto_bayi_sekarat.png', // Ganti dengan path gambar
+                'assets/images/foto_bayi_sekarat.png', // Ganti dengan path gambar
                 width: 50,
                 height: 50,
               ),

@@ -70,7 +70,7 @@ class PaymentAccountPageView extends GetView<PaymentAccountPageController> {
                                   padding: const EdgeInsets.all(16),
                                   child: Row(
                                     children: [
-                                      Image.asset('images/mandiri.png'),
+                                      Image.asset('assets/images/mandiri.png'),
                                       const SizedBox(width: 24),
                                       Column(
                                         crossAxisAlignment:

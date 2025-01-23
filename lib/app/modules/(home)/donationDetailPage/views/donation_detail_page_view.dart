@@ -1,13 +1,16 @@
 import 'package:avatar_stack/avatar_stack.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/donationDetailPage/controllers/donation_detail_page_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/myFavorite/views/my_favorite_view.dart';
 import 'package:dompet_mal/app/modules/(home)/participantPage/views/participant_page_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
+import 'package:dompet_mal/component/laporanCard.dart';
 import 'package:dompet_mal/component/shareButton.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -15,7 +18,8 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
   @override
   final RxBool isExpanded = false.obs;
   final int collapsedLines = 3;
-  String formatRupiah(num value) {
+  Future formatRupiah(num value) async {
+    await value;
     final formatter = NumberFormat.currency(
       locale: 'id_ID',
       symbol: 'Rp ',
@@ -23,6 +27,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
     );
     return formatter.format(value);
   }
+
+  final TransactionsController transactionsController =
+      Get.put(TransactionsController());
 
   Widget build(BuildContext context) {
     CharityByCategory bannerData = Get.arguments;
@@ -291,14 +298,44 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         ),
                       ),
                       SizedBox(height: 8.0),
-                      Obx(() => Text(
-                            bannerData.description,
-                            style: TextStyle(fontSize: 14.0),
-                            maxLines: isExpanded.value ? null : collapsedLines,
-                            overflow: isExpanded.value
-                                ? TextOverflow.visible
-                                : TextOverflow.ellipsis,
-                          )),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Dompet Mal',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Get.toNamed(Routes.REPORT);
+                                },
+                                child: Text(
+                                  'Lihat Semuanya >',
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Obx(() => Text(
+                                bannerData.description,
+                                style: TextStyle(fontSize: 14.0),
+                                maxLines:
+                                    isExpanded.value ? null : collapsedLines,
+                                overflow: isExpanded.value
+                                    ? TextOverflow.visible
+                                    : TextOverflow.ellipsis,
+                              )),
+                        ],
+                      ),
                       SizedBox(height: 24.0),
                       Center(
                         child: ElevatedButton(
@@ -394,6 +431,27 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       SizedBox(
                         height: 32,
                       ),
+                      Obx(
+                        () {
+                          if (transactionsController.transactions.isNotEmpty) {
+                            final latestTransaction =
+                                transactionsController.transactions.first;
+                            return laporanCard(
+                              context,
+                              transactionsController.banks
+                                  .firstWhere((bank) =>
+                                      bank.id == latestTransaction.bankId)
+                                  .name,
+                              latestTransaction.donationPrice!
+                                  .toStringAsFixed(0),
+                              latestTransaction.createdAt!,
+                            );
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        },
+                      ),
+                      Gap(26),
                       Container(
                         width: double.infinity,
                         height: 60,

@@ -152,6 +152,19 @@ class ListUserController extends GetxController {
 
         final roleName = roles['name'] ?? 'member';
 
+        // Fetch user image from files
+        String? imageUrl;
+        final fileResponse = await supabase
+            .from('files')
+            .select('file_name')
+            .eq('module_class', 'users')
+            .eq('module_id', user['id'])
+            .maybeSingle();
+
+        if (fileResponse != null) {
+          imageUrl = fileResponse['file_name'];
+        }
+
         users.add(Users(
           id: user['id'] as String,
           name: user['name'] as String,
@@ -159,6 +172,7 @@ class ListUserController extends GetxController {
           role: roleName,
           phoneNumber: user['phone_number'] as String,
           accessToken: user['access_token'] as String,
+          imageUrl: imageUrl, // Added image URL
           createdAt: DateTime.parse(user['created_at'] as String),
           updatedAt: DateTime.parse(user['updated_at'] as String),
         ));

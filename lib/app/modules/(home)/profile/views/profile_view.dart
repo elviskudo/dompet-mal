@@ -111,7 +111,8 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                       child: Row(
                         children: [
-                          Image.asset('icons/flag.png', width: 24, height: 16),
+                          Image.asset('assets/icons/flag.png',
+                              width: 24, height: 16),
                           Gap(4),
                           Text('+62',
                               style: GoogleFonts.openSans(
@@ -175,7 +176,7 @@ class ProfileView extends GetView<ProfileController> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 139),
+                        vertical: 15, ),
                     child: Text(
                       'UPDATE',
                       style: GoogleFonts.openSans(
@@ -199,7 +200,7 @@ class ProfileView extends GetView<ProfileController> {
               onPressed: () => controller.logout(),
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 139),
+                    const EdgeInsets.symmetric(vertical: 15),
                 child: Text(
                   'Logout',
                   style: GoogleFonts.openSans(
