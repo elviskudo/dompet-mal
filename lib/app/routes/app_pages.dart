@@ -6,6 +6,8 @@ import '../modules/(admin)/categories/bindings/categories_binding.dart';
 import '../modules/(admin)/categories/views/categories_view.dart';
 import '../modules/(admin)/list_user/bindings/list_user_binding.dart';
 import '../modules/(admin)/list_user/views/list_user_view.dart';
+import '../modules/(admin)/upload/bindings/upload_binding.dart';
+import '../modules/(admin)/upload/views/upload_view.dart';
 import '../modules/Report/bindings/report_binding.dart';
 import '../modules/Report/views/report_view.dart';
 import '../modules/aggrement/bindings/aggrement_binding.dart';
@@ -14,6 +16,8 @@ import '../modules/category/bindings/category_binding.dart';
 import '../modules/category/views/category_view.dart';
 import '../modules/charityAdmin/bindings/charity_admin_binding.dart';
 import '../modules/charityAdmin/views/charity_admin_view.dart';
+import '../modules/(admin)/companies/bindings/companies_binding.dart';
+import '../modules/(admin)/companies/views/companies_view.dart';
 import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
 import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
 import '../modules/contributorAdmin/bindings/contributor_admin_binding.dart';
@@ -29,14 +33,10 @@ import '../modules/forgotpass_verification/views/forgotpass_verification_view.da
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/listDonation/bindings/list_donation_binding.dart';
-import '../modules/listDonation/bindings/list_donation_binding.dart';
-import '../modules/listDonation/views/list_donation_view.dart';
 import '../modules/listDonation/views/list_donation_view.dart';
 import '../modules/listPayment/bindings/list_payment_binding.dart';
 import '../modules/listPayment/views/list_payment_view.dart';
 import '../modules/login/bindings/login_binding.dart';
-import '../modules/login/bindings/login_binding.dart';
-import '../modules/login/views/login_view.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/message/bindings/message_binding.dart';
 import '../modules/message/views/message_view.dart';
@@ -45,16 +45,12 @@ import '../modules/navigation/views/navigation_view.dart';
 import '../modules/notification/bindings/notification_binding.dart';
 import '../modules/notification/views/notification_view.dart';
 import '../modules/onBoardingPage/bindings/on_boarding_page_binding.dart';
-import '../modules/onBoardingPage/bindings/on_boarding_page_binding.dart';
-import '../modules/onBoardingPage/views/on_boarding_page_view.dart';
 import '../modules/onBoardingPage/views/on_boarding_page_view.dart';
 import '../modules/participantPage/bindings/participant_page_binding.dart';
 import '../modules/participantPage/views/participant_page_view.dart';
 import '../modules/participants/bindings/participants_binding.dart';
 import '../modules/participants/views/participants_view.dart';
 import '../modules/paymentAccountPage/bindings/payment_account_page_binding.dart';
-import '../modules/paymentAccountPage/bindings/payment_account_page_binding.dart';
-import '../modules/paymentAccountPage/views/payment_account_page_view.dart';
 import '../modules/paymentAccountPage/views/payment_account_page_view.dart';
 import '../modules/paymentSuccess/bindings/payment_success_binding.dart';
 import '../modules/paymentSuccess/views/payment_success_view.dart';
@@ -69,8 +65,6 @@ import '../modules/reset_pass/views/reset_pass_view.dart';
 import '../modules/sendMoney/bindings/sendMoney_binding.dart';
 import '../modules/sendMoney/views/sendMoney_view.dart';
 import '../modules/sendMoney2/bindings/send_money2_binding.dart';
-import '../modules/sendMoney2/bindings/send_money2_binding.dart';
-import '../modules/sendMoney2/views/send_money2_view.dart';
 import '../modules/sendMoney2/views/send_money2_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
@@ -252,6 +246,16 @@ class AppPages {
       name: _Paths.CHARITY_ADMIN,
       page: () => const CharityAdminView(),
       binding: CharityAdminBinding(),
+    ),
+    GetPage(
+      name: _Paths.UPLOAD,
+      page: () => const UploadView(),
+      binding: UploadBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMPANIES,
+      page: () => CompaniesView(),
+      binding: CompaniesBinding(),
     ),
   ];
 }

@@ -21,7 +21,6 @@ class Category {
         id: json["id"],
         name: json["name"],
         description: json["description"],
-       
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -30,16 +29,15 @@ class Category {
             : DateTime.parse(json["updated_at"]),
       );
 
-Map<String, dynamic> toJson() => {
-      "id": id ?? const Uuid().v4(),
-      "name": name,
-      "description": description,
-      "created_at": createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
-      "updated_at": updatedAt?.toIso8601String(),
-    };
-
+  Map<String, dynamic> toJson() => {
+        "id": id ?? const Uuid().v4(),
+        "name": name,
+        "description": description,
+        "created_at":
+            createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+      };
 }
-
 
 class CategoriesController extends GetxController {
   final SupabaseClient supabase = Supabase.instance.client;
@@ -61,9 +59,8 @@ class CategoriesController extends GetxController {
           .select()
           .order('created_at', ascending: false);
 
-      categories.value = (response as List)
-          .map((item) => Category.fromJson(item))
-          .toList();
+      categories.value =
+          (response as List).map((item) => Category.fromJson(item)).toList();
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch categories: $e');
     } finally {

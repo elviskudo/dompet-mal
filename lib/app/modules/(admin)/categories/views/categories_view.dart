@@ -8,8 +8,10 @@ class CategoriesView extends GetView<CategoriesController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton:
-          FloatingActionButton(onPressed: () => _showCategoryDialog(context), child: Icon(Icons.add),),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showCategoryDialog(context),
+        child: Icon(Icons.add),
+      ),
       appBar: AppBar(
         title: const Text('Categories'),
         centerTitle: true,
@@ -39,11 +41,13 @@ class CategoriesView extends GetView<CategoriesController> {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.edit),
+                          tooltip: 'edit',
                           onPressed: () =>
                               _showCategoryDialog(context, category: category),
                         ),
                         IconButton(
                           icon: const Icon(Icons.delete),
+                          tooltip: 'delete',
                           onPressed: () =>
                               _showDeleteConfirmation(category.id!),
                         ),
@@ -74,7 +78,6 @@ class CategoriesView extends GetView<CategoriesController> {
               controller: descController,
               decoration: const InputDecoration(labelText: 'Description'),
             ),
-           
           ],
         ),
         actions: [

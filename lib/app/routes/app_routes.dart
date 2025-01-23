@@ -38,6 +38,8 @@ abstract class Routes {
   static const ADMIN_PANEL = _Paths.ADMIN_PANEL;
   static const CONTRIBUTOR_ADMIN = _Paths.CONTRIBUTOR_ADMIN;
   static const CHARITY_ADMIN = _Paths.CHARITY_ADMIN;
+  static const UPLOAD = _Paths.UPLOAD;
+  static const COMPANIES = _Paths.COMPANIES;
 }
 
 abstract class _Paths {
@@ -77,4 +79,6 @@ abstract class _Paths {
   static const ADMIN_PANEL = '/admin-panel';
   static const CONTRIBUTOR_ADMIN = '/contributor-admin';
   static const CHARITY_ADMIN = '/charity-admin';
+  static const UPLOAD = '/upload';
+  static const COMPANIES = '/companies';
 }

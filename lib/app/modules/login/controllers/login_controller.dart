@@ -226,8 +226,7 @@ class LoginController extends GetxController {
         return;
       }
       isLoading.value = true;
-      String passFinal = await PasswordHasher.hashPassword(passC.text);
-      print('pass final $passFinal');
+   
 
       final user = await supabase
           .from('users')

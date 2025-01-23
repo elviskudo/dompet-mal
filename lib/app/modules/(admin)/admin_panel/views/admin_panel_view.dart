@@ -1,14 +1,18 @@
 import 'package:dompet_mal/app/modules/(admin)/admin_panel/controllers/admin_panel_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/categories/views/categories_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/companies/views/companies_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/views/list_user_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/upload/controllers/upload_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/upload/views/upload_view.dart';
 import 'package:dompet_mal/app/modules/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/app/modules/charityAdmin/views/charity_admin_view.dart';
 import 'package:dompet_mal/app/modules/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/app/modules/contributorAdmin/views/contributor_admin_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AdminPanelView extends GetView<AdminPanelController> {
   const AdminPanelView({super.key});
@@ -16,6 +20,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
   @override
   Widget build(BuildContext context) {
     Get.put(ListUserController());
+    Get.put(UploadController());
     Get.put(CategoriesController());
     Get.put(ContributorAdminController());
     Get.put(CharityAdminController());
@@ -23,15 +28,89 @@ class AdminPanelView extends GetView<AdminPanelController> {
       body: Stack(
         children: [
           // Main Content
-          Obx(() => _getPage(controller.selectedIndex.value)),
+          Obx(() {
+            return Container(
+              padding: EdgeInsets.only(top: 84, left: 16, right: 16),
+              child: _getPage(controller.selectedIndex.value),
+            );
+          }),
 
           // Menu Button
           Positioned(
             top: 20,
-            left: 20,
-            child: IconButton(
-              icon: const Icon(Icons.more_horiz),
-              onPressed: controller.toggleSidebar,
+            left: 28,
+            child: Row(
+              children: [
+                Tooltip(
+                  message: 'Menu',
+                  child: InkWell(
+                    onTap: controller.toggleSidebar,
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white, // Warna latar belakang
+                        borderRadius:
+                            BorderRadius.circular(8), // Membuat sudut membulat
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                Colors.black.withOpacity(0.2), // Warna bayangan
+                            blurRadius: 6, // Tingkat blur bayangan
+                            offset: const Offset(0, 3), // Offset bayangan
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.menu, // Ikon hamburger (garis tiga)
+                        size: 28,
+                        color: Colors.black87, // Warna ikon
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12), // Spasi antara ikon dan teks
+                Obx(
+                  () => Text(
+                    "Welcome, ${controller.username.value}",
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87, // Warna teks
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Positioned(
+            top: 20,
+            right: 28, // Menggunakan posisi dari kanan
+            child: Tooltip(
+              message: 'Logout',
+              child: InkWell(
+                onTap: controller.logout, // Fungsi logout
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Warna latar belakang
+                    borderRadius:
+                        BorderRadius.circular(8), // Membuat sudut membulat
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Warna bayangan
+                        blurRadius: 6, // Tingkat blur bayangan
+                        offset: const Offset(0, 3), // Offset bayangan
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.logout, // Ikon logout
+                    size: 28,
+                    color: Colors.black87, // Warna ikon
+                  ),
+                ),
+              ),
             ),
           ),
 
@@ -57,15 +136,19 @@ class AdminPanelView extends GetView<AdminPanelController> {
                 child: Material(
                   elevation: 16,
                   child: Container(
-                    color: Colors.blue,
+                    // color: Colors.blue,
                     child: Column(
                       children: [
                         const SizedBox(height: 40),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white),
-                            onPressed: controller.closeSidebar,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
+                              icon: const Icon(Icons.close,
+                                  color: Colors.black87),
+                              onPressed: controller.closeSidebar,
+                            ),
                           ),
                         ),
                         _buildSidebarContent(),
@@ -85,22 +168,24 @@ class AdminPanelView extends GetView<AdminPanelController> {
         const CircleAvatar(
           radius: 30,
           backgroundColor: Colors.white,
-          child: Icon(Icons.person, size: 40, color: Colors.blue),
+          child: Icon(Icons.person, size: 40, color: Colors.black87),
         ),
         const SizedBox(height: 20),
-        const Text(
+        Text(
           'Admin Panel',
-          style: TextStyle(
-            color: Colors.white,
+          style: GoogleFonts.poppins(
+            color: Colors.black87,
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
         const SizedBox(height: 30),
         _buildMenuItem(0, 'Dashboard', Icons.dashboard),
-        _buildMenuItem(1, 'Category', Icons.category),
-        _buildMenuItem(3, 'Contributor', Icons.shape_line),
-        _buildMenuItem(4, 'Charity', Icons.health_and_safety_sharp),
+        _buildMenuItem(1, 'Category', Icons.people),
+        _buildMenuItem(2, 'Upload', Icons.camera),
+        _buildMenuItem(3, 'Companies', Icons.compare_rounded),
+        _buildMenuItem(4, 'Contributor', Icons.shape_line),
+        _buildMenuItem(5, 'Charity', Icons.health_and_safety_sharp),
       ],
     );
   }
@@ -110,17 +195,17 @@ class AdminPanelView extends GetView<AdminPanelController> {
           leading: Icon(
             icon,
             color: controller.selectedIndex.value == index
-                ? Colors.white
-                : Colors.white70,
+                ? Colors.black87
+                : Colors.black87,
           ),
           title: Text(
             title,
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               color: controller.selectedIndex.value == index
-                  ? Colors.white
-                  : Colors.white70,
+                  ? Colors.black87
+                  : Colors.black87,
               fontWeight: controller.selectedIndex.value == index
-                  ? FontWeight.bold
+                  ? FontWeight.w500
                   : FontWeight.normal,
             ),
           ),
@@ -134,9 +219,13 @@ class AdminPanelView extends GetView<AdminPanelController> {
         return ListUserView();
       case 1:
         return const CategoriesView();
-        case 3:
-        return ContributorAdminView();
+      case 2:
+        return const UploadView();
+      case 3:
+        return CompaniesView();
         case 4:
+        return ContributorAdminView();
+        case 5:
         return CharityAdminView();
       default:
         return ListUserView();
