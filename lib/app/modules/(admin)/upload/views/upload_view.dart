@@ -53,6 +53,7 @@ class UploadView extends GetView<UploadController> {
               padding: const EdgeInsets.all(8.0),
               child: Obx(() {
                 return DropdownButton(
+                  // menuWidth: 50,
                   value: controller.selectedModuleClass.value.isNotEmpty
                       ? controller.selectedModuleClass.value
                       : 'all',
@@ -88,36 +89,38 @@ class UploadView extends GetView<UploadController> {
                 itemCount: controller.filteredFileList.length,
                 itemBuilder: (context, index) {
                   final file = controller.filteredFileList[index];
-                  return Obx(() => ListTile(
-                        leading: controller.isDeleteMode.value
-                            ? Checkbox(
-                                value: controller.selectedFilesForDeletion
-                                    .contains(file.id),
-                                onChanged: (bool? value) {
-                                  controller.toggleFileSelection(file.id ?? '');
-                                },
-                              )
-                            : (controller.isEditMode.value
-                                ? IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: () => controller.editFile(file),
-                                  )
-                                : null),
-                        title: Text(
-                            'Module Name: ${file.moduleName} (${file.moduleClass})'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Type: ${file.fileType}'),
-                          ],
-                        ),
-                        trailing: controller.isDeleteMode.value
-                            ? null // Remove trailing widget in delete mode
-                            : Container(
-                                width: 24,
-                                height: 24,
-                                child: Image.network(file.fileName ?? '')),
-                      ),);
+                  return Obx(
+                    () => ListTile(
+                      leading: controller.isDeleteMode.value
+                          ? Checkbox(
+                              value: controller.selectedFilesForDeletion
+                                  .contains(file.id),
+                              onChanged: (bool? value) {
+                                controller.toggleFileSelection(file.id ?? '');
+                              },
+                            )
+                          : (controller.isEditMode.value
+                              ? IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () => controller.editFile(file),
+                                )
+                              : null),
+                      title: Text(
+                          'Module Name: ${file.moduleName} (${file.moduleClass})'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Type: ${file.fileType}'),
+                        ],
+                      ),
+                      trailing: controller.isDeleteMode.value
+                          ? null // Remove trailing widget in delete mode
+                          : Container(
+                              width: 24,
+                              height: 24,
+                              child: Image.network(file.fileName ?? '')),
+                    ),
+                  );
                 },
               );
             }),

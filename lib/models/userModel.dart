@@ -19,9 +19,8 @@ class Users {
     DateTime? createdAt,
     DateTime? updatedAt,
     this.imageUrl,
-  }) : 
-    createdAt = createdAt ?? DateTime.now(),
-    updatedAt = updatedAt ?? DateTime.now();
+  })  : createdAt = createdAt ?? DateTime.now(),
+        updatedAt = updatedAt ?? DateTime.now();
 
   factory Users.fromJson(Map<String, dynamic> json) {
     return Users(
@@ -30,16 +29,15 @@ class Users {
       email: json['email'] as String? ?? '',
       role: json['role'] as String? ?? '',
       phoneNumber: json['phone_number'] as String? ?? '',
-      accessToken: json['access_token'] != null && json['access_token'] != '' 
-          ? json['access_token'] as String? 
+      accessToken: json['access_token'] != null && json['access_token'] != ''
+          ? json['access_token'] as String?
           : null,
-      createdAt: json['created_at'] != null 
-          ? DateTime.parse(json['created_at'] as String) 
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
           : null,
-      updatedAt: json['updated_at'] != null 
-          ? DateTime.parse(json['updated_at'] as String) 
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
           : null,
-      imageUrl: json['image_url'] as String?,
     );
   }
 }

@@ -16,17 +16,6 @@ void main() async {
     );
 
     // Cek koneksi dengan mencoba query sederhana
-    final supabase = Supabase.instance.client;
-
-    var users = await supabase.from('users').select().limit(10);
-    print('users: $users');
-    print('============================================================');
-    var roles = await supabase.from('roles').select().limit(10);
-    print('role: $roles');
-    print('============================================================');
-
-    var user_roles = await supabase.from('user_roles').select().limit(10);
-    print('user roles: $user_roles');
 
     print('Database connection successful!');
 

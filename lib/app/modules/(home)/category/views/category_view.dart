@@ -1,7 +1,7 @@
 import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/AppBar.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dompet_mal/models/Category.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -34,7 +34,7 @@ class CategoryView extends GetView<CategoriesController> {
           ),
           itemCount: controller.categories.length,
           itemBuilder: (context, index) {
-            final category = controller.categories[index];
+             Category category = controller.categories[index];
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [

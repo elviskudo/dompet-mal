@@ -1,16 +1,21 @@
 import 'package:avatar_stack/avatar_stack.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
-import 'package:dompet_mal/models/pilihanKategoriModel.dart';
+import 'package:dompet_mal/models/Category.dart';
+import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class BannerKategori extends StatefulWidget {
-  final List<CharityByCategory> banners;
+  final List<Charity> banners;
+  final List<Category> category;
   final int maxItems;
   const BannerKategori(
-      {super.key, required this.banners, required this.maxItems});
+      {super.key,
+      required this.banners,
+      required this.maxItems,
+      required this.category});
 
   @override
   State<BannerKategori> createState() => _BannerKategoriState();
@@ -32,6 +37,7 @@ class _BannerKategoriState extends State<BannerKategori> {
     final displayBanners = widget.maxItems > 0
         ? widget.banners.take(widget.maxItems).toList()
         : widget.banners;
+
     return Column(
         children: List.generate(
       displayBanners.length,
@@ -57,20 +63,27 @@ class _BannerKategoriState extends State<BannerKategori> {
               ],
             ),
             child: Row(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start, // Align content to top
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Stack(
                   children: [
                     Container(
                       width: 120,
-                      height: MediaQuery.of(context).size.height * 0.3, // Make image full height
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.horizontal(left: Radius.circular(10)),
-                        image: DecorationImage(
-                          image: NetworkImage(banner.imageUrls[0]),
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                        ),
+                        child: Image.network(
+                          banner.image ?? 'https://via.placeholder.com/150',
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[300],
+                              child: const Icon(Icons.image, size: 50),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -100,25 +113,31 @@ class _BannerKategoriState extends State<BannerKategori> {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment
-                          .spaceBetween, // Distribute space evenly
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              banner.title,
+                              banner.title ?? 'Unnamed Charity',
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
-                              maxLines: 2, // Limit to 2 lines
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 4),
+                            // You might need to adjust this based on how you fetch category
                             Text(
-                              banner.category.name,
+                              widget.category
+                                  .firstWhere(
+                                    (cat) => cat.id == banner.categoryId,
+                                    orElse: () =>
+                                        Category(name: 'Unknown Category'),
+                                  )
+                                  .name!,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey[800],
@@ -132,7 +151,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(4),
                               child: LinearProgressIndicator(
-                                value: banner.progress / 100,
+                                value: (banner.progress ?? 0) / 100,
                                 backgroundColor: Colors.grey[200],
                                 color: Colors.blue,
                                 minHeight: 6,
@@ -148,7 +167,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              formatRupiah(banner.totalCharities),
+                              formatRupiah(banner.total ?? 0),
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -163,8 +182,10 @@ class _BannerKategoriState extends State<BannerKategori> {
                               child: AvatarStack(
                                 height: 30,
                                 avatars: banner.contributors.map((contributor) {
+                                  print(
+                                      'user avatar: ${contributor.user?.imageUrl}');
                                   return NetworkImage(
-                                    contributor.avatarUrl ??
+                                    contributor.user?.imageUrl ??
                                         'https://via.placeholder.com/40',
                                   );
                                 }).toList(),
@@ -179,7 +200,6 @@ class _BannerKategoriState extends State<BannerKategori> {
                             ),
                           ],
                         ),
-                     
                         Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10)),
@@ -188,7 +208,14 @@ class _BannerKategoriState extends State<BannerKategori> {
                               onPressed: () {
                                 Get.bottomSheet(
                                   SlidingDonationSheet(
-                                    kategori: banner.category.name,
+                                    // You might need to adjust this
+                                    kategori:  widget.category
+                              .firstWhere(
+                                (cat) => cat.id == banner.categoryId,
+                                orElse: () =>
+                                    Category(name: 'Unknown Category'),
+                              )
+                              .name!,
                                   ),
                                   isScrollControlled: true,
                                   backgroundColor: Colors.transparent,

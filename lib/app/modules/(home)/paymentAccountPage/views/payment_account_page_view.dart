@@ -1,17 +1,19 @@
+import 'package:dompet_mal/app/modules/(admin)/bankAdmin/controllers/bank_admin_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controllers/payment_account_page_controller.dart';
-
-class PaymentAccountPageView extends GetView<PaymentAccountPageController> {
+class PaymentAccountPageView extends GetView<BankAdminController> {
   const PaymentAccountPageView({super.key});
+
   @override
   Widget build(BuildContext context) {
+    // Inisialisasi controller untuk BankAdminController
+    final controller = Get.put(BankAdminController());
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
         backgroundColor: const Color(0xff4B76D9),
-        // leading:
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
           alignment: Alignment.bottomLeft,
@@ -22,9 +24,6 @@ class PaymentAccountPageView extends GetView<PaymentAccountPageController> {
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () => Get.back(),
               ),
-              // SizedBox(
-              //   width: 16,
-              // ),
               const Text(
                 'Kirim Donasi',
                 style: TextStyle(
@@ -53,46 +52,68 @@ class PaymentAccountPageView extends GetView<PaymentAccountPageController> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Obx(() => Column(
-                      children: controller.bankAccounts
-                          .map((account) => GestureDetector(
-                                onTap: () =>
-                                    controller.selectBankAccount(account),
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 16),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                      width: 1,
+                // Menggunakan Obx untuk mendengarkan perubahan data
+                Obx(() {
+                  // Menunggu hingga data bank ter-load
+                  if (controller.bankList.isEmpty) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  // Menampilkan list bank
+                  return Column(
+                    children: controller.bankList.map((account) {
+                      return GestureDetector(
+                        onTap: () {
+                          controller.selectBankAccount(
+                              account); // Fungsi untuk memilih rekening bank
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Image.network(
+                                account.image ??
+                                    'https://via.placeholder.com/150',
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.grey[300],
+                                    child: const Icon(Icons.image, size: 50),
+                                  );
+                                },
+                              ), // Pastikan ada image yang valid
+                              const SizedBox(width: 24),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    controller.username.value ??
+                                        'No Name', // Nama bank
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                  padding: const EdgeInsets.all(16),
-                                  child: Row(
-                                    children: [
-                                      Image.asset('assets/images/mandiri.png'),
-                                      const SizedBox(width: 24),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            account.accountName,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(account.accountNumber),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ))
-                          .toList(),
-                    )),
+                                  const SizedBox(height: 4),
+                                  Text(account.accountNumber ??
+                                      'No Account Number'), // Nomor rekening
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  );
+                }),
               ],
             ),
           ),

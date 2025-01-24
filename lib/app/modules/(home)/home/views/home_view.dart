@@ -1,3 +1,4 @@
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/listDonation/views/list_donation_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/CategoryGridIcon.dart';
@@ -27,6 +28,8 @@ class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
   @override
   Widget build(BuildContext context) {
+    CharityAdminController charityController =
+        Get.put(CharityAdminController());
     var lebar = MediaQuery.of(context).size.width;
     var tinggi = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -81,13 +84,19 @@ class HomeView extends GetView<HomeController> {
                     child: SearchBars(controller: controller.searchController),
                   ),
                   Gap(6),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: TotalDanaDonasi(
-                        danaDonasiLangsung: DanaDonasiLangsung(
-                            totalBudgets: 12000, totalDonaturs: 10000),
-                        onAddPressed: () =>
-                            Get.toNamed(Routes.KONFIRMASI_TRANSFER)),
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: TotalDanaDonasi(
+                          danaDonasiLangsung: DanaDonasiLangsung(
+                            totalBudgets: charityController
+                                .charitySummary.value.totalDonations,
+                            totalDonaturs: charityController
+                                .charitySummary.value.totalDonors,
+                          ),
+                          onAddPressed: () =>
+                              Get.toNamed(Routes.KONFIRMASI_TRANSFER)),
+                    ),
                   ),
                   Gap(24),
                   BannerSlider(banners: dummyDataListCategoryBanner),
@@ -112,17 +121,37 @@ class HomeView extends GetView<HomeController> {
                             Get.toNamed(Routes.ListDonation);
                           },
                         ),
-                        StraightCharityComponent(
-                            banners: dummyDataListCategoryBanner)
+                        Obx(
+                          () {
+                            if (charityController.charities.value.isNotEmpty) {
+                              return StraightCharityComponent(
+                                banners: charityController.charities.value,
+                                category: charityController.categories.value,
+                                maxItems: 3,
+                              );
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ),
 
                   //Bantuan Dana Darurat
 
-                  EmergencyFundSection(
-                    banners: dummyDataListCategoryBanner,
-                    maxItems: 3,
+                  Obx(
+                    () {
+                      if (charityController.charities.value.isNotEmpty) {
+                        return EmergencyFundSection(
+                          banners: charityController.charities.value,
+                          maxItems: 3,
+                          category: charityController.categories,
+                        );
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    },
                   ),
 
                   // Pilihan CATEGORY
@@ -148,9 +177,18 @@ class HomeView extends GetView<HomeController> {
                             // Handle navigation to "Lihat lainnya"
                           },
                         ),
-                        BannerKategori(
-                          banners: dummyDataListCategoryBanner,
-                          maxItems: 4,
+                        Obx(
+                          () {
+                            if (charityController.charities.value.isNotEmpty) {
+                              return BannerKategori(
+                                banners: charityController.charities.value,
+                                maxItems: 4,
+                                category: charityController.categories.value,
+                              );
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          },
                         ),
                         SizedBox(
                           height: 16,

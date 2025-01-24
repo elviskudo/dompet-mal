@@ -24,7 +24,6 @@ class Companies {
         id: json['id'],
         name: json['name'],
         email: json['email'],
-        image: json['image'],
         phoneNumber: json['phone_number'],
         createdAt: json["created_at"] == null
             ? null
@@ -39,7 +38,6 @@ class Companies {
         "id": id ?? const Uuid().v4(),
         'name': name,
         'email': email,
-        'image': image,
         'phone_number': phoneNumber,
         "created_at":
             createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),

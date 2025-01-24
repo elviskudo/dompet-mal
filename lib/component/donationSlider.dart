@@ -33,7 +33,6 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
     500000,
     1000000
   ];
-
   @override
   void initState() {
     super.initState();
@@ -41,19 +40,20 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
     if (Get.arguments != null) {
       selectedBankAccount.value = Get.arguments as BankAccount;
     }
-    print(selectedBankAccount.value);
 
-    // Set initial value of TextField
-    _textController.text = donationController.donationAmount.value;
-
-    // Add listener to update controller when text changes
+    // Initial setup for text controller with formatting
     _textController.addListener(() {
       final text = _textController.text;
-      if (text != donationController.donationAmount.value) {
-        donationController.setDonationAmount(text);
-      }
+      // Remove 'Rp ' and '.' before processing
+      final cleanValue = text.replaceAll('Rp ', '').replaceAll('.', '');
+      donationController.setDonationAmount(cleanValue);
     });
 
+    // Format initial amount if exists
+    String initialAmount = donationController.donationAmount.value;
+    if (initialAmount.isNotEmpty) {
+      _textController.text = 'Rp ${_formatNumber(initialAmount)}';
+    }
     _controller = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -68,6 +68,19 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
     ));
 
     _controller.forward();
+  }
+
+  String _formatNumber(String value) {
+    // Remove any existing formatting
+    value = value.replaceAll('.', '');
+
+    // Convert to integer first
+    int? number = int.tryParse(value);
+    if (number == null) return value;
+
+    // Format with dots
+    return number.toString().replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.');
   }
 
   @override
@@ -268,43 +281,33 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                         return TextField(
                           controller: _textController,
                           onChanged: (value) {
-                            // Menghilangkan titik sebelum memproses input
-                            final cleanValue = value.replaceAll('.', '');
-                            final parsedValue = int.tryParse(cleanValue);
-
-                            if (parsedValue != null) {
-                              // Set nilai yang diformat dengan titik ribuan
-                              donationController
-                                  .setDonationAmount(parsedValue.toString());
-                            }
+                            // Remove 'Rp ' and '.' before processing
+                            final cleanValue =
+                                value.replaceAll('Rp ', '').replaceAll('.', '');
+                            donationController.setDonationAmount(cleanValue);
                           },
                           inputFormatters: [
-                            // Filter untuk hanya angka
                             FilteringTextInputFormatter.digitsOnly,
-                            // Formatter untuk menambahkan titik di setiap ribuan
                             TextInputFormatter.withFunction(
-                              (oldValue, newValue) {
-                                // Mengambil nilai input yang bersih (tanpa titik)
-                                final cleanValue =
-                                    newValue.text.replaceAll('.', '');
-                                final parsedValue =
-                                    int.tryParse(cleanValue) ?? 0;
+                                (oldValue, newValue) {
+                              // Hanya memproses jika ada angka
+                              if (newValue.text.isEmpty) return newValue;
 
-                                // Memformat nilai menjadi format rupiah
-                                final formattedValue =
-                                    formatRupiah2(parsedValue);
+                              // Parse angka
+                              final number = int.tryParse(newValue.text) ?? 0;
 
-                                // Kembali dengan nilai yang sudah diformat dan kursor yang tetap di tempat yang tepat
-                                return newValue.copyWith(
-                                  text: formattedValue,
-                                  selection: TextSelection.collapsed(
-                                    offset: formattedValue.length,
-                                  ),
-                                );
-                              },
-                            ),
+                              // Format dengan titik
+                              final formattedValue =
+                                  'Rp ${_formatNumber(number.toString())}';
+
+                              return newValue.copyWith(
+                                text: formattedValue,
+                                selection: TextSelection.collapsed(
+                                    offset: formattedValue.length),
+                              );
+                            }),
                           ],
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: '0',

@@ -32,10 +32,11 @@ class MyFavoriteView extends GetView<MyFavoriteController> {
               if (charityController.filteredCharities.value.isEmpty) {
                 return Center(child: Text('Tidak ada data ditemukan'));
               }
-              return BannerKategori(
-                banners: charityController.filteredCharities.value,
-                maxItems: 0,
-              );
+              // return BannerKategori(
+              //   banners: charityController.filteredCharities.value,
+              //   maxItems: 0,
+              // );
+              return SizedBox();
             },
           ),
         ),

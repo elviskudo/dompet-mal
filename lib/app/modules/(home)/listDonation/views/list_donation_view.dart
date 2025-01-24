@@ -1,19 +1,71 @@
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/component/bannerCategoryChoice.dart';
 import 'package:dompet_mal/component/customAppBarCategory.dart';
-import 'package:dompet_mal/models/pilihanKategoriModel.dart';
+import 'package:dompet_mal/models/Category.dart';
+import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ListDonationView extends StatelessWidget {
   ListDonationView({super.key});
 
-  // Menggunakan RxList langsung di view
-  final RxList<CharityByCategory> charities = dummyDataListCategoryBanner.obs;
-  final RxList<CharityByCategory> filteredCharities = <CharityByCategory>[].obs;
+  // Use the CharityAdminController to fetch charities
+  CharityAdminController charityController = Get.put(CharityAdminController());
 
-  // Dialog functions
-  void showSearchDialog(BuildContext context,
-      List<CharityByCategory> currentCharities, Category? categoryId) {
+  @override
+  Widget build(BuildContext context) {
+    final Category? categoryId = Get.arguments as Category?;
+
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: categoryId != null ? 'Donasi ${categoryId.name}' : 'Donasi',
+        onSortPressed: () => showSortDialog(context),
+        onFilterPressed: () => showSearchDialog(context),
+      ),
+      backgroundColor: Colors.white,
+      body: Obx(() {
+        // Check if charities are loading
+        if (charityController.isCharitiesLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        // Filter charities if a category is selected
+        final filteredCharities = categoryId?.id != null
+            ? charityController.charities
+                .where((charity) =>
+                    charity.categoryId == categoryId!.id.toString())
+                .toList()
+            : charityController.charities;
+
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsetsDirectional.all(24),
+                child: filteredCharities.isEmpty
+                    ? Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 100),
+                          child: Text('Tidak ada data ditemukan'),
+                        ),
+                      )
+                    : BannerKategori(
+                        category: charityController.categories.value,
+                        banners: filteredCharities,
+                        maxItems: 0,
+                      ),
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  void showSearchDialog(BuildContext context) {
+    final RxList<Charity> filteredCharities =
+        charityController.charities.obs as dynamic;
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -43,26 +95,15 @@ class ListDonationView extends StatelessWidget {
                   TextField(
                     onChanged: (value) {
                       if (value.isEmpty) {
-                        if (categoryId?.id != null) {
-                          filteredCharities.value = currentCharities
-                              .where((charity) =>
-                                  charity.category.id == categoryId!.id)
-                              .toList();
-                        } else {
-                          filteredCharities.value = currentCharities;
-                        }
+                        filteredCharities.value = charityController.charities;
                       } else {
-                        var filtered = currentCharities.where((charity) =>
-                            charity.title
-                                .toLowerCase()
-                                .contains(value.toLowerCase()));
-
-                        if (categoryId?.id != null) {
-                          filtered = filtered.where((charity) =>
-                              charity.category.id == categoryId?.id);
-                        }
-
-                        filteredCharities.value = filtered.toList();
+                        filteredCharities.value = charityController.charities
+                            .where((charity) =>
+                                charity.title
+                                    ?.toLowerCase()
+                                    .contains(value.toLowerCase()) ??
+                                false)
+                            .toList();
                       }
                     },
                     decoration: InputDecoration(
@@ -94,87 +135,39 @@ class ListDonationView extends StatelessWidget {
                 leading: Icon(Icons.arrow_upward),
                 title: Text('Tanggal Terbaru'),
                 onTap: () {
-                  filteredCharities.sort((a, b) {
-                    DateTime dateA = DateTime.parse(a.createdAt.toString());
-                    DateTime dateB = DateTime.parse(b.createdAt.toString());
-                    return dateB.compareTo(dateA);
-                  });
+                  charityController.charities.sort((a, b) =>
+                      (b.created_at ?? DateTime.now())
+                          .compareTo(a.created_at ?? DateTime.now()));
                   Get.back();
                 }),
             ListTile(
                 leading: Icon(Icons.arrow_downward),
                 title: Text('Tanggal Terlama'),
                 onTap: () {
-                  filteredCharities.sort((a, b) {
-                    DateTime dateA = DateTime.parse(a.createdAt.toString());
-                    DateTime dateB = DateTime.parse(b.createdAt.toString());
-                    return dateA.compareTo(dateB);
-                  });
+                  charityController.charities.sort((a, b) =>
+                      (a.created_at ?? DateTime.now())
+                          .compareTo(b.created_at ?? DateTime.now()));
                   Get.back();
                 }),
             ListTile(
                 leading: Icon(Icons.sort_by_alpha),
                 title: Text('Nama A-Z'),
                 onTap: () {
-                  filteredCharities.sort((a, b) => a.title.compareTo(b.title));
+                  charityController.charities
+                      .sort((a, b) => (a.title ?? '').compareTo(b.title ?? ''));
                   Get.back();
                 }),
             ListTile(
                 leading: Icon(Icons.sort_by_alpha),
                 title: Text('Nama Z-A'),
                 onTap: () {
-                  filteredCharities.sort((a, b) => b.title.compareTo(a.title));
+                  charityController.charities
+                      .sort((a, b) => (b.title ?? '').compareTo(a.title ?? ''));
                   Get.back();
                 }),
           ],
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final Category? categoryId = Get.arguments as Category?;
-
-    // Initial filtering
-    if (categoryId?.id != null) {
-      filteredCharities.value = charities
-          .where((charity) => charity.category.id == categoryId!.id)
-          .toList();
-    } else {
-      filteredCharities.value = charities;
-    }
-
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: categoryId != null ? 'Donasi ${categoryId.name}' : 'Donasi',
-        onSortPressed: () => showSortDialog(context),
-        onFilterPressed: () => showSearchDialog(context, charities, categoryId),
-      ),
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsetsDirectional.all(24),
-              child: Obx(() {
-                if (filteredCharities.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 100),
-                      child: Text('Tidak ada data ditemukan'),
-                    ),
-                  );
-                }
-                return BannerKategori(
-                  banners: filteredCharities,
-                  maxItems: 0,
-                );
-              }),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

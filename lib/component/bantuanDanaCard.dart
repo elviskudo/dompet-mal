@@ -2,19 +2,25 @@ import 'package:avatar_stack/avatar_stack.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/component/sectionHeader.dart';
+import 'package:dompet_mal/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
-import 'package:dompet_mal/models/pilihanKategoriModel.dart';
+import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:dompet_mal/color/color.dart';
 
 class EmergencyFundSection extends StatefulWidget {
-  final List<CharityByCategory> banners;
+  final List<Charity> banners;
+  final List<Category> category;
+
   final int maxItems;
 
   const EmergencyFundSection(
-      {Key? key, required this.banners, required this.maxItems})
+      {Key? key,
+      required this.banners,
+      required this.maxItems,
+      required this.category})
       : super(key: key);
 
   @override
@@ -47,7 +53,8 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
 
           // Cards section
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.48, // Adjust the height to fit the cards
+            height: MediaQuery.of(context).size.height *
+                0.48, // Adjust the height to fit the cards
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,
@@ -62,6 +69,7 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
                     width: 300, // Adjust the width of the card
                     child: EmergencyFundCard(
                       fund: banner,
+                      category: widget.category,
                       onTap: () {
                         // Handle tap, navigate to the donation details page
                         Get.toNamed('/donation-detail-page', arguments: banner);
@@ -80,23 +88,26 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
 }
 
 class EmergencyFundCard extends StatelessWidget {
-  final CharityByCategory fund;
+  final Charity fund;
+  final List<Category> category;
+
   final VoidCallback onTap;
 
   const EmergencyFundCard({
     Key? key,
     required this.fund,
+    required this.category,
     required this.onTap,
   }) : super(key: key);
 
   // Format currency in Rupiah
-  String formatCurrency(int amount) {
+  String formatCurrency(int? amount) {
     final formatter = NumberFormat.currency(
       locale: 'id_ID',
       symbol: 'Rp',
       decimalDigits: 0,
     );
-    return formatter.format(amount);
+    return formatter.format(amount ?? 0);
   }
 
   @override
@@ -117,9 +128,7 @@ class EmergencyFundCard extends StatelessWidget {
             AspectRatio(
               aspectRatio: 16 / 9,
               child: Image.network(
-                fund.imageUrls.isNotEmpty
-                    ? fund.imageUrls[0]
-                    : 'https://via.placeholder.com/150',
+                fund.image ?? 'https://via.placeholder.com/150',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -135,7 +144,7 @@ class EmergencyFundCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    fund.title,
+                    fund.title ?? 'Untitled Charity',
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -147,7 +156,7 @@ class EmergencyFundCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4),
                     child: LinearProgressIndicator(
-                      value: fund.progress / 100,
+                      value: (fund.progress ?? 0) / 100,
                       minHeight: 8,
                       backgroundColor: baseGray,
                       valueColor: AlwaysStoppedAnimation<Color>(basecolor),
@@ -169,7 +178,7 @@ class EmergencyFundCard extends StatelessWidget {
                           ),
                           Gap(2),
                           Text(
-                            formatCurrency(fund.totalCharities),
+                            formatCurrency(fund.targetTotal),
                             style: const TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 12),
                           ),
@@ -187,7 +196,7 @@ class EmergencyFundCard extends StatelessWidget {
                           ),
                           Gap(2),
                           Text(
-                            '35',
+                            '35', // This was hardcoded in the original, you might want to calculate dynamically
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
@@ -205,8 +214,8 @@ class EmergencyFundCard extends StatelessWidget {
                           height: 30,
                           avatars: fund.contributors.map((contributor) {
                             return NetworkImage(
-                              contributor.avatarUrl ??
-                                  'https://via.placeholder.com/40',
+                              contributor.user?.imageUrl ??
+                                  'https://via.placeholder.com/40', // Update with actual avatar URL if available
                             );
                           }).toList(),
                         ),
@@ -214,10 +223,7 @@ class EmergencyFundCard extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         '${fund.contributors.length} penyumbang',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
                       ),
                     ],
                   ),
@@ -230,7 +236,13 @@ class EmergencyFundCard extends StatelessWidget {
                         onPressed: () {
                           Get.bottomSheet(
                             SlidingDonationSheet(
-                              kategori: fund.category.name,
+                              kategori: category
+                                  .firstWhere(
+                                    (cat) => cat.id == fund.categoryId,
+                                    orElse: () =>
+                                        Category(name: 'Unknown Category'),
+                                  )
+                                  .name!, // You might want to pass the actual category
                             ),
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,

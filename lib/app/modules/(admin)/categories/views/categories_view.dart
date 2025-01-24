@@ -67,54 +67,54 @@ class CategoriesView extends GetView<CategoriesController> {
     descController.addListener(validateForm);
 
     Get.dialog(
-      Obx(() {
-        final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-        return AlertDialog(
-          title: Text(category == null ? 'Add Category' : 'Edit Category'),
-          content: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Name is required';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: descController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Description is required';
-                    }
-                    return null;
-                  },
-                  decoration: const InputDecoration(labelText: 'Description'),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Get.back(),
-              child: const Text('Cancel'),
+      AlertDialog(
+        title: Text(category == null ? 'Add Category' : 'Edit Category'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(labelText: 'Name'),
             ),
             TextField(
               controller: descController,
-              decoration: const InputDecoration(labelText: 'Description'),
-              maxLines: 3, // Allows multiple lines for description
+              decoration: InputDecoration(labelText: 'Description'),
+              maxLines: 3,
               keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.newline,
             ),
           ],
-        );
-      }),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text('Cancel'),
+          ),
+          Obx(() => TextButton(
+                onPressed: isFormValid.value
+                    ? () {
+                        if (category == null) {
+                          // Add new category
+                          final newCategory = Category(
+                            // id: Uuid().v4(),
+                            name: nameController.text.trim(),
+                            description: descController.text.trim(),
+                          );
+                          Get.find<CategoriesController>()
+                              .addCategory(newCategory);
+                        } else {
+                          // Update existing category
+                          category.name = nameController.text.trim();
+                          category.description = descController.text.trim();
+                          Get.find<CategoriesController>()
+                              .updateCategory(category);
+                        }
+                        Get.back();
+                      }
+                    : null,
+                child: Text('Save'),
+              )),
+        ],
+      ),
     );
   }
 

@@ -32,8 +32,8 @@ class CategoriesController extends GetxController {
             .select('file_name')
             .eq('module_class', 'categories')
             .eq('module_id', category.id!)
-            .limit(1) 
-            .maybeSingle(); 
+            .limit(1)
+            .maybeSingle();
 
         if (fileResponse != null) {
           category.imageUrl = fileResponse['file_name'];
@@ -77,6 +77,7 @@ class CategoriesController extends GetxController {
       Get.snackbar('Success', 'Category updated successfully');
     } catch (e) {
       Get.snackbar('Error', 'Failed to update category: $e');
+      print('error: $e');
     } finally {
       isLoading.value = false;
     }

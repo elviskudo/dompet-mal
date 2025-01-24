@@ -1,4 +1,5 @@
 import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/models/Category.dart';
 import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:dompet_mal/models/Companies.dart';
@@ -14,6 +15,8 @@ class CharityAdminController extends GetxController {
   var charities = <Charity>[].obs;
   var categories = <Category>[].obs;
   var companies = <Companies>[].obs;
+  var contributors = <Contributor>[].obs;
+
   final TextEditingController targetTotalController = TextEditingController();
   final TextEditingController totalController = TextEditingController();
   final TextEditingController progressController = TextEditingController();
@@ -41,27 +44,67 @@ class CharityAdminController extends GetxController {
   var total = 0.obs;
   var targetTotal = 0.obs;
   var targetDate = DateTime.now().obs;
+  var charitySummary = CharitySummary(totalDonors: 0, totalDonations: 0).obs;
 
   @override
   void onInit() {
     super.onInit();
-    fetchCharities();
+    fetchCharitiesWithContributors();
     fetchCategories();
     fetchCompanies();
+    calculateCharitySummary();
   }
 
-  // Fetch charities
-  Future<void> fetchCharities() async {
+  void onClose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    progressController.dispose();
+    targetTotalController.dispose();
+    targetDateController.dispose();
+    super.onClose();
+  }
+
+  Future<void> fetchCharitiesWithContributors() async {
     try {
       isCharitiesLoading.value = true;
       errorMessage.value = '';
 
       final response =
           await supabase.from('charities').select().eq('status', 1);
-      List<Charity> charitiesWithImages = [];
+      List<Charity> charitiesWithDetails = [];
+
       for (var item in response) {
         final charity = Charity.fromJson(item);
 
+        // Fetch contributors for this charity
+        final contributorsResponse = await supabase
+            .from('contributors')
+            .select('*, users:user_id(*)')
+            .eq('charity_id', charity.id!);
+
+        // Process contributors and add image URLs
+        charity.contributors =
+            await Future.wait((contributorsResponse as List).map((data) async {
+          final contributor = Contributor.fromJson(data);
+
+          // Fetch image for the user from files table
+          final userFileResponse = await supabase
+              .from('files')
+              .select('file_name')
+              .eq('module_class', 'users')
+              .eq('module_id', contributor.user!.id)
+              .limit(1)
+              .maybeSingle();
+
+          // Update user's image if found
+          if (userFileResponse != null) {
+            contributor.user?.imageUrl = userFileResponse['file_name'];
+          }
+
+          return contributor;
+        }));
+
+        // Fetch charity image if needed
         final fileResponse = await supabase
             .from('files')
             .select('file_name')
@@ -74,12 +117,13 @@ class CharityAdminController extends GetxController {
           charity.image = fileResponse['file_name'];
         }
 
-        charitiesWithImages.add(charity);
+        charitiesWithDetails.add(charity);
       }
 
-      charities.value = charitiesWithImages;
+      charities.value = charitiesWithDetails;
     } catch (e) {
-      errorMessage.value = 'Failed to fetch charities: ${e.toString()}';
+      errorMessage.value =
+          'Failed to fetch charities with contributors: ${e.toString()}';
       print('Failed to fetch charities: ${e.toString()}');
       Get.snackbar('Error', errorMessage.value,
           snackPosition: SnackPosition.BOTTOM);
@@ -103,6 +147,33 @@ class CharityAdminController extends GetxController {
           snackPosition: SnackPosition.BOTTOM);
     } finally {
       isCategoriesLoading.value = false;
+    }
+  }
+
+  Future<void> calculateCharitySummary() async {
+    try {
+      // Fetch all transactions
+      final donorsResponse = await supabase.from('transactions').select('*');
+
+      // Calculate total donations by summing donation prices
+      final totalDonations = donorsResponse.fold(0.0,
+          (sum, transaction) => sum + (transaction['donation_price'] ?? 0.0));
+
+      // Get unique donors by user_id
+      final uniqueDonors = Set.from(donorsResponse.map((e) => e['user_id']));
+
+      charitySummary.value = CharitySummary(
+        totalDonors: uniqueDonors.length,
+        totalDonations: totalDonations.toInt(),
+      );
+
+      print('Total Donors: ${uniqueDonors.length}');
+      print('Total Donations: $totalDonations');
+    } catch (e) {
+      errorMessage.value =
+          'Failed to calculate charity summary: ${e.toString()}';
+      Get.snackbar('Error', errorMessage.value,
+          snackPosition: SnackPosition.BOTTOM);
     }
   }
 
@@ -140,14 +211,14 @@ class CharityAdminController extends GetxController {
         progress: int.parse(progressController.text),
         // total: int.parse(totalController.text),
         targetTotal: int.parse(targetTotalController.text),
-        targetDate: DateTime.parse(targetDateController.text),
+        targetDate: targetDateController.text,
         created_at: DateTime.now(),
         updated_at: DateTime.now(),
         status: 1,
       );
 
       await supabase.from('charities').insert(newCharity.toJson());
-      await fetchCharities();
+      await fetchCharitiesWithContributors();
 
       resetFormFields();
 
@@ -177,7 +248,7 @@ class CharityAdminController extends GetxController {
         progress: int.parse(progressController.text),
         // total: int.parse(totalController.text),
         targetTotal: int.parse(targetTotalController.text),
-        targetDate: DateTime.parse(targetDateController.text),
+        targetDate: targetDateController.text,
         created_at: DateTime.now(), // Optionally keep the original created_at
         updated_at: DateTime.now(),
         status: 1,
@@ -187,7 +258,7 @@ class CharityAdminController extends GetxController {
           .from('charities')
           .update(updatedCharity.toJson())
           .eq('id', charityId);
-      await fetchCharities();
+      await fetchCharitiesWithContributors();
 
       resetFormFields();
 
@@ -214,7 +285,7 @@ class CharityAdminController extends GetxController {
           .update({'status': 0}) // Mengubah status menjadi 0
           .eq('id', id);
 
-      await fetchCharities(); // Refresh data
+      await fetchCharitiesWithContributors(); // Refresh data
 
       Get.snackbar('Success', 'Charity status updated successfully',
           snackPosition: SnackPosition.BOTTOM);
@@ -236,7 +307,9 @@ class CharityAdminController extends GetxController {
     progress.value = 0;
     total.value = 0;
     targetTotal.value = 0;
-    targetDateController.clear(); // Reset tanggal
+    targetDateController.clear();
+    targetTotalController.clear();
+    // Reset tanggal
   }
 
   // Show category selection dialog
@@ -303,4 +376,14 @@ class CharityAdminController extends GetxController {
       },
     );
   }
+}
+
+class CharitySummary {
+  final int totalDonors;
+  final int totalDonations;
+
+  CharitySummary({
+    required this.totalDonors,
+    required this.totalDonations,
+  });
 }

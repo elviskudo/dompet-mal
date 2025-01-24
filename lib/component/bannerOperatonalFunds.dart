@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BannerDanaOperasional extends StatefulWidget {
-  const BannerDanaOperasional({super.key});
-
+  const BannerDanaOperasional({
+    Key? key,
+  }) : super(key: key);
   @override
   State<BannerDanaOperasional> createState() => _BannerDanaOperasionalState();
 }
@@ -37,7 +38,8 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
             onTap: () {
               // Handle tap
               //  Get.
-              Get.toNamed("/donation-detail-page", arguments: dummyDataListCategoryBanner[4]);
+              Get.toNamed("/donation-detail-page",
+                  arguments: dummyDataListCategoryBanner[4]);
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -91,7 +93,6 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
                     size: 32,
                     color: Colors.grey[800],
                   ),
-                  
                 ],
               ),
             ),

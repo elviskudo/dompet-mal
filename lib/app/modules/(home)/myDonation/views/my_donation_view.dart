@@ -11,11 +11,8 @@ class MyDonationView extends GetView<MyDonationController> {
   @override
   final charityController = Get.put(MyDonationController());
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      
       appBar: CustomAppBar(
-        
         title: 'Donasi Ku',
         onSortPressed: () {
           controller.showSortDialog(context);
@@ -23,7 +20,6 @@ class MyDonationView extends GetView<MyDonationController> {
         onFilterPressed: () {
           controller.showSearchDialog(context);
         },
-      
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -34,10 +30,11 @@ class MyDonationView extends GetView<MyDonationController> {
               if (controller.filteredCharities.value.isEmpty) {
                 return Center(child: Text('Tidak ada data ditemukan'));
               }
-              return BannerKategori(
-                banners: charityController.filteredCharities.value,
-                maxItems: 0,
-              );
+              // return BannerKategori(
+              //   banners: charityController.filteredCharities.value,
+              //   maxItems: 0,
+              // );
+              return SizedBox();
             },
           ),
         ),

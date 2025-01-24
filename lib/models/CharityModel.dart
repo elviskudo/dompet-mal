@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
+
 Charity charityFromJson(String str) => Charity.fromJson(json.decode(str));
 
 String charityToJson(Charity data) => json.encode(data.toJson());
@@ -12,13 +14,14 @@ class Charity {
   String? id;
   String? categoryId;
   String? image;
+  List<Contributor> contributors = [];
   String? companyId;
   String? title;
   String? description;
   int? progress;
   int? total;
   int? targetTotal;
-  DateTime? targetDate;
+  String? targetDate;
   DateTime? created_at;
   DateTime? updated_at;
   int? status;
@@ -37,21 +40,19 @@ class Charity {
     this.created_at,
     this.updated_at,
     this.status,
+    this.contributors = const [],
   });
 
   factory Charity.fromJson(Map<String, dynamic> json) => Charity(
         id: json["id"],
         categoryId: json["category_id"],
         companyId: json["company_id"],
-        image: json["image"],
         title: json["title"],
         description: json["description"],
         progress: json["progress"],
         total: json["total"],
         targetTotal: json["target_total"],
-        targetDate: json["target_date"] == null
-            ? null
-            : DateTime.parse(json["target_date"]),
+        targetDate: json["target_date"],
         created_at: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -65,13 +66,12 @@ class Charity {
         "id": id,
         "category_id": categoryId,
         "company_id": companyId,
-        "image": image,
         "title": title,
         "description": description,
         "progress": progress,
         "total": total,
         "target_total": targetTotal,
-        "target_date": targetDate?.toIso8601String(),
+        "target_date": targetDate,
         "created_at":
             created_at?.toIso8601String() ?? DateTime.now().toIso8601String(),
         "updated_at": updated_at?.toIso8601String(),

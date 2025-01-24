@@ -1,5 +1,6 @@
 import 'package:dompet_mal/models/BankModel.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -7,11 +8,18 @@ class BankAdminController extends GetxController {
   final supabase = Supabase.instance.client;
   final bankList = <Bank>[].obs;
   final errorMessage = ''.obs;
+  RxString username = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
+    getCurrentUser();
     fetchBankList();
+  }
+
+  Future<void> getCurrentUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    username.value = prefs.getString('userName') ?? '';
   }
 
   void fetchBankList() async {
@@ -39,6 +47,12 @@ class BankAdminController extends GetxController {
     } catch (e) {
       errorMessage.value = 'Error fetching bank list: $e';
     }
+  }
+
+  void selectBankAccount(Bank account) {
+    // Handle the bank account selection logic here
+    print('Selected bank account: ${account.name}');
+    Get.back(result: account);
   }
 
   void createBank(String name) async {

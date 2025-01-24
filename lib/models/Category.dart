@@ -21,7 +21,6 @@ class Category {
         id: json["id"],
         name: json["name"],
         description: json["description"],
-        imageUrl: json["imageUrl"],  // Add this in fromJson
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -34,7 +33,6 @@ class Category {
         "id": id ?? const Uuid().v4(),
         "name": name,
         "description": description,
-        "imageUrl": imageUrl,  // Include in toJson
         "created_at":
             createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),

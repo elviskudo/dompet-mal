@@ -1,16 +1,22 @@
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
+import 'package:dompet_mal/models/Category.dart';
+import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 
 class StraightCharityComponent extends StatelessWidget {
-  final List<CharityByCategory> banners;
+  final List<Charity> banners;
+  final List<Category> category;
+  final int maxItems;
 
   const StraightCharityComponent({
     Key? key,
     required this.banners,
+    required this.category,
+    this.maxItems = -1,
   }) : super(key: key);
 
   String formatCurrency(int amount) {
@@ -30,13 +36,15 @@ class StraightCharityComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var lebar = MediaQuery.of(context).size.width;
+    final displayBanners =
+        maxItems > 0 ? banners.take(maxItems).toList() : banners;
     return Container(
       height: 340,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: banners.length,
+        itemCount: displayBanners.length,
         itemBuilder: (context, index) {
-          final banner = banners[index];
+          var banner = displayBanners[index];
           return GestureDetector(
             onTap: () {
               Get.toNamed("/donation-detail-page", arguments: banner);
@@ -53,16 +61,24 @@ class StraightCharityComponent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Image
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                    ),
-                    child: Image.network(
-                      banner.imageUrls[0],
-                      width: lebar * 0.49,
-                      height: 120,
-                      fit: BoxFit.cover,
+                  Container(
+                    width: double.infinity,
+                    height: 140,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                      ),
+                      child: Image.network(
+                        banner.image ?? 'https://via.placeholder.com/150',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.image, size: 50),
+                          );
+                        },
+                      ),
                     ),
                   ),
                   // Content
@@ -72,7 +88,7 @@ class StraightCharityComponent extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          banner.title,
+                          banner.title ?? 'Untitled Charity',
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -83,7 +99,13 @@ class StraightCharityComponent extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          banner.category.name,
+                          category
+                              .firstWhere(
+                                (cat) => cat.id == banner.categoryId,
+                                orElse: () =>
+                                    Category(name: 'Unknown Category'),
+                              )
+                              .name!,
                           style: TextStyle(
                             fontSize: 11,
                             color: Colors.grey[800],
@@ -99,12 +121,14 @@ class StraightCharityComponent extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          formatCurrency(banner.totalCharities),
+                          formatCurrency(
+                              banner.total ?? 0), // Nilai default 0 jika null
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+
                         const SizedBox(height: 12),
                         const Text(
                           'Waktu Penyerahan',
@@ -113,14 +137,22 @@ class StraightCharityComponent extends StatelessWidget {
                             color: Colors.black54,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 12),
                         Text(
-                          formatDate(banner.createdAt),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                          '${formatDate(banner.created_at!)}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.black54,
                           ),
                         ),
+                        const SizedBox(height: 2),
+                        // Text(
+                        //   formatDate(banner.created_at! ?? DateTime.now()),
+                        //   style: const TextStyle(
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.w600,
+                        //   ),
+                        // ),
                         Gap(8),
                         Container(
                           decoration: BoxDecoration(
@@ -130,7 +162,13 @@ class StraightCharityComponent extends StatelessWidget {
                               onPressed: () {
                                 Get.bottomSheet(
                                   SlidingDonationSheet(
-                                    kategori: banner.category.name,
+                                    kategori: category
+                              .firstWhere(
+                                (cat) => cat.id == banner.categoryId,
+                                orElse: () =>
+                                    Category(name: 'Unknown Category'),
+                              )
+                              .name!,
                                   ),
                                   isScrollControlled: true,
                                   backgroundColor: Colors.transparent,
