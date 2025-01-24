@@ -32,7 +32,7 @@ class BankAdminController extends GetxController {
         final fileResponse = await supabase
             .from('files')
             .select('file_name')
-            .eq('module_class', 'bank')
+            .eq('module_class', 'banks')
             .eq('module_id', bank.id!)
             .limit(1)
             .maybeSingle();

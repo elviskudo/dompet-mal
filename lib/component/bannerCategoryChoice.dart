@@ -1,4 +1,5 @@
 import 'package:avatar_stack/avatar_stack.dart';
+import 'package:dompet_mal/app/modules/(home)/donationDetailPage/views/donation_detail_page_view.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/models/Category.dart';
@@ -45,7 +46,10 @@ class _BannerKategoriState extends State<BannerKategori> {
         final banner = displayBanners[index];
         return GestureDetector(
           onTap: () {
-            Get.toNamed("/donation-detail-page", arguments: banner);
+            Get.toNamed("/donation-detail-page", arguments: Gabungan(
+                    category: widget.category ,
+                    charity: banner,
+                  ));
           },
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -208,7 +212,8 @@ class _BannerKategoriState extends State<BannerKategori> {
                               onPressed: () {
                                 Get.bottomSheet(
                                   SlidingDonationSheet(
-                                    // You might need to adjust this
+                                    kategoriId: banner.categoryId!,
+                                    charityId: banner.id!,
                                     kategori:  widget.category
                               .firstWhere(
                                 (cat) => cat.id == banner.categoryId,

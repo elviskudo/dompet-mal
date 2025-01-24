@@ -1,3 +1,4 @@
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/myDonation/controllers/my_donation_controller.dart';
 import 'package:dompet_mal/component/bannerCategoryChoice.dart';
 import 'package:dompet_mal/component/bottomBar.dart';
@@ -11,16 +12,16 @@ import '../controllers/my_favorite_controller.dart';
 class MyFavoriteView extends GetView<MyFavoriteController> {
   MyFavoriteView({super.key});
   @override
-  final charityController = Get.put(MyDonationController());
+  final charityController = Get.put(CharityAdminController());
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Donasi Favorit',
         onSortPressed: () {
-          charityController.showSortDialog(context);
+          // charityController.showSortDialog(context);
         },
         onFilterPressed: () {
-          charityController.showSearchDialog(context);
+          // charityController.showSearchDialog(context);
         },
       ),
       backgroundColor: Colors.white,
@@ -29,14 +30,14 @@ class MyFavoriteView extends GetView<MyFavoriteController> {
           padding: EdgeInsetsDirectional.all(24),
           child: Obx(
             () {
-              if (charityController.filteredCharities.value.isEmpty) {
+              if (charityController.charities.value.isEmpty) {
                 return Center(child: Text('Tidak ada data ditemukan'));
               }
-              // return BannerKategori(
-              //   banners: charityController.filteredCharities.value,
-              //   maxItems: 0,
-              // );
-              return SizedBox();
+              return BannerKategori(
+                category: charityController.categories.value,
+                banners: charityController.charities.value,
+                maxItems: 0,
+              );
             },
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(home)/donationDetailPage/views/donation_detail_page_view.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/models/Category.dart';
 import 'package:dompet_mal/models/CharityModel.dart';
@@ -38,6 +39,7 @@ class StraightCharityComponent extends StatelessWidget {
     var lebar = MediaQuery.of(context).size.width;
     final displayBanners =
         maxItems > 0 ? banners.take(maxItems).toList() : banners;
+
     return Container(
       height: 340,
       child: ListView.builder(
@@ -45,9 +47,19 @@ class StraightCharityComponent extends StatelessWidget {
         itemCount: displayBanners.length,
         itemBuilder: (context, index) {
           var banner = displayBanners[index];
+          var categoryName = category
+              .firstWhere(
+                (cat) => cat.id == banner.categoryId,
+                orElse: () => Category(name: 'Unknown Category'),
+              )
+              .name!;
           return GestureDetector(
             onTap: () {
-              Get.toNamed("/donation-detail-page", arguments: banner);
+              Get.toNamed("/donation-detail-page",
+                  arguments: Gabungan(
+                    category: category ,
+                    charity: banner,
+                  ));
             },
             child: Container(
               width: lebar * 0.49,
@@ -162,13 +174,9 @@ class StraightCharityComponent extends StatelessWidget {
                               onPressed: () {
                                 Get.bottomSheet(
                                   SlidingDonationSheet(
-                                    kategori: category
-                              .firstWhere(
-                                (cat) => cat.id == banner.categoryId,
-                                orElse: () =>
-                                    Category(name: 'Unknown Category'),
-                              )
-                              .name!,
+                                    kategoriId: banner.categoryId!,
+                                    charityId: banner.id!,
+                                    kategori: categoryName,
                                   ),
                                   isScrollControlled: true,
                                   backgroundColor: Colors.transparent,

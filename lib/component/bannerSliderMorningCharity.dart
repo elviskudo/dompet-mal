@@ -1,14 +1,18 @@
-import 'package:dompet_mal/models/pilihanKategoriModel.dart';
+import 'package:dompet_mal/app/modules/(home)/donationDetailPage/views/donation_detail_page_view.dart';
+import 'package:dompet_mal/models/Category.dart';
+import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 
 class BannerSlider extends StatefulWidget {
-  final List<CharityByCategory> banners;
+  final List<Charity> banners;
+  final List<Category> category;
 
   const BannerSlider({
     Key? key,
     required this.banners,
+    required this.category,
   }) : super(key: key);
 
   @override
@@ -41,20 +45,14 @@ class _BannerSliderState extends State<BannerSlider> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Image.network(
-                        banner.imageUrls[0],
+                        banner.image! ?? 'https://via.placeholder.com/150',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: 200,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
-                            color: Colors.blue,
-                            child: Center(
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: Colors.white,
-                                size: 50,
-                              ),
-                            ),
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.image, size: 50),
                           );
                         },
                       ),
@@ -81,7 +79,7 @@ class _BannerSliderState extends State<BannerSlider> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            banner.title,
+                            banner.title! ?? "",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -97,7 +95,7 @@ class _BannerSliderState extends State<BannerSlider> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            banner.description,
+                            banner.description! ?? "",
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -117,7 +115,10 @@ class _BannerSliderState extends State<BannerSlider> {
                             onPressed: () {
                               Get.toNamed(
                                 "/donation-detail-page",
-                                arguments: banner,
+                                arguments: Gabungan(
+                                  category: widget.category,
+                                  charity: banner,
+                                ),
                               );
                             },
                             style: ElevatedButton.styleFrom(
@@ -156,7 +157,7 @@ class _BannerSliderState extends State<BannerSlider> {
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.banners.asMap().entries.map((entry) {
+            children: widget.banners!.asMap().entries.map((entry) {
               return Container(
                 width: 8.0,
                 height: 8.0,

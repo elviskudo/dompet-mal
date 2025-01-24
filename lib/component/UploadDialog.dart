@@ -44,7 +44,7 @@ class UploadDialog extends StatelessWidget {
                 labelText: 'Module Type',
                 border: OutlineInputBorder(),
               ),
-              items: ['categories', 'users', 'companies', 'charities', 'bank']
+              items: ['categories', 'users', 'companies', 'charities', 'banks']
                   .map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -80,19 +80,19 @@ class UploadDialog extends StatelessWidget {
                     );
                   }).toList(),
                   onChanged: (value) {
-                    var selectedCategory = categoriesController.categories
-                        .firstWhere((data) => data.id == value);
-
-                    // Check if a file exists for this category
+                    // Remove the incorrect category search
+                    // Instead, directly check if a file exists for this bank/charity
                     bool hasFile = uploadController.fileList.any((file) =>
-                        file.moduleClass == 'charities' &&
-                        file.moduleId == selectedCategory.id);
+                        file.moduleClass ==
+                            '${uploadController.selectedModuleClass.value}' &&
+                        file.moduleId == value);
 
                     if (hasFile) {
                       // Show error popup
                       Get.defaultDialog(
-                        title: 'Error',
-                        middleText: 'Category ini sudah diisi.',
+                        title: 'Warning',
+                        middleText:
+                            'Entitas ini sudah diisi. kalau mau update aje',
                         textConfirm: 'OK',
                         onConfirm: () => Get.back(),
                       );
@@ -163,19 +163,19 @@ class UploadDialog extends StatelessWidget {
                     );
                   }).toList(),
                   onChanged: (value) {
-                    var selectedCategory = categoriesController.categories
-                        .firstWhere((data) => data.id == value);
-
-                    // Check if a file exists for this category
+                    // Remove the incorrect category search
+                    // Instead, directly check if a file exists for this bank/charity
                     bool hasFile = uploadController.fileList.any((file) =>
-                        file.moduleClass == 'companies' &&
-                        file.moduleId == selectedCategory.id);
+                        file.moduleClass ==
+                            '${uploadController.selectedModuleClass.value}' &&
+                        file.moduleId == value);
 
                     if (hasFile) {
                       // Show error popup
                       Get.defaultDialog(
-                        title: 'Error',
-                        middleText: 'Category ini sudah diisi.',
+                        title: 'Warning',
+                        middleText:
+                            'Entitas ini sudah diisi. kalau mau update aje',
                         textConfirm: 'OK',
                         onConfirm: () => Get.back(),
                       );
@@ -206,19 +206,19 @@ class UploadDialog extends StatelessWidget {
                     );
                   }).toList(),
                   onChanged: (value) {
-                    var selectedCategory = categoriesController.categories
-                        .firstWhere((data) => data.id == value);
-
-                    // Check if a file exists for this category
+                    // Remove the incorrect category search
+                    // Instead, directly check if a file exists for this bank/charity
                     bool hasFile = uploadController.fileList.any((file) =>
-                        file.moduleClass == 'charities' &&
-                        file.moduleId == selectedCategory.id);
+                        file.moduleClass ==
+                            '${uploadController.selectedModuleClass.value}' &&
+                        file.moduleId == value);
 
                     if (hasFile) {
                       // Show error popup
                       Get.defaultDialog(
-                        title: 'Error',
-                        middleText: 'Category ini sudah diisi.',
+                        title: 'Warning',
+                        middleText:
+                            'Entitas ini sudah diisi. kalau mau update aje',
                         textConfirm: 'OK',
                         onConfirm: () => Get.back(),
                       );
@@ -230,16 +230,17 @@ class UploadDialog extends StatelessWidget {
                   },
                 );
               }
-              if (uploadController.selectedModuleClass.value == 'bank') {
+              if (uploadController.selectedModuleClass.value == 'banks') {
                 return DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                    labelText: 'Select Bank',
+                    labelText: 'Select Banks',
                     border: OutlineInputBorder(),
                   ),
                   items: bankAdminController.bankList.map((Bank data) {
                     // Check if a file exists for this bank
                     bool hasFile = uploadController.fileList.any((file) =>
-                        file.moduleClass == 'bank' && file.moduleId == data.id);
+                        file.moduleClass == 'banks' &&
+                        file.moduleId == data.id);
 
                     return DropdownMenuItem<String>(
                       value: data.id,
@@ -248,19 +249,19 @@ class UploadDialog extends StatelessWidget {
                     );
                   }).toList(),
                   onChanged: (value) {
-                    var selectedCategory = categoriesController.categories
-                        .firstWhere((data) => data.id == value);
-
-                    // Check if a file exists for this category
+                    // Remove the incorrect category search
+                    // Instead, directly check if a file exists for this bank/charity
                     bool hasFile = uploadController.fileList.any((file) =>
-                        file.moduleClass == 'bank' &&
-                        file.moduleId == selectedCategory.id);
+                        file.moduleClass ==
+                            '${uploadController.selectedModuleClass.value}' &&
+                        file.moduleId == value);
 
                     if (hasFile) {
                       // Show error popup
                       Get.defaultDialog(
-                        title: 'Error',
-                        middleText: 'Category ini sudah diisi.',
+                        title: 'Warning',
+                        middleText:
+                            'Entitas ini sudah diisi. kalau mau update aje',
                         textConfirm: 'OK',
                         onConfirm: () => Get.back(),
                       );
@@ -322,7 +323,10 @@ class UploadDialog extends StatelessWidget {
                     onPressed: uploadController.imageUrl.isEmpty ||
                             uploadController.selectedModuleId.isEmpty
                         ? null
-                        : () => uploadController.saveFileInfo(),
+                        : () async {
+                            await uploadController.saveFileInfo();
+                            await uploadController.fetchFiles();
+                          },
                     child: const Text('Submit'),
                   )),
           ],

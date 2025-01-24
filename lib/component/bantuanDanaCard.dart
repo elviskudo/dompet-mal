@@ -236,6 +236,8 @@ class EmergencyFundCard extends StatelessWidget {
                         onPressed: () {
                           Get.bottomSheet(
                             SlidingDonationSheet(
+                              kategoriId: fund.categoryId!,
+                              charityId: fund.id!,
                               kategori: category
                                   .firstWhere(
                                     (cat) => cat.id == fund.categoryId,

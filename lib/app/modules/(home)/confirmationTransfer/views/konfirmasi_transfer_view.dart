@@ -1,10 +1,12 @@
 import 'dart:math';
 
+import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
 import 'package:dompet_mal/models/BankAccountModel.dart';
+import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -80,6 +82,9 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
 
     final bankName =
         args['bankAccount'] as String? ?? 'Nama bank tidak tersedia';
+
+    final charityId =
+        args['charityId'] as String? ?? 'Nama charid id tidak tersedia';
     final bankNumber =
         args['bankNumber'] as String? ?? 'Nomor rekening tidak tersedia';
     // final String idTransaksi = "#DM110703412";
@@ -196,7 +201,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                             padding: EdgeInsets.all(24),
                           ),
                           onPressed: () =>
-                              _showCenteredPopup(context, idTransaksi),
+                              _showCenteredPopup(context, charityId),
                           child: const Text(
                             "TRANSFER SEKARANG",
                             style: TextStyle(
@@ -242,6 +247,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
   }
 
   void _showCenteredPopup(BuildContext context, String idTransaksi) {
+    final TransactionsController controller = Get.put(TransactionsController());
     showDialog(
       context: context,
       barrierDismissible: false, // Popup tidak bisa ditutup dengan klik di luar
@@ -335,8 +341,15 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                           backgroundColor: basecolor,
                           padding: EdgeInsets.all(24),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.pop(context);
+                          await controller.updateTransaction(
+                              Transaction(
+                                id: idTransaksi, // Pass the existing transaction ID
+                                status: 2,
+                              ),
+                              idTransaksi // Pass the ID again as the second argument
+                              );
                           Get.toNamed(Routes.SEND_MONEY,
                               arguments: {'idTransaksi': idTransaksi});
                         },

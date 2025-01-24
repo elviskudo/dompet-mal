@@ -18,6 +18,8 @@ class Charity {
   String? companyId;
   String? title;
   String? description;
+  String? companyImage;
+  String? companyName;
   int? progress;
   int? total;
   int? targetTotal;
@@ -35,7 +37,9 @@ class Charity {
     this.progress,
     this.total,
     this.image,
+    this.companyName,
     this.targetTotal,
+    this.companyImage,
     this.targetDate,
     this.created_at,
     this.updated_at,

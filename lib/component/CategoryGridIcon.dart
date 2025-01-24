@@ -63,7 +63,7 @@ class CATEGORYGrid extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       Container(
-                        width: 55,
+                        width: 57,
                         child: Text(
                           category.name ?? 'No Name',
                           maxLines: 3,

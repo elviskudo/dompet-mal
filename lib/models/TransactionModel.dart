@@ -6,6 +6,7 @@ class Transaction {
   final String? charityId;
   final String? userId;
   final String? transactionNumber;
+  final int? status;
   final double? donationPrice;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -14,6 +15,7 @@ class Transaction {
     this.id,
     this.bankId,
     this.charityId,
+    this.status,
     this.userId,
     this.transactionNumber,
     this.donationPrice,
@@ -27,6 +29,7 @@ class Transaction {
         bankId: json['bank_id'],
         charityId: json['charity_id'],
         userId: json['user_id'],
+        status: json['status'],
         transactionNumber: json['transaction_number'],
         donationPrice: json['donation_price']?.toDouble(),
         createdAt: json['created_at'] != null
@@ -43,6 +46,7 @@ class Transaction {
         'bank_id': bankId,
         'charity_id': charityId,
         'user_id': userId,
+        'status': status ?? 0,
         'transaction_number': transactionNumber,
         'donation_price': donationPrice,
         "created_at":
@@ -56,6 +60,7 @@ class Transaction {
     String? bankId,
     String? charityId,
     String? userId,
+    int? status,
     String? transactionNumber,
     double? donationPrice,
     DateTime? createdAt,
@@ -65,6 +70,7 @@ class Transaction {
       id: id ?? this.id,
       bankId: bankId ?? this.bankId,
       charityId: charityId ?? this.charityId,
+      status: status ?? this.status,
       userId: userId ?? this.userId,
       transactionNumber: transactionNumber ?? this.transactionNumber,
       donationPrice: donationPrice ?? this.donationPrice,

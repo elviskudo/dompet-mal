@@ -99,7 +99,16 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                   Gap(24),
-                  BannerSlider(banners: dummyDataListCategoryBanner),
+                  Obx(() {
+                    if (charityController.charities.value.isNotEmpty) {
+                      return BannerSlider(
+                        banners: charityController.charities.value,
+                        category: charityController.categories.value,
+                      );
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  }),
                   Gap(24),
                   CATEGORYGrid(),
                   Padding(

@@ -72,7 +72,11 @@ class CategoriesController extends GetxController {
       await supabase
           .from('categories')
           .update(category.toJson())
-          .eq('id', category.id as Object);
+          .eq('id', category.id as Object)
+          .order(
+            'name',
+            ascending: false,
+          );
       await getCategories(); // Refresh the list
       Get.snackbar('Success', 'Category updated successfully');
     } catch (e) {

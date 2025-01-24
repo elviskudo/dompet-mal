@@ -33,7 +33,7 @@ class UploadController extends GetxController {
     'categories',
     'companies',
     'charities',
-    'bank',
+    'banks',
     'all'
   ].obs; // Contoh data module class
   final RxList<FileModel> filteredFileList = <FileModel>[].obs;
@@ -126,6 +126,7 @@ class UploadController extends GetxController {
   Future<List<FileModel>> fetchFiles() async {
     try {
       final response = await supabase.from('files').select('*');
+      ;
       final data = response as List<dynamic>;
 
       List<FileModel> files = [];
@@ -173,6 +174,7 @@ class UploadController extends GetxController {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+      print('error: $e');
       return [];
     }
   }

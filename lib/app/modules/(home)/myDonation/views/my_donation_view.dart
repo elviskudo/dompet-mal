@@ -1,3 +1,4 @@
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/component/bannerCategoryChoice.dart';
 import 'package:dompet_mal/component/customAppBarCategory.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import '../controllers/my_donation_controller.dart';
 class MyDonationView extends GetView<MyDonationController> {
   MyDonationView({super.key});
   @override
-  final charityController = Get.put(MyDonationController());
+  final charityController = Get.put(CharityAdminController());
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
@@ -27,13 +28,14 @@ class MyDonationView extends GetView<MyDonationController> {
           padding: EdgeInsetsDirectional.all(24),
           child: Obx(
             () {
-              if (controller.filteredCharities.value.isEmpty) {
+              if (charityController.charities.value.isEmpty) {
                 return Center(child: Text('Tidak ada data ditemukan'));
               }
-              // return BannerKategori(
-              //   banners: charityController.filteredCharities.value,
-              //   maxItems: 0,
-              // );
+              return BannerKategori(
+                category: charityController.categories.value,
+                banners: charityController.charities.value,
+                maxItems: 0,
+              );
               return SizedBox();
             },
           ),

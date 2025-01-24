@@ -1,18 +1,26 @@
+import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/home/controllers/home_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/models/BankAccountModel.dart';
+import 'package:dompet_mal/models/BankModel.dart';
+import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 class SlidingDonationSheet extends StatefulWidget {
   @override
+  final String kategoriId;
   final String kategori;
+  final String charityId;
 
   const SlidingDonationSheet({
     Key? key,
+    required this.kategoriId,
     required this.kategori,
+    required this.charityId,
   }) : super(key: key);
   State<SlidingDonationSheet> createState() => _SlidingDonationSheetState();
 }
@@ -23,7 +31,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
   late Animation<Offset> _slideAnimation;
   final donationController = Get.find<HomeController>();
   final TextEditingController _textController = TextEditingController();
-  final Rx<BankAccount?> selectedBankAccount = Rx<BankAccount?>(null);
+  final Rx<Bank?> selectedBankAccount = Rx<Bank?>(null);
 
   final List<int> predefinedAmounts = [
     50000,
@@ -38,7 +46,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
     super.initState();
     // Check if there's an argument passed
     if (Get.arguments != null) {
-      selectedBankAccount.value = Get.arguments as BankAccount;
+      selectedBankAccount.value = Get.arguments;
     }
 
     // Initial setup for text controller with formatting
@@ -128,19 +136,26 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset(
-                      'assets/images/mandiri.png',
-                      width: 80,
-                      height: 40,
-                    ),
-                    // const SizedBox(height: 4),
+                    Image.network(
+                      selectedBankAccount.value!.image ??
+                          'https://via.placeholder.com/150',
+                      // fit: BoxFit.fill,
+                      width: 73,
+                      height: 24,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.image, size: 50),
+                        );
+                      },
+                    ), //
                     Text(
-                      selectedBankAccount.value!.accountName,
+                      selectedBankAccount.value!.name!,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      selectedBankAccount.value!.accountNumber,
+                      selectedBankAccount.value!.accountNumber!,
                       style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 16,
@@ -161,7 +176,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
             onPressed: () async {
               // Get result from payment-account-page
               final result = await Get.toNamed("payment-account-page");
-              if (result != null && result is BankAccount) {
+              if (result != null && result is Bank) {
                 selectedBankAccount.value = result;
               }
             },
@@ -184,6 +199,8 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
 
   @override
   Widget build(BuildContext context) {
+    final TransactionsController transactionsController =
+        Get.put(TransactionsController());
     return GestureDetector(
       onVerticalDragEnd: (details) {
         if (details.primaryVelocity! > 500) {
@@ -281,38 +298,36 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                         return TextField(
                           controller: _textController,
                           onChanged: (value) {
-                            // Remove 'Rp ' and '.' before processing
-                            final cleanValue =
-                                value.replaceAll('Rp ', '').replaceAll('.', '');
-                            donationController.setDonationAmount(cleanValue);
-                          },
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            TextInputFormatter.withFunction(
-                                (oldValue, newValue) {
-                              // Hanya memproses jika ada angka
-                              if (newValue.text.isEmpty) return newValue;
+                            // Remove non-numeric characters
+                            String cleanValue =
+                                value.replaceAll(RegExp(r'[^\d]'), '');
 
-                              // Parse angka
-                              final number = int.tryParse(newValue.text) ?? 0;
+                            // Convert to integer
+                            int? number = int.tryParse(cleanValue);
 
-                              // Format dengan titik
-                              final formattedValue =
-                                  'Rp ${_formatNumber(number.toString())}';
+                            if (number != null) {
+                              // Format with Rupiah prefix
+                              String formattedValue = formatRupiah2(number);
 
-                              return newValue.copyWith(
+                              // Update text controller without triggering another onChanged
+                              _textController.value = TextEditingValue(
                                 text: formattedValue,
                                 selection: TextSelection.collapsed(
                                     offset: formattedValue.length),
                               );
-                            }),
-                          ],
-                          keyboardType: TextInputType.text,
+
+                              // Update donation amount
+                              donationController
+                                  .setDonationAmount(number.toString());
+                            }
+                          },
+                          keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: '0',
                           ),
                         );
+                        ;
                       }),
                     ),
                   ],
@@ -360,13 +375,35 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                                 return;
                               }
 
+                              await transactionsController.addTransaction(
+                                  Transaction(
+                                      // id: Uuid().v4(),
+                                      bankId: selectedBankAccount.value!.id,
+                                      charityId: widget.charityId,
+                                      userId:
+                                          transactionsController.userId.value,
+                                      updatedAt: DateTime.now(),
+                                      transactionNumber: selectedBankAccount
+                                          .value!.accountNumber,
+                                      donationPrice: double.parse(
+                                              donationController
+                                                  .donationAmount.value
+                                                  .toString()) *
+                                          2,
+                                      status: 1 // Pending
+                                      ));
+
+                              Get.snackbar(
+                                  'Berhasil transaksi', 'Status: pending');
+
                               // Kirim data ke halaman konfirmasi
                               Get.toNamed(
                                 Routes.KONFIRMASI_TRANSFER,
                                 arguments: {
                                   'kategori': widget.kategori.toString(),
+                                  'charityId': widget.charityId,
                                   'bankAccount':
-                                      selectedBankAccount.value!.accountName,
+                                      selectedBankAccount.value!.name,
                                   'bankNumber':
                                       selectedBankAccount.value!.accountNumber,
                                   'amount':

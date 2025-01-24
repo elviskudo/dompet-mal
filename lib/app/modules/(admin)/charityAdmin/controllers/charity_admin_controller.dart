@@ -117,6 +117,20 @@ class CharityAdminController extends GetxController {
           charity.image = fileResponse['file_name'];
         }
 
+        final companyFileResponse = await supabase
+            .from('files')
+            .select('file_name')
+            .eq('module_class', 'companies')
+            .eq('module_id', charity.companyId!)
+            .limit(1)
+            .maybeSingle();
+
+        if (companyFileResponse != null) {
+          charity.companyImage = companyFileResponse['file_name'];
+        }
+
+        charity.companyName = item['companies']?['name'];
+
         charitiesWithDetails.add(charity);
       }
 
@@ -160,14 +174,13 @@ class CharityAdminController extends GetxController {
           (sum, transaction) => sum + (transaction['donation_price'] ?? 0.0));
 
       // Get unique donors by user_id
-      final uniqueDonors = Set.from(donorsResponse.map((e) => e['user_id']));
 
       charitySummary.value = CharitySummary(
-        totalDonors: uniqueDonors.length,
+        totalDonors: donorsResponse.length,
         totalDonations: totalDonations.toInt(),
       );
 
-      print('Total Donors: ${uniqueDonors.length}');
+      print('Total Donors: ${donorsResponse.length}');
       print('Total Donations: $totalDonations');
     } catch (e) {
       errorMessage.value =

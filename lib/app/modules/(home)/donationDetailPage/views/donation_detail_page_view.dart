@@ -8,11 +8,22 @@ import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/component/laporanCard.dart';
 import 'package:dompet_mal/component/shareButton.dart';
-import 'package:dompet_mal/models/pilihanKategoriModel.dart';
+import 'package:dompet_mal/models/Category.dart';
+import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+class Gabungan {
+  Charity? charity;
+  List<Category> category;
+
+  Gabungan({
+    required this.category,
+    required this.charity,
+  });
+}
 
 class DonationDetailView extends GetView<DonationDetailPageController> {
   @override
@@ -32,14 +43,20 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
       Get.put(TransactionsController());
 
   Widget build(BuildContext context) {
-    CharityByCategory bannerData = Get.arguments;
+    Gabungan gabungan = Get.arguments as Gabungan;
+    var categoryName = gabungan.category
+        .firstWhere(
+          (cat) => cat.id == gabungan.charity!.categoryId,
+          orElse: () => Category(name: 'Unknown Category'),
+        )
+        .name!;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         // elevation: 0,
         title: Text(
-          bannerData.title,
+          gabungan.charity!.title!,
           maxLines: 1,
           style: TextStyle(overflow: TextOverflow.ellipsis),
         ),
@@ -51,13 +68,13 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
           IconButton(
             icon: Icon(Icons.favorite, color: Colors.black),
             onPressed: () {
-              print('---- ${bannerData}');
-              print('---- ${bannerData.title}');
+              print('---- ${gabungan.charity!}');
+              print('---- ${gabungan.charity!.title}');
               Get.to(MyFavoriteView());
             },
           ),
           ShareButton(
-            title: bannerData.title,
+            title: gabungan.charity!.title!,
             contentToShare: 'Konten yang ingin dibagikan https://example.com',
           ),
           // IconButton(
@@ -72,53 +89,16 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
           children: [
             Stack(
               children: [
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 350,
-                    viewportFraction: 1.0,
-                    onPageChanged: (index, reason) {
-                      controller.updateSliderIndex(index);
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.network(
+                    gabungan.charity!.image!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Center(
+                        child: Icon(Icons.image, size: 50, color: Colors.grey),
+                      );
                     },
-                  ),
-                  items: bannerData.imageUrls.map((item) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Image.network(
-                        item,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Center(
-                            child: Icon(Icons.broken_image,
-                                size: 50, color: Colors.grey),
-                          );
-                        },
-                      ),
-                    );
-                  }).toList(),
-                ),
-                Positioned(
-                  bottom: 20,
-                  left: 0,
-                  right: 0,
-                  child: Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children:
-                          bannerData.imageUrls.asMap().entries.map((entry) {
-                        return Container(
-                          width: 8,
-                          height: 8,
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                controller.currentSliderIndex.value == entry.key
-                                    ? Colors.white
-                                    : Colors.white.withOpacity(0.5),
-                          ),
-                        );
-                      }).toList(),
-                    ),
                   ),
                 ),
               ],
@@ -129,7 +109,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    bannerData.title,
+                    gabungan.charity!.title!,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -165,7 +145,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                bannerData.category.name,
+                                categoryName,
                                 style: TextStyle(
                                   color: Color(0xffFF7B00),
                                   fontSize: 12,
@@ -187,7 +167,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
-                            value: bannerData.progress / 100,
+                            value: gabungan.charity!.progress! / 100,
                             backgroundColor: Colors.grey[200],
                             color: Colors.blue,
                             minHeight: 6,
@@ -197,7 +177,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            '${bannerData.progress}%',
+                            '${gabungan.charity!.progress}%',
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 14,
@@ -205,7 +185,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           ),
                         ),
                         Text(
-                          'Terkumpul ${formatRupiah(bannerData.totalCharities)}',
+                          'Terkumpul ${formatRupiah(gabungan.charity!.total!)}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -215,7 +195,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           height: 10,
                         ),
                         Text(
-                          'Target ${formatRupiah(bannerData.targetCharityDonation)}',
+                          'Target ${formatRupiah(gabungan.charity!.targetTotal!)}',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 14,
@@ -239,7 +219,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                     children: [
                       CircleAvatar(
                         backgroundImage: NetworkImage(
-                            bannerData.company.image ??
+                            gabungan.charity!.companyImage ??
                                 'https://placehold.co/40x40'),
                         radius: 20,
                       ),
@@ -250,7 +230,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           Row(
                             children: [
                               Text(
-                                bannerData.company.companyName,
+                                gabungan.charity!.companyName!,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -291,7 +271,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       SizedBox(height: 4.0),
                       Text(
                         DateFormat('dd MMMM yyyy', 'id_ID')
-                            .format(bannerData.createdAt),
+                            .format(gabungan.charity!.created_at!),
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 14.0,
@@ -326,7 +306,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                             ],
                           ),
                           Obx(() => Text(
-                                bannerData.description,
+                                gabungan.charity!.description!,
                                 style: TextStyle(fontSize: 14.0),
                                 maxLines:
                                     isExpanded.value ? null : collapsedLines,
@@ -379,17 +359,17 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           Flexible(
                             child: AvatarStack(
                               height: 30,
-                              avatars:
-                                  bannerData.contributors.map((contributor) {
+                              avatars: gabungan.charity!.contributors
+                                  .map((contributor) {
                                 return NetworkImage(
-                                  contributor.avatarUrl ??
+                                  contributor.user!.imageUrl ??
                                       'https://via.placeholder.com/40',
                                 );
                               }).toList(),
                             ),
                           ),
                           Text(
-                            bannerData.contributors.length.toString(),
+                            gabungan.charity!.contributors.length.toString(),
                             style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold,
@@ -459,7 +439,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           onPressed: () {
                             Get.bottomSheet(
                               SlidingDonationSheet(
-                                kategori: bannerData.category.name,
+                                kategoriId: gabungan.charity!.categoryId!,
+                                charityId: gabungan.charity!.id!,
+                                kategori: categoryName,
                               ),
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,

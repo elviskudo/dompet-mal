@@ -80,9 +80,11 @@ class PaymentAccountPageView extends GetView<BankAdminController> {
                           child: Row(
                             children: [
                               Image.network(
-                                account.image ??
+                                account.image! ??
                                     'https://via.placeholder.com/150',
                                 fit: BoxFit.cover,
+                                width: 60,
+                                height: 42,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
                                     color: Colors.grey[300],
@@ -95,8 +97,7 @@ class PaymentAccountPageView extends GetView<BankAdminController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    controller.username.value ??
-                                        'No Name', // Nama bank
+                                    account.name ?? 'No Name', // Nama bank
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,

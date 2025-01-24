@@ -3,6 +3,7 @@ import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:dompet_mal/models/userModel.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 // import 'package:uuid/uuid.dart';
@@ -14,6 +15,7 @@ class TransactionsController extends GetxController {
   RxList banks = <Bank>[].obs;
   RxList charities = <Charity>[].obs;
   RxList users = <Users>[].obs;
+  RxString userId = ''.obs;
 
   @override
   void onInit() {
@@ -22,6 +24,12 @@ class TransactionsController extends GetxController {
     getBanks();
     getCharities();
     getUsers();
+    getCurrentUser();
+  }
+
+  Future<void> getCurrentUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    userId.value = prefs.getString('userId') ?? '';
   }
 
   Future getUsers() async {
@@ -105,15 +113,25 @@ class TransactionsController extends GetxController {
   // Update transaction
   Future updateTransaction(Transaction transaction, String id) async {
     try {
-      isLoading.value = true;
-      await supabase
-          .from('transactions')
-          .update(transaction.toJson())
-          .eq('id', id );
+      final updateData = {
+        'status': transaction.status,
+        'updated_at': DateTime.now().toIso8601String(),
+        'transaction_number': transaction.transactionNumber,
+        'bank_id': transaction.bankId,
+        'charity_id': transaction.charityId,
+        'user_id': transaction.userId,
+        'donation_price': transaction.donationPrice,
+      };
+
+      print('Update data: $updateData');
+
+      await supabase.from('transactions').update(updateData).eq('id', id);
+
       await getTransactions(); // Refresh the list
       Get.snackbar('Success', 'Transaction updated successfully');
     } catch (e) {
       Get.snackbar('Error', 'Failed to update transaction: $e');
+      print('Detailed error: $e');
     } finally {
       isLoading.value = false;
     }
