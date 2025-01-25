@@ -33,6 +33,12 @@ class _BannerSliderState extends State<BannerSlider> {
             itemCount: widget.banners.length,
             itemBuilder: (context, index, realIndex) {
               final banner = widget.banners[index];
+              var categoryName = widget.category
+                  .firstWhere(
+                    (cat) => cat.id == banner.categoryId,
+                    orElse: () => Category(name: 'Unknown Category'),
+                  )
+                  .name!;
               return Container(
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.symmetric(horizontal: 0.0),
@@ -114,13 +120,16 @@ class _BannerSliderState extends State<BannerSlider> {
                           const SizedBox(height: 12),
                           ElevatedButton(
                             onPressed: () {
-                              Get.toNamed(
-                                "/donation-detail-page",
-                                arguments: Gabungan(
-                                  category: widget.category,
-                                  charity: banner,
-                                ),
-                              );
+                              Get.toNamed("/donation-detail-page", arguments: {
+                                "categoryName": categoryName,
+                                "charity": {
+                                  "title": banner.title! ?? "",
+                                  "image": banner.image! ?? "",
+                                  "progress": banner.progress ?? 0,
+                                  "total": banner.total ?? 0,
+                                  "targetTotal": banner.targetTotal ?? 0
+                                }
+                              });
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xffFFA450),
@@ -177,7 +186,6 @@ class _BannerSliderState extends State<BannerSlider> {
     );
   }
 }
-
 
 class BannerSliderSkeleton extends StatelessWidget {
   const BannerSliderSkeleton({Key? key}) : super(key: key);

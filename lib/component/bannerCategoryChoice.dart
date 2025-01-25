@@ -46,13 +46,36 @@ class _BannerKategoriState extends State<BannerKategori> {
       displayBanners.length,
       (index) {
         final banner = displayBanners[index];
+        var categoryName = widget.category
+            .firstWhere(
+              (cat) => cat.id == banner.categoryId,
+              orElse: () => Category(name: 'Unknown Category'),
+            )
+            .name!;
         return GestureDetector(
           onTap: () {
-            Get.toNamed("/donation-detail-page",
-                arguments: Gabungan(
-                  category: widget.category,
-                  charity: banner,
-                ));
+            Get.toNamed("/donation-detail-page", arguments: {
+              "categoryName": categoryName,
+              "charity": {
+                "id": banner.id! ?? "",
+                "title": banner.title! ?? "",
+                "image": banner.image! ?? "",
+                "progress": banner.progress ?? 0,
+                "total": banner.total ?? 0,
+                "targetTotal": banner.targetTotal ?? 0,
+                "description": banner.description ?? '',
+                "categoryId": banner.categoryId ?? '',
+                "companyName": banner.companyName ?? "",
+                "companyImage": banner.companyImage ?? "",
+                "created_at": banner.created_at,
+                "contributors": banner.contributors
+                    .map((contributor) => {
+                          "imageUrl": contributor.user?.imageUrl ??
+                              'https://via.placeholder.com/40'
+                        })
+                    .toList()
+              }
+            });
           },
           child: Container(
             width: MediaQuery.of(context).size.width,

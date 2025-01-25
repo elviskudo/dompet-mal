@@ -15,22 +15,11 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class Gabungan {
-  Charity? charity;
-  List<Category> category;
-
-  Gabungan({
-    required this.category,
-    required this.charity,
-  });
-}
-
 class DonationDetailView extends GetView<DonationDetailPageController> {
   @override
   final RxBool isExpanded = false.obs;
   final int collapsedLines = 3;
-  Future formatRupiah(num value) async {
-    await value;
+  formatRupiah(num value) {
     final formatter = NumberFormat.currency(
       locale: 'id_ID',
       symbol: 'Rp ',
@@ -39,24 +28,31 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
     return formatter.format(value);
   }
 
-  final TransactionsController transactionsController =
-      Get.put(TransactionsController());
-
   Widget build(BuildContext context) {
-    Gabungan gabungan = Get.arguments as Gabungan;
-    var categoryName = gabungan.category
-        .firstWhere(
-          (cat) => cat.id == gabungan.charity!.categoryId,
-          orElse: () => Category(name: 'Unknown Category'),
-        )
-        .name!;
+    final TransactionsController transactionsController =
+        Get.put(TransactionsController());
+    final arguments = Get.arguments as Map<String, dynamic>;
+    final Map<String, dynamic>? detail = Get.arguments;
+
+    if (detail == null) {
+      print('Detail tidak ditemukan: $detail');
+      return Scaffold(
+        body: Center(
+          child: Text('Data tidak tersedia'),
+        ),
+      );
+    }
+
+    final charity = detail['charity'];
+    final categoryName = detail['categoryName'] ?? 'Kategori tidak tersedia';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         // elevation: 0,
         title: Text(
-          gabungan.charity!.title!,
+          charity["title"],
           maxLines: 1,
           style: TextStyle(overflow: TextOverflow.ellipsis),
         ),
@@ -68,13 +64,11 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
           IconButton(
             icon: Icon(Icons.favorite, color: Colors.black),
             onPressed: () {
-              print('---- ${gabungan.charity!}');
-              print('---- ${gabungan.charity!.title}');
               Get.to(MyFavoriteView());
             },
           ),
           ShareButton(
-            title: gabungan.charity!.title!,
+            title: charity["title"] ?? "kk",
             contentToShare: 'Konten yang ingin dibagikan https://example.com',
           ),
           // IconButton(
@@ -92,7 +86,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   child: Image.network(
-                    gabungan.charity!.image!,
+                    charity["image"] ?? 'https://via.placeholder.com/40',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Center(
@@ -109,7 +103,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    gabungan.charity!.title!,
+                    charity["title"] ?? 'Unknown',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -145,7 +139,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                categoryName,
+                                categoryName ?? "ss",
                                 style: TextStyle(
                                   color: Color(0xffFF7B00),
                                   fontSize: 12,
@@ -167,7 +161,8 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
-                            value: gabungan.charity!.progress! / 100,
+                            // charity["title"] ?? 'Unknown'
+                            value: charity["progress"] / 100 ?? 1,
                             backgroundColor: Colors.grey[200],
                             color: Colors.blue,
                             minHeight: 6,
@@ -177,7 +172,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            '${gabungan.charity!.progress}%',
+                            '${charity["progress"] ?? 100}%',
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 14,
@@ -185,7 +180,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           ),
                         ),
                         Text(
-                          'Terkumpul ${formatRupiah(gabungan.charity!.total!)}',
+                          'Terkumpul ${formatRupiah(charity["total"])}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -195,7 +190,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           height: 10,
                         ),
                         Text(
-                          'Target ${formatRupiah(gabungan.charity!.targetTotal!)}',
+                          'Target ${formatRupiah(charity["targetTotal"] ?? 0)}',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 14,
@@ -219,8 +214,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                     children: [
                       CircleAvatar(
                         backgroundImage: NetworkImage(
-                            gabungan.charity!.companyImage ??
-                                'https://placehold.co/40x40'),
+                          charity["companyImage"] ??
+                              'https://via.placeholder.com/40',
+                        ),
                         radius: 20,
                       ),
                       SizedBox(width: 12),
@@ -230,7 +226,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           Row(
                             children: [
                               Text(
-                                gabungan.charity!.companyName!,
+                                charity["companyName"] ?? "s",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -271,7 +267,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       SizedBox(height: 4.0),
                       Text(
                         DateFormat('dd MMMM yyyy', 'id_ID')
-                            .format(gabungan.charity!.created_at!),
+                            .format(charity["created_at"]),
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 14.0,
@@ -306,7 +302,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                             ],
                           ),
                           Obx(() => Text(
-                                gabungan.charity!.description!,
+                                charity["description"] ?? "",
                                 style: TextStyle(fontSize: 14.0),
                                 maxLines:
                                     isExpanded.value ? null : collapsedLines,
@@ -359,17 +355,14 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           Flexible(
                             child: AvatarStack(
                               height: 30,
-                              avatars: gabungan.charity!.contributors
+                              avatars: (charity["contributors"] as List)
                                   .map((contributor) {
-                                return NetworkImage(
-                                  contributor.user!.imageUrl ??
-                                      'https://via.placeholder.com/40',
-                                );
+                                return NetworkImage(contributor["imageUrl"]);
                               }).toList(),
                             ),
                           ),
                           Text(
-                            gabungan.charity!.contributors.length.toString(),
+                            (charity["contributors"] as List).length.toString(),
                             style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold,
@@ -439,9 +432,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           onPressed: () {
                             Get.bottomSheet(
                               SlidingDonationSheet(
-                                kategoriId: gabungan.charity!.categoryId!,
-                                charityId: gabungan.charity!.id!,
-                                kategori: categoryName,
+                                kategoriId: charity["categoryId"] ?? "",
+                                charityId: charity["id"] ?? "",
+                                kategori: categoryName ?? "",
                               ),
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,

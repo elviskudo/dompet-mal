@@ -28,6 +28,7 @@ void main() async {
         theme: ThemeData(useMaterial3: true),
       ),
     );
+    
   } catch (e) {
     print('Database connection failed: $e');
     // Tampilkan dialog error atau handling sesuai kebutuhan

@@ -62,6 +62,12 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
               itemCount: displayBanners.length,
               itemBuilder: (context, index) {
                 final banner = displayBanners[index];
+                var categoryName = widget.category
+                    .firstWhere(
+                      (cat) => cat.id == banner.categoryId,
+                      orElse: () => Category(name: 'Unknown Category'),
+                    )
+                    .name!;
                 return Padding(
                   padding: EdgeInsets.only(
                     right: index == displayBanners.length - 1 ? 0 : 16,
@@ -73,7 +79,28 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
                       category: widget.category,
                       onTap: () {
                         // Handle tap, navigate to the donation details page
-                        Get.toNamed('/donation-detail-page', arguments: banner);
+                        Get.toNamed('/donation-detail-page', arguments: {
+                          "categoryName": categoryName,
+                          "charity": {
+                            "id": banner.id! ?? "",
+                            "title": banner.title! ?? "",
+                            "image": banner.image! ?? "",
+                            "progress": banner.progress ?? 0,
+                            "total": banner.total ?? 0,
+                            "targetTotal": banner.targetTotal ?? 0,
+                            "description": banner.description ?? '',
+                            "categoryId": banner.categoryId ?? '',
+                            "companyName": banner.companyName ?? "",
+                            "companyImage": banner.companyImage ?? "",
+                            "created_at": banner.created_at,
+                            "contributors": banner.contributors
+                                .map((contributor) => {
+                                      "imageUrl": contributor.user?.imageUrl ??
+                                          'https://via.placeholder.com/40'
+                                    })
+                                .toList()
+                          }
+                        });
                       },
                     ),
                   ),
@@ -275,7 +302,6 @@ class EmergencyFundCard extends StatelessWidget {
   }
 }
 
-
 class EmergencyFundSkeleton extends StatelessWidget {
   final int itemCount;
 
@@ -381,10 +407,12 @@ class EmergencyFundSkeleton extends StatelessWidget {
                                 const SizedBox(height: 16),
                                 // Collected and Days Left skeleton
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Shimmer.fromColors(
                                           baseColor: Colors.grey[300]!,
@@ -408,7 +436,8 @@ class EmergencyFundSkeleton extends StatelessWidget {
                                       ],
                                     ),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Shimmer.fromColors(
                                           baseColor: Colors.grey[300]!,

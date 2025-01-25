@@ -40,7 +40,7 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
               // Handle tap
               //  Get.
               Get.toNamed("/donation-detail-page",
-                  arguments: dummyDataListCategoryBanner[4]);
+                  arguments:{ dummyDataListCategoryBanner[4]});
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

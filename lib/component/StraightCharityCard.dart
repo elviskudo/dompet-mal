@@ -1,5 +1,6 @@
 import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/donationDetailPage/views/donation_detail_page_view.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/models/Category.dart';
 import 'package:dompet_mal/models/CharityModel.dart';
@@ -57,11 +58,28 @@ class StraightCharityComponent extends StatelessWidget {
               .name!;
           return GestureDetector(
             onTap: () {
-              Get.toNamed("/donation-detail-page",
-                  arguments: Gabungan(
-                    category: category,
-                    charity: banner,
-                  ));
+              Get.toNamed(Routes.DONATION_DETAIL_PAGE, arguments: {
+                "categoryName": categoryName,
+                "charity": {
+                  "id": banner.id! ?? "",
+                  "title": banner.title! ?? "",
+                  "image": banner.image! ?? "",
+                  "progress": banner.progress ?? 0,
+                  "total": banner.total ?? 0,
+                  "targetTotal": banner.targetTotal ?? 0,
+                  "description": banner.description ?? '',
+                  "categoryId": banner.categoryId ?? '',
+                  "companyName": banner.companyName ?? "",
+                  "companyImage": banner.companyImage ?? "",
+                  "created_at": banner.created_at,
+                  "contributors": banner.contributors
+                      .map((contributor) => {
+                            "imageUrl": contributor.user?.imageUrl ??
+                                'https://via.placeholder.com/40'
+                          })
+                      .toList()
+                }
+              });
             },
             child: Container(
               width: lebar * 0.49,
