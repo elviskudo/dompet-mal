@@ -104,8 +104,17 @@ class PaymentAccountPageView extends GetView<BankAdminController> {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  Text(account.accountNumber ??
-                                      'No Account Number'), // Nomor rekening
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.55,
+                                    child: Text(
+                                      account.accountNumber ??
+                                          'No Account Number',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(),
+                                    ),
+                                  ), // Nomor rekening
                                 ],
                               ),
                             ],

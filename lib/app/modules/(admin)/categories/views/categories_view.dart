@@ -14,10 +14,14 @@ class CategoriesView extends GetView<CategoriesController> {
         child: Icon(Icons.add),
       ),
       appBar: AppBar(
+      backgroundColor: Colors.white,
+
         title: const Text('Categories'),
         centerTitle: true,
         actions: [],
       ),
+      backgroundColor: Colors.white,
+
       body: Obx(
         () => controller.isLoading.value
             ? const Center(child: CircularProgressIndicator())

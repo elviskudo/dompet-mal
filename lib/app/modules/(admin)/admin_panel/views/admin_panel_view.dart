@@ -31,6 +31,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
     Get.put(CharityAdminController());
     Get.put(BankAdminController());
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           // Main Content
@@ -43,7 +44,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
 
           // Menu Button
           Positioned(
-            top: 20,
+            top: 52,
             left: 28,
             child: Row(
               children: [
@@ -90,7 +91,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
           ),
 
           Positioned(
-            top: 20,
+            top: 52,
             right: 28, // Menggunakan posisi dari kanan
             child: Tooltip(
               message: 'Logout',
@@ -142,7 +143,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
                 child: Material(
                   elevation: 16,
                   child: Container(
-                    // color: Colors.blue,
+                    color: Colors.white,
                     child: Column(
                       children: [
                         const SizedBox(height: 40),
@@ -237,7 +238,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
         return CharityAdminView();
       case 6:
         return TransactionsView();
-        case 7:
+      case 7:
         return BankAdminView();
       default:
         return ListUserView();

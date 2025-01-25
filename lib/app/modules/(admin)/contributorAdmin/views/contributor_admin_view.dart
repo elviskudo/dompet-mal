@@ -10,10 +10,14 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+      backgroundColor: Colors.white,
+
         title: const Text('Contributor Management'),
         centerTitle: true,
         // backgroundColor: Colors.blue[700],
       ),
+      backgroundColor: Colors.white,
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

@@ -71,7 +71,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Container Button_filter(
       double lebar, String img, String name, Function()? onFilterPressed) {
     return Container(
-      width: lebar * 0.25,
+      // width: lebar * 0.25,
       child: OutlinedButton(
         onPressed: onFilterPressed,
         child: Row(

@@ -54,7 +54,7 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
           // Cards section
           SizedBox(
             height: MediaQuery.of(context).size.height *
-                0.48, // Adjust the height to fit the cards
+                0.51, // Adjust the height to fit the cards
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,
@@ -244,18 +244,25 @@ class EmergencyFundCard extends StatelessWidget {
                                     orElse: () =>
                                         Category(name: 'Unknown Category'),
                                   )
-                                  .name!, // You might want to pass the actual category
+                                  .name!,
                             ),
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
                           );
                         },
                         style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8), // Reduced padding
+                            minimumSize: Size(80, 24), // Smaller minimum size
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             backgroundColor: const Color(0xff4B76D9),
                             foregroundColor: Colors.white),
-                        child: const Text("Donasi")),
+                        child: const Text(
+                          "Donasi",
+                          style: TextStyle(
+                              fontSize: 14), // Optional: reduce text size
+                        )),
                   )
                 ],
               ),

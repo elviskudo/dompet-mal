@@ -126,6 +126,7 @@ class TransactionsView extends GetView<TransactionsController> {
                       value: selectedCharityId.value.isNotEmpty
                           ? selectedCharityId.value
                           : null,
+                      
                       decoration: const InputDecoration(labelText: 'Charity'),
                       items: controller.charities
                           .map<DropdownMenuItem<String>>((charity) {
@@ -134,7 +135,7 @@ class TransactionsView extends GetView<TransactionsController> {
                           child: Text(charity.title),
                         );
                       }).toList(),
-                      onChanged: (value) =>
+                      onChanged: (value) => 
                           selectedCharityId.value = value ?? '',
                     )),
 

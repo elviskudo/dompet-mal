@@ -37,11 +37,12 @@ class StraightCharityComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var lebar = MediaQuery.of(context).size.width;
+    var tinggi = MediaQuery.of(context).size.height;
     final displayBanners =
         maxItems > 0 ? banners.take(maxItems).toList() : banners;
 
     return Container(
-      height: 340,
+      height: tinggi * 0.465,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: displayBanners.length,
@@ -57,7 +58,7 @@ class StraightCharityComponent extends StatelessWidget {
             onTap: () {
               Get.toNamed("/donation-detail-page",
                   arguments: Gabungan(
-                    category: category ,
+                    category: category,
                     charity: banner,
                   ));
             },
@@ -99,15 +100,18 @@ class StraightCharityComponent extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          banner.title ?? 'Untitled Charity',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            height: 1.2,
+                        Container(
+                          height: 32,
+                          child: Text(
+                            banner.title ?? 'Untitled Charity',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              height: 1.2,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -183,6 +187,9 @@ class StraightCharityComponent extends StatelessWidget {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
+                                  minimumSize:
+                                      Size(lebar, 32), // Smaller minimum size
+
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8)),
                                   backgroundColor: const Color(0xff4B76D9),

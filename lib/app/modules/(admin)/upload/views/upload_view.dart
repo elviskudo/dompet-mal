@@ -12,67 +12,87 @@ class UploadView extends GetView<UploadController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Text('UploadView'),
-                Gap(8),
-                IconButton(
-                    icon: const Icon(Icons.upload),
-                    tooltip: 'Upload Foto',
-                    onPressed: () => controller.showUploadDialog(context)),
-                // Edit Mode Toggle
-                IconButton(
-                  icon: Obx(() => Icon(Icons.edit,
-                      color: controller.isEditMode.value ? Colors.blue : null)),
-                  tooltip: 'Edit Mode',
-                  onPressed: () => controller.toggleEditMode(),
-                ),
-                // Delete Mode Toggle
-                IconButton(
-                  icon: Obx(() => Icon(Icons.delete,
-                      color:
-                          controller.isDeleteMode.value ? Colors.red : null)),
-                  tooltip: 'Delete Mode',
-                  onPressed: () => controller.toggleDeleteMode(),
-                ),
-                // Delete Confirm Button (visible only in delete mode)
-                Obx(() => controller.isDeleteMode.value &&
-                        controller.selectedFilesForDeletion.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.check, color: Colors.green),
-                        onPressed: () => controller.deleteSelectedFiles(),
-                      )
-                    : const SizedBox.shrink()),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Obx(() {
-                return DropdownButton(
-                  // menuWidth: 50,
-                  value: controller.selectedModuleClass.value.isNotEmpty
-                      ? controller.selectedModuleClass.value
-                      : 'all',
-                  onChanged: (newValue) {
-                    if (newValue != null) {
-                      controller.selectedModuleClass.value = newValue;
-                      controller.filterFiles(); // Apply filter
-                    }
-                  },
-                  items: controller.moduleClasses
-                      .map((moduleClass) => DropdownMenuItem(
-                            value: moduleClass,
-                            child: Text(moduleClass),
-                          ))
-                      .toList(),
-                );
-              }),
-            ),
-          ],
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.white,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        toolbarHeight: 100,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        title: Container(
+          padding: EdgeInsets.only(top: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('UploadView'),
+                  Obx(() {
+                    return DropdownButton(
+                      // menuWidth: 50,
+                      value: controller.selectedModuleClass.value.isNotEmpty
+                          ? controller.selectedModuleClass.value
+                          : 'all',
+                      onChanged: (newValue) {
+                        if (newValue != null) {
+                          controller.selectedModuleClass.value = newValue;
+                          controller.filterFiles(); // Apply filter
+                        }
+                      },
+                      items: controller.moduleClasses
+                          .map((moduleClass) => DropdownMenuItem(
+                                value: moduleClass,
+                                child: Text(moduleClass),
+                              ))
+                          .toList(),
+                    );
+                  }),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () => controller.showUploadDialog(context),
+                    child: Container(
+                      child: Icon(Icons.upload),
+                    ),
+                  ),
+                  Gap(14),
+                  InkWell(
+                    onTap: () => controller.toggleEditMode(),
+                    child: Container(
+                      child: Icon(Icons.edit),
+                    ),
+                  ),
+                  Gap(14),
+                  InkWell(
+                    onTap: () => controller.toggleDeleteMode(),
+                    child: Container(
+                      child: Icon(
+                        Icons.delete,
+                        color:
+                            controller.isDeleteMode.value ? Colors.red : null,
+                      ),
+                    ),
+                  ),
+                  Gap(14),
+                  Obx(() => controller.isDeleteMode.value &&
+                          controller.selectedFilesForDeletion.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.check, color: Colors.green),
+                          onPressed: () => controller.deleteSelectedFiles(),
+                        )
+                      : const SizedBox.shrink()),
+                ],
+              ),
+              Gap(12)
+            ],
+          ),
         ),
       ),
       body: Column(

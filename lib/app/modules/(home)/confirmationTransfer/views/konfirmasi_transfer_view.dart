@@ -82,6 +82,8 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
 
     final bankName =
         args['bankAccount'] as String? ?? 'Nama bank tidak tersedia';
+    final bankImage =
+        args['bankImage'] as String? ?? 'Image bank tidak tersedia';
 
     final charityId =
         args['charityId'] as String? ?? 'Nama charid id tidak tersedia';
@@ -127,20 +129,22 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                 children: [
                   Row(
                     children: [
-                      Image.asset(
-                        'assets/images/mandiri.png', // Ganti dengan path logo bank Anda
-                        width: 73,
+                      Image.network(
+                        bankImage ?? 'https://via.placeholder.com/150',
+                        fit: BoxFit.cover,
+                        width: 72,
                         height: 21,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.image, size: 50),
+                          );
+                        },
                       ),
                       const SizedBox(width: 16),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Bank Mandiri",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
                           Text("${bankName}"),
                         ],
                       ),
@@ -155,10 +159,10 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset('assets/icons/dashicons_warning.png'),
-                      Gap(12),
+                      Gap(8),
                       const Text(
                         "Pastikan nominal sesuai hingga 2 digit terakhir",
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: Colors.black, fontSize: 13),
                       ),
                     ],
                   ),
@@ -314,10 +318,13 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.35,
+                      width: MediaQuery.of(context).size.width * 0.3,
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.all(24),
+                          minimumSize:
+                              Size(MediaQuery.of(context).size.width * 0.3, 32),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 16),
                           side: const BorderSide(
                               color: Color.fromARGB(48, 49, 48, 54)),
                         ),
@@ -335,11 +342,12 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                       ),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.35,
+                      width: MediaQuery.of(context).size.width * 0.3,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: basecolor,
-                          padding: EdgeInsets.all(24),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 16),
                         ),
                         onPressed: () async {
                           Navigator.pop(context);
@@ -435,11 +443,16 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            nomorRekening,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+          Container(
+            width: MediaQuery.of(context).size.width * 0.6,
+            child: Text(
+              nomorRekening,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
           InkWell(

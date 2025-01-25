@@ -38,6 +38,7 @@ class _BannerKategoriState extends State<BannerKategori> {
     final displayBanners = widget.maxItems > 0
         ? widget.banners.take(widget.maxItems).toList()
         : widget.banners;
+    var lebar = MediaQuery.of(context).size.width;
 
     return Column(
         children: List.generate(
@@ -46,10 +47,11 @@ class _BannerKategoriState extends State<BannerKategori> {
         final banner = displayBanners[index];
         return GestureDetector(
           onTap: () {
-            Get.toNamed("/donation-detail-page", arguments: Gabungan(
-                    category: widget.category ,
-                    charity: banner,
-                  ));
+            Get.toNamed("/donation-detail-page",
+                arguments: Gabungan(
+                  category: widget.category,
+                  charity: banner,
+                ));
           },
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -214,19 +216,20 @@ class _BannerKategoriState extends State<BannerKategori> {
                                   SlidingDonationSheet(
                                     kategoriId: banner.categoryId!,
                                     charityId: banner.id!,
-                                    kategori:  widget.category
-                              .firstWhere(
-                                (cat) => cat.id == banner.categoryId,
-                                orElse: () =>
-                                    Category(name: 'Unknown Category'),
-                              )
-                              .name!,
+                                    kategori: widget.category
+                                        .firstWhere(
+                                          (cat) => cat.id == banner.categoryId,
+                                          orElse: () => Category(
+                                              name: 'Unknown Category'),
+                                        )
+                                        .name!,
                                   ),
                                   isScrollControlled: true,
                                   backgroundColor: Colors.transparent,
                                 );
                               },
                               style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(lebar, 32),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8)),
                                   backgroundColor: Color(0xff4B76D9),

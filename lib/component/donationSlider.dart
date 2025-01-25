@@ -154,12 +154,17 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w600),
                     ),
-                    Text(
-                      selectedBankAccount.value!.accountNumber!,
-                      style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Text(
+                        selectedBankAccount.value!.accountNumber!,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ],
                 );
@@ -402,6 +407,8 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                                 arguments: {
                                   'kategori': widget.kategori.toString(),
                                   'charityId': widget.charityId,
+                                  'bankImage':
+                                      selectedBankAccount.value!.image,
                                   'bankAccount':
                                       selectedBankAccount.value!.name,
                                   'bankNumber':

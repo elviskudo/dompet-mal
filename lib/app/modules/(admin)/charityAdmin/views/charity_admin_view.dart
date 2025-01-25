@@ -18,6 +18,8 @@ class CharityAdminView extends GetView<CharityAdminController> {
       child: Icon(Icons.add), 
       ),
       appBar: AppBar(  
+      backgroundColor: Colors.white,
+
         title: const Text('Charities Management'),  
         centerTitle: true,  
         actions: [  
@@ -36,7 +38,9 @@ class CharityAdminView extends GetView<CharityAdminController> {
                   onPressed: () => controller.fetchCharitiesWithContributors(),  
                 ))  
         ],  
-      ),  
+      ), 
+      backgroundColor: Colors.white,
+
       body: Padding(  
         padding: const EdgeInsets.all(16.0),  
         child: Column(  

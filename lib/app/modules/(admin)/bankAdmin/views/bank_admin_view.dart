@@ -9,10 +9,14 @@ class BankAdminView extends GetView<BankAdminController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+      backgroundColor: Colors.white,
+
         title: const Text('Bank Admin'),
         centerTitle: true,
       ),
+      
       body: Obx(() {
         if (controller.errorMessage.value.isNotEmpty) {
           return Center(child: Text(controller.errorMessage.value));
@@ -30,7 +34,8 @@ class BankAdminView extends GetView<BankAdminController> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      final nameController = TextEditingController(text: bank.name);
+                      final nameController =
+                          TextEditingController(text: bank.name);
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -49,7 +54,8 @@ class BankAdminView extends GetView<BankAdminController> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                controller.updateBank(bank, nameController.text);
+                                controller.updateBank(
+                                    bank, nameController.text);
                                 Navigator.of(context).pop();
                               },
                               child: const Text('Update'),
