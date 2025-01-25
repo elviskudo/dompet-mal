@@ -34,193 +34,216 @@ class HomeView extends GetView<HomeController> {
     var tinggi = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color(0xfff2f2f2),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Container(
-                  width: lebar,
-                  height: 226,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/bgbatik.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: lebar,
-                  height: tinggi * 0.525,
-                  color: Colors.white,
-                )
-              ],
-            ),
-            // Content
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
-              child: Column(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await charityController.fetchCharitiesWithContributors();
+          await charityController.fetchCategories();
+        },
+        backgroundColor: Colors.white,
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Logo(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            notification(),
-                            Gap(14),
-                            chat(),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Gap(21),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18),
-                    child: SearchBars(controller: controller.searchController),
-                  ),
-                  Gap(6),
-                  Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: TotalDanaDonasi(
-                          danaDonasiLangsung: DanaDonasiLangsung(
-                            totalBudgets: charityController
-                                .charitySummary.value.totalDonations,
-                            totalDonaturs: charityController
-                                .charitySummary.value.totalDonors,
-                          ),
-                          onAddPressed: () =>
-                              Get.toNamed(Routes.KONFIRMASI_TRANSFER)),
-                    ),
-                  ),
-                  Gap(24),
-                  Obx(() {
-                    if (charityController.charities.value.isNotEmpty) {
-                      return BannerSlider(
-                        banners: charityController.charities.value,
-                        category: charityController.categories.value,
-                      );
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  }),
-                  Gap(24),
-                  CATEGORYGrid(),
-                  Padding(
-                    padding: EdgeInsets.only(top: 40),
-                    child: BannerDanaOperasional(),
-                  ),
-                  Gap(18),
-
-                  // Donasi Langsung
-
-                  Section(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SectionHeader(
-                          title: 'Donasi Langsung',
-                          actionText: 'Lihat lainnya',
-                          onActionPressed: () {
-                            Get.toNamed(Routes.ListDonation);
-                          },
-                        ),
-                        Obx(
-                          () {
-                            if (charityController.charities.value.isNotEmpty) {
-                              return StraightCharityComponent(
-                                banners: charityController.charities.value,
-                                category: charityController.categories.value,
-                                maxItems: 3,
-                              );
-                            } else {
-                              return CircularProgressIndicator();
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  //Bantuan Dana Darurat
-
-                  Obx(
-                    () {
-                      if (charityController.charities.value.isNotEmpty) {
-                        return EmergencyFundSection(
-                          banners: charityController.charities.value,
-                          maxItems: 3,
-                          category: charityController.categories,
-                        );
-                      } else {
-                        return CircularProgressIndicator();
-                      }
-                    },
-                  ),
-
-                  // Pilihan CATEGORY
                   Container(
-                    height: 10,
-                    color: Color(0xfff7f7f7),
                     width: lebar,
+                    height: 226,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/bgbatik.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                  Gap(0),
                   Container(
-                    padding: EdgeInsetsDirectional.only(
-                      start: 24,
-                      end: 24,
-                      bottom: 16,
-                    ),
+                    width: lebar,
+                    height: tinggi * 0.58,
                     color: Colors.white,
-                    child: Column(
-                      children: [
-                        SectionHeader(
-                          title: 'Pilihan Kategori',
-                          actionText: '',
-                          onActionPressed: () {
-                            // Handle navigation to "Lihat lainnya"
-                          },
-                        ),
-                        Obx(
-                          () {
-                            if (charityController.charities.value.isNotEmpty) {
-                              return BannerKategori(
-                                banners: charityController.charities.value,
-                                maxItems: 4,
-                                category: charityController.categories.value,
-                              );
-                            } else {
-                              return CircularProgressIndicator();
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Container(
-                          width: 190,
-                          height: 40,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(ListDonationView());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xffD6E1FF),
-                                  foregroundColor: Color(0xff4B76D9)),
-                              child: Text("Lihat lainnya")),
-                        )
-                      ],
-                    ),
                   )
                 ],
               ),
-            ),
-          ],
+              // Content
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Logo(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              notification(),
+                              Gap(14),
+                              chat(),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Gap(21),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      child:
+                          SearchBars(controller: controller.searchController),
+                    ),
+                    Gap(6),
+                    Obx(() {
+                      if (charityController.charities.value.isNotEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: TotalDanaDonasi(
+                              danaDonasiLangsung: DanaDonasiLangsung(
+                                totalBudgets: charityController
+                                    .charitySummary.value.totalDonations,
+                                totalDonaturs: charityController
+                                    .charitySummary.value.totalDonors,
+                              ),
+                              onAddPressed: () =>
+                                  Get.toNamed(Routes.KONFIRMASI_TRANSFER)),
+                        );
+                      } else {
+                        return TotalDanaDonasiSkeleton();
+                      }
+                    }),
+                    Gap(24),
+                    Obx(() {
+                      if (charityController.charities.value.isNotEmpty) {
+                        return BannerSlider(
+                          banners: charityController.charities.value,
+                          category: charityController.categories.value,
+                        );
+                      } else {
+                        return BannerSliderSkeleton();
+                      }
+                    }),
+                    Gap(24),
+                    CATEGORYGrid(),
+
+                    Obx(() {
+                      if (charityController.charities.value.isNotEmpty) {
+                        return Padding(
+                          padding: EdgeInsets.only(top: 40),
+                          child: BannerDanaOperasional(),
+                        );
+                      } else {
+                        return BannerDanaOperasionalSkeleton();
+                      }
+                    }),
+
+                    Gap(18),
+
+                    // Donasi Langsung
+
+                    Section(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SectionHeader(
+                            title: 'Donasi Langsung',
+                            actionText: 'Lihat lainnya',
+                            onActionPressed: () {
+                              Get.toNamed(Routes.ListDonation);
+                            },
+                          ),
+                          Obx(
+                            () {
+                              if (charityController
+                                  .charities.value.isNotEmpty) {
+                                return StraightCharityComponent(
+                                  banners: charityController.charities.value,
+                                  category: charityController.categories.value,
+                                  maxItems: 3,
+                                );
+                              } else {
+                                return StraightCharitySkeleton();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    //Bantuan Dana Darurat
+
+                    Obx(
+                      () {
+                        if (charityController.charities.value.isNotEmpty) {
+                          return EmergencyFundSection(
+                            banners: charityController.charities.value,
+                            maxItems: 3,
+                            category: charityController.categories,
+                          );
+                        } else {
+                          return EmergencyFundSkeleton();
+                        }
+                      },
+                    ),
+
+                    // Pilihan CATEGORY
+                    Container(
+                      height: 10,
+                      color: Color(0xfff7f7f7),
+                      width: lebar,
+                    ),
+                    Gap(0),
+                    Container(
+                      padding: EdgeInsetsDirectional.only(
+                        start: 24,
+                        end: 24,
+                        bottom: 16,
+                      ),
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          SectionHeader(
+                            title: 'Pilihan Kategori',
+                            actionText: '',
+                            onActionPressed: () {
+                              // Handle navigation to "Lihat lainnya"
+                            },
+                          ),
+                          Obx(
+                            () {
+                              if (charityController
+                                  .charities.value.isNotEmpty) {
+                                return BannerKategori(
+                                  banners: charityController.charities.value,
+                                  maxItems: 4,
+                                  category: charityController.categories.value,
+                                );
+                              } else {
+                                return BannerSkeletonLoader();
+                              }
+                            },
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Container(
+                            width: 190,
+                            height: 40,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Get.to(ListDonationView());
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xffD6E1FF),
+                                    foregroundColor: Color(0xff4B76D9)),
+                                child: Text("Lihat lainnya")),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

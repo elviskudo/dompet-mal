@@ -3,6 +3,7 @@ import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CATEGORYGrid extends StatelessWidget {
   final CategoriesController categoriesController =
@@ -15,7 +16,7 @@ class CATEGORYGrid extends StatelessWidget {
     return Obx(() {
       // Check if categories are loaded
       if (categoriesController.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
+        return CategoryGridSkeleton();
       }
 
       // Get first 4 categories
@@ -120,5 +121,82 @@ class CATEGORYGrid extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+class CategoryGridSkeleton extends StatelessWidget {
+  const CategoryGridSkeleton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 100,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ...List.generate(4, (index) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    padding: EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    width: 42,
+                    height: 42,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: 57,
+                    height: 12,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            );
+          }),
+
+          // "View All" skeleton
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  width: 48,
+                  height: 48,
+                ),
+              ),
+              SizedBox(height: 8),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: 55,
+                  height: 12,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

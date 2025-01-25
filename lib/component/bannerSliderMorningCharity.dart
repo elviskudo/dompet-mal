@@ -4,6 +4,7 @@ import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BannerSlider extends StatefulWidget {
   final List<Charity> banners;
@@ -170,6 +171,99 @@ class _BannerSliderState extends State<BannerSlider> {
                 ),
               );
             }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class BannerSliderSkeleton extends StatelessWidget {
+  const BannerSliderSkeleton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 200,
+            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white,
+                ),
+                child: Stack(
+                  children: [
+                    // Skeleton content mimicking the original banner
+                    Positioned(
+                      bottom: 18,
+                      left: 18,
+                      right: 18,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title skeleton
+                          Container(
+                            width: 200,
+                            height: 24,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(height: 8),
+                          // Description skeleton
+                          Container(
+                            width: double.infinity,
+                            height: 16,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            width: 150,
+                            height: 16,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(height: 12),
+                          // Button skeleton
+                          Container(
+                            width: 150,
+                            height: 40,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          // Indicator dots skeleton
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              3,
+              (index) => Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: 8.0,
+                  height: 8.0,
+                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

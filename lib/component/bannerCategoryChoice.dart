@@ -7,6 +7,7 @@ import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BannerKategori extends StatefulWidget {
   final List<Charity> banners;
@@ -251,5 +252,107 @@ class _BannerKategoriState extends State<BannerKategori> {
         );
       },
     ));
+  }
+}
+
+class BannerSkeletonLoader extends StatelessWidget {
+  final int itemCount;
+
+  const BannerSkeletonLoader({Key? key, this.itemCount = 1}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(itemCount, (index) {
+        return Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 0.3,
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Skeleton for image
+                Container(
+                  width: 120,
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  color: Colors.white,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Skeleton for title
+                        Container(
+                          width: double.infinity,
+                          height: 20,
+                          color: Colors.white,
+                        ),
+                        // Skeleton for category
+                        Container(
+                          width: 100,
+                          height: 15,
+                          color: Colors.white,
+                        ),
+                        // Skeleton for progress bar
+                        Container(
+                          width: double.infinity,
+                          height: 6,
+                          color: Colors.white,
+                        ),
+                        // Skeleton for amount
+                        Container(
+                          width: 80,
+                          height: 15,
+                          color: Colors.white,
+                        ),
+                        // Skeleton for contributors
+                        Row(
+                          children: [
+                            Container(
+                              width: 80,
+                              height: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 10),
+                            Container(
+                              width: 50,
+                              height: 15,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                        // Skeleton for button
+                        Container(
+                          width: double.infinity,
+                          height: 40,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }),
+    );
   }
 }
