@@ -14,11 +14,14 @@ class TransactionsView extends GetView<TransactionsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showTransactionDialog(context),
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: const Text('Transactions'),
         centerTitle: true,
         actions: [],
@@ -34,7 +37,9 @@ class TransactionsView extends GetView<TransactionsController> {
                     title: Text(transaction.transactionNumber ??
                         'No Transaction Number'),
                     subtitle: Text(
-                        'Donation: \$${transaction.donationPrice?.toStringAsFixed(2) ?? '0.00'}'),
+                      'Donation: \$${transaction.donationPrice?.toStringAsFixed(2) ?? '0.00'}\n'
+                      'Status: ${_getStatusText(transaction.status)}',
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -71,6 +76,7 @@ class TransactionsView extends GetView<TransactionsController> {
     final RxString selectedBankId = (transaction?.bankId ?? '').obs;
     final RxString selectedCharityId = (transaction?.charityId ?? '').obs;
     final RxString selectedUserId = (transaction?.userId ?? '').obs;
+    final RxInt selectedStatus = (transaction?.status ?? 1).obs;
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     Get.dialog(
@@ -107,6 +113,16 @@ class TransactionsView extends GetView<TransactionsController> {
                   },
                 ),
                 // Bank Dropdown
+                Obx(() => DropdownButtonFormField<int>(
+                      value: selectedStatus.value,
+                      decoration: const InputDecoration(labelText: 'Status'),
+                      items: [
+                        DropdownMenuItem(value: 1, child: Text('Pending')),
+                        DropdownMenuItem(value: 2, child: Text('Processed')),
+                        DropdownMenuItem(value: 3, child: Text('Completed')),
+                      ],
+                      onChanged: (value) => selectedStatus.value = value ?? 1,
+                    )),
                 Obx(() => DropdownButtonFormField(
                       value: selectedBankId.value.isNotEmpty
                           ? selectedBankId.value
@@ -126,7 +142,6 @@ class TransactionsView extends GetView<TransactionsController> {
                       value: selectedCharityId.value.isNotEmpty
                           ? selectedCharityId.value
                           : null,
-                      
                       decoration: const InputDecoration(labelText: 'Charity'),
                       items: controller.charities
                           .map<DropdownMenuItem<String>>((charity) {
@@ -135,7 +150,7 @@ class TransactionsView extends GetView<TransactionsController> {
                           child: Text(charity.title),
                         );
                       }).toList(),
-                      onChanged: (value) => 
+                      onChanged: (value) =>
                           selectedCharityId.value = value ?? '',
                     )),
 
@@ -169,7 +184,9 @@ class TransactionsView extends GetView<TransactionsController> {
           TextButton(
             onPressed: () {
               final newTransaction = Transaction(
+                id: transaction?.id,
                 transactionNumber: transactionNumberController.text,
+                status: selectedStatus.value,
                 donationPrice: double.tryParse(donationPriceController.text),
                 bankId:
                     selectedBankId.value.isEmpty ? null : selectedBankId.value,
@@ -221,5 +238,18 @@ class TransactionsView extends GetView<TransactionsController> {
         ],
       ),
     );
+  }
+
+  String _getStatusText(int? status) {
+    switch (status) {
+      case 1:
+        return 'Pending';
+      case 2:
+        return 'Processed';
+      case 3:
+        return 'Completed';
+      default:
+        return 'Unknown';
+    }
   }
 }

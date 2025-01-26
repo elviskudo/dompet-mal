@@ -15,6 +15,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
     var tinggi = MediaQuery.of(context).size.height;
     var lebar = MediaQuery.of(context).size.width;
     var id_transaksi = '#DM110703412';
+    final transactionId = Get.arguments['transactionId'];
     return Scaffold(
         appBar: appbar2(
           title: 'Kirim Uang',
@@ -47,7 +48,8 @@ class SendMoneyView extends GetView<SendMoneyController> {
                           backgroundColor: basecolor,
                           padding: EdgeInsets.all(24),
                         ),
-                        onPressed: () => Get.toNamed(Routes.SEND_MONEY2),
+                        onPressed: () => Get.toNamed(Routes.SEND_MONEY2,
+                            arguments: transactionId),
                         child: const Text(
                           "UNGGAH BUKTI TRANSFER",
                           style: TextStyle(

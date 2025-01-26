@@ -113,19 +113,10 @@ class TransactionsController extends GetxController {
   // Update transaction
   Future updateTransaction(Transaction transaction, String id) async {
     try {
-      final updateData = {
-        'status': transaction.status,
-        'updated_at': DateTime.now().toIso8601String(),
-        'transaction_number': transaction.transactionNumber,
-        'bank_id': transaction.bankId,
-        'charity_id': transaction.charityId,
-        'user_id': transaction.userId,
-        'donation_price': transaction.donationPrice,
-      };
-
-      print('Update data: $updateData');
-
-      await supabase.from('transactions').update(updateData).eq('id', id);
+      await supabase
+          .from('transactions')
+          .update(transaction.toJson())
+          .eq('id', id);
 
       await getTransactions(); // Refresh the list
       Get.snackbar('Success', 'Transaction updated successfully');

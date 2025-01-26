@@ -15,6 +15,7 @@ import 'package:dompet_mal/app/modules/(admin)/charityAdmin/views/charity_admin_
 import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/views/contributor_admin_view.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -37,7 +38,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
           // Main Content
           Obx(() {
             return Container(
-              padding: EdgeInsets.only(top: 84, left: 16, right: 16),
+              padding: EdgeInsets.only(top: 110, left: 16, right: 16),
               child: _getPage(controller.selectedIndex.value),
             );
           }),

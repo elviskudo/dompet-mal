@@ -108,7 +108,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SEND_MONEY2,
-      page: () => const SendMoney2View(),
+      page: () => SendMoney2View(),
       binding: SendMoney2Binding(),
     ),
     GetPage(
@@ -188,7 +188,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SEND_MONEY2,
-      page: () => const SendMoney2View(),
+      page: () =>  SendMoney2View(),
       binding: SendMoney2Binding(),
     ),
     GetPage(
@@ -267,7 +267,7 @@ class AppPages {
       binding: TransactionsBinding(),
     ),
     GetPage(
-       name: _Paths.BANK_ADMIN,
+      name: _Paths.BANK_ADMIN,
       page: () => const BankAdminView(),
       binding: BankAdminBinding(),
     ),

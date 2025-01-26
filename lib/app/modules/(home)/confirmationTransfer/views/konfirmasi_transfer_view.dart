@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
@@ -82,6 +83,12 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
 
     final bankName =
         args['bankAccount'] as String? ?? 'Nama bank tidak tersedia';
+    final bankId = args['bankId'] as String? ?? 'Nama bank tidak tersedia';
+    final transactionNumber =
+        args['transactionNumber'] as String? ?? 'Nama bank tidak tersedia';
+    final transactionId =
+        args['transactionId'] as String? ?? 'Nama bank tidak tersedia';
+    final userId = args['userId'] as String? ?? 'Nama bank tidak tersedia';
     final bankImage =
         args['bankImage'] as String? ?? 'Image bank tidak tersedia';
 
@@ -91,7 +98,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
         args['bankNumber'] as String? ?? 'Nomor rekening tidak tersedia';
     // final String idTransaksi = "#DM110703412";
     var lebar = MediaQuery.of(context).size.width;
-    final totalTransfer = args['amount'] as String? ?? '0';
+    final totalTransfer = args['amount'] ?? '0';
     final namaKategori = args['kategori'] as String? ?? 'haha';
     final String idTransaksi =
         generateTransactionId(categoryName: namaKategori);
@@ -204,8 +211,15 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                             backgroundColor: basecolor,
                             padding: EdgeInsets.all(24),
                           ),
-                          onPressed: () =>
-                              _showCenteredPopup(context, charityId),
+                          onPressed: () => _showCenteredPopup(
+                            context,
+                            bankId,
+                            charityId,
+                            totalTransfer,
+                            transactionNumber,
+                            userId,
+                            transactionId,
+                          ),
                           child: const Text(
                             "TRANSFER SEKARANG",
                             style: TextStyle(
@@ -250,7 +264,8 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
     );
   }
 
-  void _showCenteredPopup(BuildContext context, String idTransaksi) {
+  void _showCenteredPopup(BuildContext context, String bankId, String charityId,
+      donationPrice, transactionNumber, String userId, String trasactionId) {
     final TransactionsController controller = Get.put(TransactionsController());
     showDialog(
       context: context,
@@ -350,16 +365,38 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                               horizontal: 24, vertical: 16),
                         ),
                         onPressed: () async {
-                          Navigator.pop(context);
-                          await controller.updateTransaction(
-                              Transaction(
-                                id: idTransaksi, // Pass the existing transaction ID
-                                status: 2,
-                              ),
-                              idTransaksi // Pass the ID again as the second argument
-                              );
-                          Get.toNamed(Routes.SEND_MONEY,
-                              arguments: {'idTransaksi': idTransaksi});
+                          try {
+                            print(
+                                'Attempting to update transaction with ID: $charityId');
+                            print('New status: 2');
+
+                            final newTransaction = Transaction(
+                              transactionNumber: transactionNumber,
+                              status: 2,
+                              donationPrice: double.tryParse(donationPrice),
+                              bankId: bankId,
+                              charityId: charityId,
+                              userId: userId,
+                              updatedAt: DateTime.now(),
+                            );
+                            print('transactionNumber : $transactionNumber');
+                            Navigator.pop(context);
+                            // Add timeout to prevent indefinite waiting
+                            await controller.updateTransaction(
+                                newTransaction, trasactionId);
+
+                            Get.toNamed(Routes.SEND_MONEY,
+                                arguments: {'idTransaksi': trasactionId});
+                            print('Update method called');
+                          } catch (e) {
+                            print('Error updating transaction: $e');
+                            // Show an error dialog or snackbar
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Failed to update transaction: $e')),
+                            );
+                          }
                         },
                         child: const Text(
                           "SUDAH",

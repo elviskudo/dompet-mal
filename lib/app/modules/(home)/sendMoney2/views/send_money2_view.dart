@@ -1,14 +1,17 @@
 import 'dart:io';
+import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/app/modules/(home)/sendMoney2/controllers/send_money2_controller.dart';
 import 'package:dompet_mal/color/color.dart';
+import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SendMoney2View extends GetView<SendMoney2Controller> {
-  const SendMoney2View({super.key});
+  SendMoney2View({super.key});
+  final transactionId = Get.arguments['transactionId'];
 
   // Function to show image source picker
   void _showImageSourceDialog(BuildContext context) {
@@ -153,7 +156,9 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
   }
 
   // Function to show success dialog
-  void _showSuccessDialog(BuildContext context) {
+  void _showSuccessDialog(BuildContext context, String transactionId) {
+    final TransactionsController controller = Get.put(TransactionsController());
+    controller.updateTransaction(Transaction(status: 3), transactionId);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -204,7 +209,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     _showLoadingDialog(context);
     await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
-    _showSuccessDialog(context);
+    _showSuccessDialog(context, transactionId);
     await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
 

@@ -379,10 +379,11 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                                 );
                                 return;
                               }
+                              final transactionId = Uuid().v4();
 
                               await transactionsController.addTransaction(
                                   Transaction(
-                                      // id: Uuid().v4(),
+                                      id: transactionId,
                                       bankId: selectedBankAccount.value!.id,
                                       charityId: widget.charityId,
                                       userId:
@@ -407,10 +408,17 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                                 arguments: {
                                   'kategori': widget.kategori.toString(),
                                   'charityId': widget.charityId,
-                                  'bankImage':
-                                      selectedBankAccount.value!.image,
+                                  // 'status': widget.,
+                                  'bankImage': selectedBankAccount.value!.image,
+                                  'transactionNumber':
+                                      selectedBankAccount.value!.accountNumber,
+                                  'transactionId': transactionId,
+                                  'bankId': selectedBankAccount.value!.id,
                                   'bankAccount':
                                       selectedBankAccount.value!.name,
+                                  'userId':
+                                      transactionsController.userId.value!,
+
                                   'bankNumber':
                                       selectedBankAccount.value!.accountNumber,
                                   'amount':
