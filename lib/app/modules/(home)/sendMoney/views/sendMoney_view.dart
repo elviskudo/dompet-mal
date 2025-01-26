@@ -50,7 +50,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
                           padding: EdgeInsets.all(24),
                         ),
                         onPressed: () => Get.toNamed(Routes.SEND_MONEY2,
-                            arguments: {'transactionId': id_transaksi}),
+                            arguments: {'transactionId': transactionId}),
                         child: const Text(
                           "UNGGAH BUKTI TRANSFER",
                           style: TextStyle(
