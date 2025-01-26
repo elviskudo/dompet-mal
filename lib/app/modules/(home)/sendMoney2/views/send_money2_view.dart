@@ -11,7 +11,6 @@ import 'package:image_picker/image_picker.dart';
 
 class SendMoney2View extends GetView<SendMoney2Controller> {
   SendMoney2View({super.key});
-  final transactionId = Get.arguments['transactionId'];
 
   // Function to show image source picker
   void _showImageSourceDialog(BuildContext context) {
@@ -195,33 +194,13 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
   }
 
   // Function to handle upload process
-  void _handleUpload(BuildContext context) async {
-    if (controller.selectedImage.value == null) {
-      Get.snackbar(
-        'Error',
-        'Silahkan pilih gambar terlebih dahulu',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    _showLoadingDialog(context);
-    await Future.delayed(Duration(seconds: 2));
-    Navigator.pop(context);
-    _showSuccessDialog(context, transactionId);
-    await Future.delayed(Duration(seconds: 2));
-    Navigator.pop(context);
-
-    // Navigate to home or next screen
-    Get.toNamed(Routes.PAYMENT_SUCCESS);
-    Get.toNamed(Routes.HOME);
-  }
 
   @override
   Widget build(BuildContext context) {
     var lebar = MediaQuery.of(context).size.width;
     var tinggi = MediaQuery.of(context).size.height;
+    final args = Get.arguments as Map<String, dynamic>;
+    final transactionId = args['transactionId'] as String;
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -275,7 +254,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                 ),
                 onPressed: () => controller.selectedImage.value == null
                     ? _showImageSourceDialog(context)
-                    : _handleUpload(context),
+                    : _handleUpload(context, transactionId),
                 child: Text(
                   controller.selectedImage.value == null
                       ? "UNGGAH BUKTI TRANSFER"
@@ -331,5 +310,28 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
         ),
       ),
     );
+  }
+
+  void _handleUpload(BuildContext context, String transactionId) async {
+    if (controller.selectedImage.value == null) {
+      Get.snackbar(
+        'Error',
+        'Silahkan pilih gambar terlebih dahulu',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    _showLoadingDialog(context);
+    await Future.delayed(Duration(seconds: 2));
+    Navigator.pop(context);
+    _showSuccessDialog(context, transactionId);
+    await Future.delayed(Duration(seconds: 2));
+    Navigator.pop(context);
+
+    // Navigate to home or next screen
+    Get.toNamed(Routes.PAYMENT_SUCCESS);
+    Get.toNamed(Routes.HOME);
   }
 }
