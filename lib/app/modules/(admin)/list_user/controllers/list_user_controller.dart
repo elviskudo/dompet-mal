@@ -1,9 +1,11 @@
 import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/helper/PasswordHasher.dart';
 import 'package:dompet_mal/models/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class ListUserController extends GetxController {
   final supabase = Supabase.instance.client;
@@ -11,6 +13,12 @@ class ListUserController extends GetxController {
   RxBool isLoading = false.obs;
   RxString roleUser = ''.obs;
   RxString currentUserId = ''.obs;
+  final formKey = GlobalKey<FormState>();
+  final namaController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final phoneController = TextEditingController();
+  RxString selectedRoleId = ''.obs;
 
   @override
   void onInit() {
@@ -22,6 +30,96 @@ class ListUserController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     currentUserId.value = prefs.getString('userId') ?? '';
   }
+
+ Future<void> createUser() async {
+    if (!formKey.currentState!.validate()) return;
+
+    isLoading.value = true;
+
+    try {
+      final formattedPhoneNumber = formatPhoneNumber(phoneController.text);
+
+      // Use selected role ID instead of fetching default role
+      if (selectedRoleId.value.isEmpty) {
+        throw 'Please select a role';
+      }
+
+      // Insert data ke table users
+      final hashedPassword = await PasswordHasher.hashPassword(passwordController.text);
+      String userId = Uuid().v4();
+      final userData = {
+        'id': userId,
+        'name': namaController.text,
+        'email': emailController.text.toLowerCase(),
+        'password': hashedPassword,
+        'phone_number': formattedPhoneNumber,
+        'access_token': '',
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      await supabase.from('users').insert(userData);
+
+      // Insert ke table user_roles dengan selected role
+      final userRoleData = {
+        'user_id': userId,
+        'role_id': selectedRoleId.value,
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      await supabase.from('user_roles').insert(userRoleData);
+
+      Get.snackbar(
+        'Sukses',
+        'User berhasil dibuat',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+
+      // Clear form
+      namaController.clear();
+      emailController.clear();
+      passwordController.clear();
+      phoneController.clear();
+      selectedRoleId.value = ''; // Reset selected role
+
+      // Refresh user list
+      await fetchUsers();
+
+      Get.back(); // Tutup dialog form
+    } catch (error) {
+      print('Error creating user: $error');
+      String errorMessage = 'Terjadi kesalahan saat membuat user';
+
+      if (error is PostgrestException) {
+        if (error.code == '23505') {
+          errorMessage = 'Email sudah terdaftar';
+        }
+      }
+
+      Get.snackbar(
+        'Error',
+        errorMessage,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  // Tambahkan helper method untuk format nomor telepon
+  String formatPhoneNumber(String phone) {
+    String cleanPhone = phone.replaceAll(RegExp(r'[^\d]'), '');
+    if (cleanPhone.startsWith('0')) {
+      cleanPhone = cleanPhone.substring(1);
+    }
+    if (!cleanPhone.startsWith('62')) {
+      cleanPhone = '62$cleanPhone';
+    }
+    return '+$cleanPhone';
+  }
+  
 
   Future<bool> isAdmin() async {
     try {
@@ -46,6 +144,7 @@ class ListUserController extends GetxController {
       return false;
     }
   }
+
 
   Future<void> deleteUser(String userId) async {
     try {
@@ -237,6 +336,7 @@ class ListUserController extends GetxController {
         ) ??
         false;
   }
+  
 
   void showEditDialog(BuildContext context, Users user) async {
     final nameController = TextEditingController(text: user.name);
@@ -329,6 +429,10 @@ class ListUserController extends GetxController {
 
   @override
   void onClose() {
-    super.onClose();
+     namaController.dispose();
+  emailController.dispose();
+  passwordController.dispose();
+  phoneController.dispose();
+  super.onClose();
   }
 }

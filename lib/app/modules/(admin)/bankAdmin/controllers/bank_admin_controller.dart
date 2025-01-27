@@ -55,16 +55,17 @@ class BankAdminController extends GetxController {
     Get.back(result: account);
   }
 
-  void createBank(String name) async {
+  void createBank(String name, String accountNumber) async {
     try {
       final newBank = Bank(
         id: const Uuid().v4(),
         name: name,
-        accountNumber: const Uuid().v4(),
+        accountNumber:
+            accountNumber, // Use provided account number instead of UUID
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
-      await supabase.from('banks').insert(newBank);
+      await supabase.from('banks').insert(newBank.toJson());
       bankList.add(newBank);
       errorMessage.value = '';
       Get.snackbar('Success', 'Bank created successfully');
@@ -75,10 +76,11 @@ class BankAdminController extends GetxController {
     }
   }
 
-  void updateBank(Bank bank, String name) async {
+  void updateBank(Bank bank, String name, String accountNumber) async {
     try {
       await supabase.from('banks').update({
         'name': name,
+        'account_number': accountNumber,
         'updated_at': DateTime.now().toIso8601String()
       }).eq('id', bank.id ?? '');
 
@@ -87,7 +89,7 @@ class BankAdminController extends GetxController {
         bankList[index] = Bank(
           id: bank.id,
           name: name,
-          accountNumber: bank.accountNumber,
+          accountNumber: accountNumber,
           createdAt: bank.createdAt,
           updatedAt: DateTime.now(),
         );

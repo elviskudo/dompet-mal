@@ -371,6 +371,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                             print('New status: 2');
 
                             final newTransaction = Transaction(
+                              id: trasactionId,
                               transactionNumber: transactionNumber,
                               status: 2,
                               donationPrice: double.tryParse(donationPrice),
@@ -385,8 +386,14 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                             await controller.updateTransaction(
                                 newTransaction, trasactionId);
 
-                            Get.toNamed(Routes.SEND_MONEY,
-                                arguments: {'idTransaksi': trasactionId});
+                            Get.toNamed(Routes.SEND_MONEY, arguments: {
+                              'idTransaksi': trasactionId,
+                              'transactionNumber': transactionNumber,
+                              'bankId': bankId,
+                              'charityId': charityId,
+                              'donationPrice': donationPrice,
+                              'userId': userId,
+                            });
                             print('Update method called');
                           } catch (e) {
                             print('Error updating transaction: $e');

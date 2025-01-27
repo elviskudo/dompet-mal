@@ -11,12 +11,10 @@ class BankAdminView extends GetView<BankAdminController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-      backgroundColor: Colors.white,
-
+        backgroundColor: Colors.white,
         title: const Text('Bank Admin'),
         centerTitle: true,
       ),
-      
       body: Obx(() {
         if (controller.errorMessage.value.isNotEmpty) {
           return Center(child: Text(controller.errorMessage.value));
@@ -36,6 +34,8 @@ class BankAdminView extends GetView<BankAdminController> {
                     onPressed: () {
                       final nameController =
                           TextEditingController(text: bank.name);
+                      final accountNumberController =
+                          TextEditingController(text: bank.accountNumber);
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -49,13 +49,23 @@ class BankAdminView extends GetView<BankAdminController> {
                                   labelText: 'Bank Name',
                                 ),
                               ),
+                              const SizedBox(height: 16),
+                              TextField(
+                                controller: accountNumberController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Account Number',
+                                ),
+                              ),
                             ],
                           ),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 controller.updateBank(
-                                    bank, nameController.text);
+                                  bank,
+                                  nameController.text,
+                                  accountNumberController.text,
+                                );
                                 Navigator.of(context).pop();
                               },
                               child: const Text('Update'),
@@ -79,6 +89,7 @@ class BankAdminView extends GetView<BankAdminController> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final nameController = TextEditingController();
+          final accountNumberController = TextEditingController();
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -92,12 +103,22 @@ class BankAdminView extends GetView<BankAdminController> {
                       labelText: 'Bank Name',
                     ),
                   ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: accountNumberController,
+                    decoration: const InputDecoration(
+                      labelText: 'Account Number',
+                    ),
+                  ),
                 ],
               ),
               actions: [
                 TextButton(
                   onPressed: () {
-                    controller.createBank(nameController.text);
+                    controller.createBank(
+                      nameController.text,
+                      accountNumberController.text,
+                    );
                     Navigator.of(context).pop();
                   },
                   child: const Text('Create'),

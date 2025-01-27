@@ -14,9 +14,21 @@ class SendMoneyView extends GetView<SendMoneyController> {
   Widget build(BuildContext context) {
     var tinggi = MediaQuery.of(context).size.height;
     var lebar = MediaQuery.of(context).size.width;
-    var id_transaksi = '#DM110703412';
-    final args = Get.arguments as Map<String, dynamic>;
-    final transactionId = args['idTransaksi'] as String;
+    var default_id_transaksi = '#DM110703412';
+    final args = Get.arguments as Map<String, dynamic>?;
+
+    // Provide default values and proper null handling
+    final transactionId =
+        args?['idTransaksi'] as String? ?? default_id_transaksi;
+    final transactionNumber =
+        args?['transactionNumber'] as String? ?? default_id_transaksi;
+    final charityId = args?['charityId'] as String? ?? '';
+    final bankId = args?['bankId'] as String? ?? '';
+    final donationPrice = args?['donationPrice'] as String? ?? '0';
+    final userId = args?['userId'] as String? ?? '';
+
+    print('transid id : $transactionId');
+
     return Scaffold(
         appBar: appbar2(
           title: 'Kirim Uang',
@@ -29,7 +41,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
           child: Column(
             children: [
               _Jumbotron(tinggi, lebar),
-              Section_IdTransaksi(context, id_transaksi),
+              Section_IdTransaksi(context, transactionNumber),
               Gap(24),
               Container(
                 width: lebar,
@@ -49,8 +61,15 @@ class SendMoneyView extends GetView<SendMoneyController> {
                           backgroundColor: basecolor,
                           padding: EdgeInsets.all(24),
                         ),
-                        onPressed: () => Get.toNamed(Routes.SEND_MONEY2,
-                            arguments: {'transactionId': transactionId}),
+                        onPressed: () =>
+                            Get.toNamed(Routes.SEND_MONEY2, arguments: {
+                          'idTransaksi': transactionId,
+                          'transactionNumber': transactionNumber,
+                          'bankId': bankId,
+                          'charityId': charityId,
+                          'donationPrice': donationPrice,
+                          'userId': userId,
+                        }),
                         child: const Text(
                           "UNGGAH BUKTI TRANSFER",
                           style: TextStyle(

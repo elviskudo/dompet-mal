@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/home/controllers/home_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
@@ -117,6 +119,27 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
     if (mounted && context.mounted) {
       Get.back();
     }
+  }
+
+  String generateTransactionNumber({
+    required String categoryName,
+  }) {
+    // Create category initial from category name
+    String categoryInitial =
+        categoryName.split(' ').map((word) => word[0].toUpperCase()).join();
+
+    // Get current date
+    DateTime now = DateTime.now();
+    String year = now.year.toString();
+    String month = now.month.toString().padLeft(2, '0');
+
+    // Generate random sequence
+    Random random = Random();
+    int randomSequence = random.nextInt(99999) + 1;
+    String formattedSequence = randomSequence.toString().padLeft(4, '0');
+
+    // Combine all parts to create transaction ID
+    return "#$categoryInitial$year$month$formattedSequence";
   }
 
   Widget _buildPaymentSection() {
@@ -379,6 +402,11 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                                 );
                                 return;
                               }
+                              final transactionNumber =
+                                  generateTransactionNumber(
+                                categoryName: widget.kategori,
+                              );
+
                               final transactionId = Uuid().v4();
 
                               await transactionsController.addTransaction(
@@ -389,8 +417,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                                       userId:
                                           transactionsController.userId.value,
                                       updatedAt: DateTime.now(),
-                                      transactionNumber: selectedBankAccount
-                                          .value!.accountNumber,
+                                      transactionNumber: transactionNumber,
                                       donationPrice: double.parse(
                                               donationController
                                                   .donationAmount.value
@@ -410,8 +437,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                                   'charityId': widget.charityId,
                                   // 'status': widget.,
                                   'bankImage': selectedBankAccount.value!.image,
-                                  'transactionNumber':
-                                      selectedBankAccount.value!.accountNumber,
+                                  'transactionNumber': transactionNumber,
                                   'transactionId': transactionId,
                                   'bankId': selectedBankAccount.value!.id,
                                   'bankAccount':

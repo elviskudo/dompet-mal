@@ -322,8 +322,7 @@ class RegisterView extends GetView<RegisterController> {
                           ),
                           onPressed: controller.register,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 139),
+                            padding: const EdgeInsets.symmetric(vertical: 15),
                             child: Text(
                               'DAFTAR',
                               style: GoogleFonts.openSans(

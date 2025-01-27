@@ -155,42 +155,71 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
   }
 
   // Function to show success dialog
-  void _showSuccessDialog(BuildContext context, String transactionId) {
+  void _showSuccessDialog(BuildContext context) async {
     final TransactionsController controller = Get.put(TransactionsController());
-    controller.updateTransaction(Transaction(status: 3), transactionId);
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Container(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 50,
-                ),
-                SizedBox(height: 20),
-                Text(
-                  'Bukti transfer terkirim',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+    final args = Get.arguments as Map<String, dynamic>;
+    final transactionId = args?['idTransaksi'] as String? ?? '';
+    final transactionNumber = args?['transactionNumber'] as String? ?? '';
+    final charityId = args?['charityId'] as String? ?? '';
+    final bankId = args?['bankId'] as String? ?? '';
+    final donationPrice = args?['donationPrice'] as String? ?? '0';
+    final userId = args?['userId'] as String? ?? '';
+
+    final updatedTransaction = Transaction(
+      bankId: bankId,
+      charityId: charityId,
+      donationPrice: double.parse(donationPrice),
+      transactionNumber: transactionNumber,
+      userId: userId,
+      status: 3, // Update status to 3
+      updatedAt: DateTime.now(),
     );
+    try {
+      // Update the transaction
+      await controller.updateTransaction(updatedTransaction, transactionId);
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 50,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Bukti transfer terkirim',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      // Handle any errors that might occur during the update
+      Get.snackbar(
+        'Error',
+        'Gagal mengupdate transaksi: ${e.toString()}',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
   // Function to handle upload process
@@ -199,8 +228,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
   Widget build(BuildContext context) {
     var lebar = MediaQuery.of(context).size.width;
     var tinggi = MediaQuery.of(context).size.height;
-    final args = Get.arguments as Map<String, dynamic>;
-    final transactionId = args['transactionId'] as String;
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -254,7 +282,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                 ),
                 onPressed: () => controller.selectedImage.value == null
                     ? _showImageSourceDialog(context)
-                    : _handleUpload(context, transactionId),
+                    : _handleUpload(context),
                 child: Text(
                   controller.selectedImage.value == null
                       ? "UNGGAH BUKTI TRANSFER"
@@ -295,7 +323,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                   padding: EdgeInsets.all(24),
                   side: BorderSide(color: Color.fromARGB(48, 49, 48, 54)),
                 ),
-                onPressed: () => Get.toNamed(Routes.HOME),
+                onPressed: () => Get.toNamed(Routes.NAVIGATION),
                 child: Text(
                   "KEMBALI KE BERANDA",
                   style: TextStyle(
@@ -312,7 +340,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     );
   }
 
-  void _handleUpload(BuildContext context, String transactionId) async {
+  void _handleUpload(BuildContext context) async {
     if (controller.selectedImage.value == null) {
       Get.snackbar(
         'Error',
@@ -326,7 +354,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     _showLoadingDialog(context);
     await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
-    _showSuccessDialog(context, transactionId);
+    _showSuccessDialog(context);
     await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
 

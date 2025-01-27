@@ -6,10 +6,21 @@ import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:dompet_mal/models/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class TransactionsView extends GetView<TransactionsController> {
   const TransactionsView({super.key});
+
+  String formatToRupiah(double? amount) {
+    if (amount == null) return 'Rp 0';
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
+    return formatCurrency.format(amount);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,44 +35,151 @@ class TransactionsView extends GetView<TransactionsController> {
         elevation: 0,
         title: const Text('Transactions'),
         centerTitle: true,
-        actions: [],
       ),
       body: Obx(
         () => controller.isLoading.value
             ? const Center(child: CircularProgressIndicator())
             : ListView.builder(
+                padding: const EdgeInsets.all(16),
                 itemCount: controller.transactions.length,
                 itemBuilder: (context, index) {
                   final transaction = controller.transactions[index];
-                  return ListTile(
-                    title: Text(transaction.transactionNumber ??
-                        'No Transaction Number'),
-                    subtitle: Text(
-                      'Donation: \$${transaction.donationPrice?.toStringAsFixed(2) ?? '0.00'}\n'
-                      'Status: ${_getStatusText(transaction.status)}',
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          tooltip: 'edit',
-                          onPressed: () => _showTransactionDialog(context,
-                              transaction: transaction, id: transaction.id),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          tooltip: 'delete',
-                          onPressed: () =>
-                              _showDeleteConfirmation(transaction.id!),
-                        ),
-                      ],
+                  // Find related data
+                  final user = controller.users.firstWhere(
+                    (u) => u.id == transaction.userId,
+                    orElse: () => Users(id: '', name: 'Unknown User'),
+                  );
+                  final bank = controller.banks.firstWhere(
+                    (b) => b.id == transaction.bankId,
+                    orElse: () => Bank(id: '', name: 'Unknown Bank'),
+                  );
+                  final charity = controller.charities.firstWhere(
+                    (c) => c.id == transaction.charityId,
+                    orElse: () => Charity(id: '', title: 'Unknown Charity'),
+                  );
+
+                  return Card(
+                    color: Colors.white,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  transaction.transactionNumber ??
+                                      'No Transaction Number',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: _getStatusColor(transaction.status),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  _getStatusText(transaction.status),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          _buildInfoRow('User', user.name),
+                          _buildInfoRow('Bank', bank.name),
+                          _buildInfoRow('Charity', charity.title),
+                          _buildInfoRow(
+                            'Amount',
+                            formatToRupiah(transaction.donationPrice),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () => _showTransactionDialog(
+                                  context,
+                                  transaction: transaction,
+                                  id: transaction.id!,
+                                ),
+                              ),
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () =>
+                                    _showDeleteConfirmation(transaction.id!),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
               ),
       ),
     );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          const Text(': '),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getStatusColor(int? status) {
+    switch (status) {
+      case 1:
+        return Colors.orange;
+      case 2:
+        return Colors.blue;
+      case 3:
+        return Colors.green;
+      default:
+        return Colors.white;
+    }
   }
 
   void _showTransactionDialog(BuildContext context,
