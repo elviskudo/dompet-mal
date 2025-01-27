@@ -42,8 +42,9 @@ class ListPaymentView extends GetView<TransactionsController> {
       body: Obx(() {
         // Filter transaksi berdasarkan userId
         final userTransactions = controller.transactions
-            .where(
-                (transaction) => transaction.userId == controller.userId.value && transaction.status == 3)
+            .where((transaction) =>
+                transaction.userId == controller.userId.value &&
+                transaction.status == 3)
             .toList();
 
         if (controller.isLoading.value) {
@@ -59,7 +60,7 @@ class ListPaymentView extends GetView<TransactionsController> {
           itemCount: userTransactions.length,
           itemBuilder: (context, index) {
             final Transaction transaction = userTransactions[index];
-            final bank = controller.banks.firstWhere(
+            final Bank bank = controller.banks.firstWhere(
               (b) => b.id == transaction.bankId,
               orElse: () => Bank(id: '', name: 'Unknown Bank'),
             );
@@ -85,7 +86,7 @@ class ListPaymentView extends GetView<TransactionsController> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Bank: ',
+                      'Bank: ${bank.name}',
                       style: GoogleFonts.openSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
