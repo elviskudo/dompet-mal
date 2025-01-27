@@ -4,6 +4,7 @@ import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transact
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/app/modules/(home)/sendMoney2/controllers/send_money2_controller.dart';
 import 'package:dompet_mal/color/color.dart';
+import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -180,6 +181,34 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     try {
       // Update the transaction
       await controller.updateTransaction(updatedTransaction, transactionId);
+
+      final charity =
+          charityController.charities.firstWhere((c) => c.id == charityId);
+      final currentTotal = charity.total ?? 0;
+      final newTotal = currentTotal + double.parse(donationPrice).toInt();
+
+      // Calculate new progress percentage
+      final targetTotal = charity.targetTotal ?? 1; // Prevent division by zero
+      final newProgress = ((newTotal / targetTotal) * 100).toInt();
+
+      // Update charity with new total and progress
+      final updatedCharity = Charity(
+        id: charityId,
+        categoryId: charity.categoryId,
+        companyId: charity.companyId,
+        title: charity.title,
+        description: charity.description,
+        progress: newProgress,
+        total: newTotal,
+        targetTotal: charity.targetTotal,
+        targetDate: charity.targetDate,
+        status: charity.status,
+        updated_at: DateTime.now(),
+      );
+
+      // Update charity in database
+      await charityController.updateCharityTotal(
+          charityId, newTotal, newProgress);
 
       await charityController.fetchCharitiesWithContributors();
       await charityController.calculateCharitySummary();

@@ -1,5 +1,6 @@
 import 'package:avatar_stack/avatar_stack.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/donationDetailPage/controllers/donation_detail_page_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/myFavorite/views/my_favorite_view.dart';
@@ -45,7 +46,16 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
 
     final charity = detail['charity'];
     final categoryName = detail['categoryName'] ?? 'Kategori tidak tersedia';
+    double calculateProgress(int? total, int? targetTotal) {
+      if (targetTotal == null || targetTotal == 0 || total == null) {
+        return 0.0;
+      }
+      // Calculate progress as a percentage (0.0 to 1.0)
+      return total / targetTotal;
+    }
 
+    double progressValue =
+        calculateProgress(charity["total"], charity["targetTotal"]);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -162,7 +172,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
                             // charity["title"] ?? 'Unknown'
-                            value: charity["progress"] / 100 ?? 1,
+                            value: progressValue,
                             backgroundColor: Colors.grey[200],
                             color: Colors.blue,
                             minHeight: 6,
@@ -172,7 +182,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            '${charity["progress"] ?? 100}%',
+                            '${charity["progress"] <= 100 ? charity["progress"] : 100}%',
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 14,
@@ -385,7 +395,10 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           ElevatedButton(
                             onPressed: () {
                               // Tambahkan aksi yang ingin dilakukan saat tombol ditekan
-                              Get.to(ParticipantPage());
+                              Get.to(
+                                ParticipantPage(),
+                                arguments: {'charityId': charity["id"]},
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:

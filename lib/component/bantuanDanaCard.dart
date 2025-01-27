@@ -141,6 +141,14 @@ class EmergencyFundCard extends StatelessWidget {
     return formatter.format(amount ?? 0);
   }
 
+  double calculateProgress(int? total, int? targetTotal) {
+    if (targetTotal == null || targetTotal == 0 || total == null) {
+      return 0.0;
+    }
+    // Calculate progress as a percentage (0.0 to 1.0)
+    return total / targetTotal;
+  }
+
   Widget _buildDonationButton(
       BuildContext context, String charityId, String categoryName) {
     return Obx(() {
@@ -238,6 +246,8 @@ class EmergencyFundCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double progressValue = calculateProgress(fund.total, fund.targetTotal);
+    int progressPercentage = (progressValue * 100).round();
     var categoryName = category
         .firstWhere(
           (cat) => cat.id == fund.categoryId,
@@ -288,7 +298,7 @@ class EmergencyFundCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4),
                     child: LinearProgressIndicator(
-                      value: (fund.progress ?? 0) / 100,
+                      value: progressValue,
                       minHeight: 8,
                       backgroundColor: baseGray,
                       valueColor: AlwaysStoppedAnimation<Color>(basecolor),
@@ -310,7 +320,7 @@ class EmergencyFundCard extends StatelessWidget {
                           ),
                           Gap(2),
                           Text(
-                            formatCurrency(fund.targetTotal),
+                            formatCurrency(fund.total),
                             style: const TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 12),
                           ),

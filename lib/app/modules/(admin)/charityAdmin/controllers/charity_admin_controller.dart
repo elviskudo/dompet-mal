@@ -164,6 +164,22 @@ class CharityAdminController extends GetxController {
     }
   }
 
+  Future<void> updateCharityTotal(
+      String charityId, int newTotal, int newProgress) async {
+    try {
+      await supabase.from('charities').update({
+        'total': newTotal,
+        'progress': newProgress,
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('id', charityId);
+    } catch (e) {
+      errorMessage.value = 'Failed to update charity total: ${e.toString()}';
+      Get.snackbar('Error', errorMessage.value,
+          snackPosition: SnackPosition.BOTTOM);
+      throw e;
+    }
+  }
+
   Future<void> calculateCharitySummary() async {
     try {
       // Fetch all transactions

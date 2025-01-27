@@ -132,6 +132,14 @@ class _BannerKategoriState extends State<BannerKategori> {
     );
   }
 
+  double calculateProgress(int? total, int? targetTotal) {
+    if (targetTotal == null || targetTotal == 0 || total == null) {
+      return 0.0;
+    }
+    // Calculate progress as a percentage (0.0 to 1.0)
+    return total / targetTotal;
+  }
+
   @override
   Widget build(BuildContext context) {
     final displayBanners = widget.maxItems > 0
@@ -144,6 +152,9 @@ class _BannerKategoriState extends State<BannerKategori> {
       displayBanners.length,
       (index) {
         final banner = displayBanners[index];
+        double progressValue =
+            calculateProgress(banner.total, banner.targetTotal);
+        int progressPercentage = (progressValue * 100).round();
         var categoryName = widget.category
             .firstWhere(
               (cat) => cat.id == banner.categoryId,
@@ -279,7 +290,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(4),
                               child: LinearProgressIndicator(
-                                value: (banner.progress ?? 0) / 100,
+                                value: progressValue,
                                 backgroundColor: Colors.grey[200],
                                 color: Colors.blue,
                                 minHeight: 6,
