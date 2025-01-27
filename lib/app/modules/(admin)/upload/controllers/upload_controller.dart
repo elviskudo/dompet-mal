@@ -1,4 +1,6 @@
 // File: app/controllers/upload_controller.dart
+import 'dart:io';
+
 import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/companies/controllers/companies_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
@@ -121,6 +123,35 @@ class UploadController extends GetxController {
 
     // Then show the dialog
     Get.dialog(UploadDialog());
+  }
+
+  Future<String?> pickAndUploadImage({required String moduleClass}) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      isLoading.value = true;
+      try {
+        // Upload ke server menggunakan Supabase
+        final uploadResult = await supabase.storage.from(moduleClass).upload(
+              'images/${DateTime.now().toIso8601String()}-${image.name}',
+              File(image.path),
+            );
+        // if (uploadResult.error == null) {
+        //   final publicUrl = supabase.storage
+        //       .from(moduleClass)
+        //       .getPublicUrl(uploadResult.path);
+        //   return publicUrl;
+        // } else {
+        //   Get.snackbar('Error', 'Gagal mengupload gambar');
+        // }
+      } catch (e) {
+        Get.snackbar('Error', 'Terjadi kesalahan: $e');
+      } finally {
+        isLoading.value = false;
+      }
+    }
+    return null;
   }
 
   Future<List<FileModel>> fetchFiles() async {

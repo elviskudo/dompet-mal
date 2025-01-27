@@ -1,7 +1,10 @@
 import 'package:avatar_stack/avatar_stack.dart';
+import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/donationDetailPage/views/donation_detail_page_view.dart';
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
+import 'package:dompet_mal/models/BankModel.dart';
 import 'package:dompet_mal/models/Category.dart';
 import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +27,8 @@ class BannerKategori extends StatefulWidget {
 }
 
 class _BannerKategoriState extends State<BannerKategori> {
+  final TransactionsController transactionController =
+      Get.put(TransactionsController());
   // Format currency
   String formatRupiah(num value) {
     final formatter = NumberFormat.currency(
@@ -32,6 +37,99 @@ class _BannerKategoriState extends State<BannerKategori> {
       decimalDigits: 0,
     );
     return formatter.format(value);
+  }
+
+  Widget _buildDonationButton(BuildContext context, String charityId,
+      String categoryName, double lebar) {
+    return Obx(() {
+      final latestTransaction = transactionController.transactions
+          .where((t) =>
+              t.charityId == charityId &&
+              t.userId == transactionController.userId.value)
+          .toList()
+        ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+
+      if (latestTransaction.isEmpty) {
+        return _normalDonationButton(context, charityId, categoryName, lebar);
+      }
+
+      final status = latestTransaction.first.status;
+      if (status == 1 || status == 2) {
+        return FutureBuilder<Bank?>(
+          future: transactionController
+              .getBankById(latestTransaction.first.bankId!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final bank = snapshot.data;
+            return ElevatedButton(
+              onPressed: () {
+                Get.toNamed(
+                  Routes.KONFIRMASI_TRANSFER,
+                  arguments: {
+                    'kategori': categoryName,
+                    'charityId': charityId,
+                    'bankImage': bank?.image,
+                    'transactionNumber':
+                        latestTransaction.first.transactionNumber,
+                    'transactionId': latestTransaction.first.id,
+                    'bankId': latestTransaction.first.bankId,
+                    'bankAccount': bank?.name,
+                    'userId': transactionController.userId.value,
+                    'bankNumber': bank?.accountNumber,
+                    'amount':
+                        latestTransaction.first.donationPrice?.toString() ??
+                            '0',
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(lebar, 32),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                backgroundColor: const Color(0xffFFA500),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text(
+                "Lanjutkan Pembayaran",
+                style: TextStyle(fontSize: 12),
+              ),
+            );
+          },
+        );
+      } else {
+        return _normalDonationButton(context, charityId, categoryName, lebar);
+      }
+    });
+  }
+
+  Widget _normalDonationButton(BuildContext context, String charityId,
+      String categoryName, double lebar) {
+    return ElevatedButton(
+      onPressed: () {
+        Get.bottomSheet(
+          SlidingDonationSheet(
+            kategoriId: charityId,
+            charityId: charityId,
+            kategori: categoryName,
+          ),
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(lebar, 32),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        backgroundColor: const Color(0xff4B76D9),
+        foregroundColor: Colors.white,
+      ),
+      child: const Text(
+        "Donasi",
+        style: TextStyle(fontSize: 12),
+      ),
+    );
   }
 
   @override
@@ -234,36 +332,12 @@ class _BannerKategoriState extends State<BannerKategori> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10)),
                           width: double.infinity,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Get.bottomSheet(
-                                  SlidingDonationSheet(
-                                    kategoriId: banner.categoryId!,
-                                    charityId: banner.id!,
-                                    kategori: widget.category
-                                        .firstWhere(
-                                          (cat) => cat.id == banner.categoryId,
-                                          orElse: () => Category(
-                                              name: 'Unknown Category'),
-                                        )
-                                        .name!,
-                                  ),
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(lebar, 32),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  backgroundColor: Color(0xff4B76D9),
-                                  foregroundColor: Colors.white),
-                              child: Text(
-                                "Donasi",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                ),
-                              )),
+                          child: _buildDonationButton(
+                            context,
+                            banner.id!,
+                            categoryName,
+                            lebar,
+                          ),
                         )
                       ],
                     ),

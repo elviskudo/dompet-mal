@@ -128,6 +128,39 @@ class TransactionsController extends GetxController {
     }
   }
 
+  Future<Bank?> getBankById(String bankId) async {
+    try {
+      // Get bank data
+      final bankResponse =
+          await supabase.from('banks').select('*').eq('id', bankId).single();
+
+      if (bankResponse != null) {
+        // Get bank image from files table
+        final fileResponse = await supabase
+            .from('files')
+            .select('file_name')
+            .eq('module_class',
+                'banks') // Menggunakan 'banks' sebagai module_class
+            .eq('module_id', bankId) // Menggunakan bankId sebagai module_id
+            .maybeSingle();
+
+        // Create bank object
+        final bank = Bank.fromJson(bankResponse);
+
+        // Set image URL if file exists
+        if (fileResponse != null) {
+          bank.image = fileResponse['file_name'];
+        }
+
+        return bank;
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching bank details: $e');
+      return null;
+    }
+  }
+
   // Delete transaction
   Future deleteTransaction(String id) async {
     try {

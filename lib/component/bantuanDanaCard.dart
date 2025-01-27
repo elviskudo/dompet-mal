@@ -1,7 +1,9 @@
 import 'package:avatar_stack/avatar_stack.dart';
+import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/component/sectionHeader.dart';
+import 'package:dompet_mal/models/BankModel.dart';
 import 'package:dompet_mal/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -118,10 +120,11 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
 class EmergencyFundCard extends StatelessWidget {
   final Charity fund;
   final List<Category> category;
-
   final VoidCallback onTap;
+  final TransactionsController transactionController =
+      Get.put(TransactionsController());
 
-  const EmergencyFundCard({
+  EmergencyFundCard({
     Key? key,
     required this.fund,
     required this.category,
@@ -138,8 +141,109 @@ class EmergencyFundCard extends StatelessWidget {
     return formatter.format(amount ?? 0);
   }
 
+  Widget _buildDonationButton(
+      BuildContext context, String charityId, String categoryName) {
+    return Obx(() {
+      final latestTransaction = transactionController.transactions
+          .where((t) =>
+              t.charityId == charityId &&
+              t.userId == transactionController.userId.value)
+          .toList()
+        ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+
+      if (latestTransaction.isEmpty) {
+        return _normalDonationButton(context, charityId, categoryName);
+      }
+
+      final status = latestTransaction.first.status;
+      if (status == 1 || status == 2) {
+        return FutureBuilder<Bank?>(
+          future: transactionController
+              .getBankById(latestTransaction.first.bankId!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final bank = snapshot.data;
+            return ElevatedButton(
+              onPressed: () {
+                Get.toNamed(
+                  Routes.KONFIRMASI_TRANSFER,
+                  arguments: {
+                    'kategori': categoryName,
+                    'charityId': charityId,
+                    'bankImage': bank?.image,
+                    'transactionNumber':
+                        latestTransaction.first.transactionNumber,
+                    'transactionId': latestTransaction.first.id,
+                    'bankId': latestTransaction.first.bankId,
+                    'bankAccount': bank?.name,
+                    'userId': transactionController.userId.value,
+                    'bankNumber': bank?.accountNumber,
+                    'amount':
+                        latestTransaction.first.donationPrice?.toString() ??
+                            '0',
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: Size(80, 24),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                backgroundColor: const Color(0xffFFA500),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text(
+                "Lanjutkan Pembayaran",
+                style: TextStyle(fontSize: 14),
+              ),
+            );
+          },
+        );
+      } else {
+        return _normalDonationButton(context, charityId, categoryName);
+      }
+    });
+  }
+
+  Widget _normalDonationButton(
+      BuildContext context, String charityId, String categoryName) {
+    return ElevatedButton(
+      onPressed: () {
+        Get.bottomSheet(
+          SlidingDonationSheet(
+            kategoriId: charityId,
+            charityId: charityId,
+            kategori: categoryName,
+          ),
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        minimumSize: Size(80, 24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        backgroundColor: const Color(0xff4B76D9),
+        foregroundColor: Colors.white,
+      ),
+      child: const Text(
+        "Donasi",
+        style: TextStyle(fontSize: 14),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    var categoryName = category
+        .firstWhere(
+          (cat) => cat.id == fund.categoryId,
+          orElse: () => Category(name: 'Unknown Category'),
+        )
+        .name!;
     return Card(
       shadowColor: Colors.black,
       color: Colors.white,
@@ -260,37 +364,11 @@ class EmergencyFundCard extends StatelessWidget {
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(10)),
                     width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Get.bottomSheet(
-                            SlidingDonationSheet(
-                              kategoriId: fund.categoryId!,
-                              charityId: fund.id!,
-                              kategori: category
-                                  .firstWhere(
-                                    (cat) => cat.id == fund.categoryId,
-                                    orElse: () =>
-                                        Category(name: 'Unknown Category'),
-                                  )
-                                  .name!,
-                            ),
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8), // Reduced padding
-                            minimumSize: Size(80, 24), // Smaller minimum size
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            backgroundColor: const Color(0xff4B76D9),
-                            foregroundColor: Colors.white),
-                        child: const Text(
-                          "Donasi",
-                          style: TextStyle(
-                              fontSize: 14), // Optional: reduce text size
-                        )),
+                    child: _buildDonationButton(
+                      context,
+                      fund.id!,
+                      categoryName,
+                    ),
                   )
                 ],
               ),
