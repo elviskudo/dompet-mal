@@ -188,7 +188,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SEND_MONEY2,
-      page: () =>  SendMoney2View(),
+      page: () => SendMoney2View(),
       binding: SendMoney2Binding(),
     ),
     GetPage(
