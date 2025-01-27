@@ -43,7 +43,7 @@ class ListPaymentView extends GetView<TransactionsController> {
         // Filter transaksi berdasarkan userId
         final userTransactions = controller.transactions
             .where(
-                (transaction) => transaction.userId == controller.userId.value)
+                (transaction) => transaction.userId == controller.userId.value && transaction.status == 3)
             .toList();
 
         if (controller.isLoading.value) {
