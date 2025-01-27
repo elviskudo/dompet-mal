@@ -38,6 +38,8 @@ class HomeView extends GetView<HomeController> {
         onRefresh: () async {
           await charityController.fetchCharitiesWithContributors();
           await charityController.fetchCategories();
+          await charityController.fetchCompanies();
+          await charityController.calculateCharitySummary();
         },
         backgroundColor: Colors.white,
         child: SingleChildScrollView(

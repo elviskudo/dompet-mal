@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/app/modules/(home)/sendMoney2/controllers/send_money2_controller.dart';
@@ -157,6 +158,8 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
   // Function to show success dialog
   void _showSuccessDialog(BuildContext context) async {
     final TransactionsController controller = Get.put(TransactionsController());
+    final CharityAdminController charityController =
+        Get.put(CharityAdminController());
     final args = Get.arguments as Map<String, dynamic>;
     final transactionId = args?['idTransaksi'] as String? ?? '';
     final transactionNumber = args?['transactionNumber'] as String? ?? '';
@@ -177,6 +180,9 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     try {
       // Update the transaction
       await controller.updateTransaction(updatedTransaction, transactionId);
+
+      await charityController.fetchCharitiesWithContributors();
+      await charityController.calculateCharitySummary();
 
       showDialog(
         context: context,
