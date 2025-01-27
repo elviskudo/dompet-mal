@@ -163,8 +163,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PROFILE,
-      page: () => const ProfileView(),
-      binding: ProfileBinding(),
+      page: () =>  ProfileView(),
+      binding: ListUserBinding(),
     ),
     GetPage(
       name: _Paths.NAVIGATION,

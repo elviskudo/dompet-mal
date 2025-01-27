@@ -1,7 +1,9 @@
 import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/donationDetailPage/views/donation_detail_page_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
+import 'package:dompet_mal/models/BankModel.dart';
 import 'package:dompet_mal/models/Category.dart';
 import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +16,10 @@ class StraightCharityComponent extends StatelessWidget {
   final List<Charity> banners;
   final List<Category> category;
   final int maxItems;
+  final TransactionsController transactionController =
+      Get.put(TransactionsController());
 
-  const StraightCharityComponent({
+  StraightCharityComponent({
     Key? key,
     required this.banners,
     required this.category,
@@ -34,6 +38,94 @@ class StraightCharityComponent extends StatelessWidget {
   String formatDate(DateTime date) {
     final formatter = DateFormat('d MMMM yyyy', 'id_ID');
     return formatter.format(date);
+  }
+
+  Widget _buildDonationButton(BuildContext context, String charityId,
+      String categoryName, double lebar) {
+    return Obx(() {
+      final latestTransaction = transactionController.transactions
+          .where((t) =>
+              t.charityId == charityId &&
+              t.userId == transactionController.userId.value)
+          .toList()
+        ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+
+      if (latestTransaction.isEmpty) {
+        return _normalDonationButton(context, charityId, categoryName, lebar);
+      }
+
+      final status = latestTransaction.first.status;
+      if (status == 1 || status == 2) {
+        return FutureBuilder<Bank?>(
+          future: transactionController
+              .getBankById(latestTransaction.first.bankId!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final bank = snapshot.data;
+            print(bank?.image);
+            return ElevatedButton(
+              onPressed: () {
+                Get.toNamed(
+                  Routes.KONFIRMASI_TRANSFER,
+                  arguments: {
+                    'kategori': categoryName,
+                    'charityId': charityId,
+                    'bankImage': bank?.image,
+                    'transactionNumber':
+                        latestTransaction.first.transactionNumber,
+                    'transactionId': latestTransaction.first.id,
+                    'bankId': latestTransaction.first.bankId,
+                    'bankAccount': bank?.name,
+                    'userId': transactionController.userId.value,
+                    'bankNumber': bank?.accountNumber,
+                    'amount':
+                        latestTransaction.first.donationPrice?.toString() ??
+                            '0',
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(lebar, 32),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                backgroundColor: const Color(0xffFFA500),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text("Lanjutkan Pembayaran"),
+            );
+          },
+        );
+      } else {
+        return _normalDonationButton(context, charityId, categoryName, lebar);
+      }
+    });
+  }
+
+  Widget _normalDonationButton(BuildContext context, String charityId,
+      String categoryName, double lebar) {
+    return ElevatedButton(
+      onPressed: () {
+        Get.bottomSheet(
+          SlidingDonationSheet(
+            kategoriId: charityId,
+            charityId: charityId,
+            kategori: categoryName,
+          ),
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(lebar, 32),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        backgroundColor: const Color(0xff4B76D9),
+        foregroundColor: Colors.white,
+      ),
+      child: const Text("Donasi"),
+    );
   }
 
   @override
@@ -193,27 +285,12 @@ class StraightCharityComponent extends StatelessWidget {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10)),
                           width: double.infinity,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Get.bottomSheet(
-                                  SlidingDonationSheet(
-                                    kategoriId: banner.categoryId!,
-                                    charityId: banner.id!,
-                                    kategori: categoryName,
-                                  ),
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize:
-                                      Size(lebar, 32), // Smaller minimum size
-
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  backgroundColor: const Color(0xff4B76D9),
-                                  foregroundColor: Colors.white),
-                              child: const Text("Donasi")),
+                          child: _buildDonationButton(
+                            context,
+                            banner.id!,
+                            categoryName,
+                            lebar,
+                          ),
                         )
                       ],
                     ),

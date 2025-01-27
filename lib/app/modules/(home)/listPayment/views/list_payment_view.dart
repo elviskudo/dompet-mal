@@ -20,10 +20,6 @@ class ListPaymentView extends GetView<ListPaymentController> {
         ),
         backgroundColor: Colors.white,
         elevation: 0.5,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert, color: Colors.black),

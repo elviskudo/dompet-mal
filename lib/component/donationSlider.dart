@@ -139,7 +139,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
     String formattedSequence = randomSequence.toString().padLeft(4, '0');
 
     // Combine all parts to create transaction ID
-    return "#$categoryInitial$year$month$formattedSequence";
+    return "$categoryInitial$year$month$formattedSequence";
   }
 
   Widget _buildPaymentSection() {

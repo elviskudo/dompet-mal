@@ -19,6 +19,7 @@ class ProfileController extends GetxController {
     loadUserData();
   }
 
+
   Future<void> logout() async {
     try {
       isLoading.value = true;

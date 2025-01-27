@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/helper/PasswordHasher.dart';
 import 'package:dompet_mal/models/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
+import 'package:dio/dio.dart' as dio;
 
 class ListUserController extends GetxController {
   final supabase = Supabase.instance.client;
@@ -20,10 +24,56 @@ class ListUserController extends GetxController {
   final phoneController = TextEditingController();
   RxString selectedRoleId = ''.obs;
 
+  final Rx<XFile?> selectedImage = Rx<XFile?>(null);
+  final Rx<Users?> currentUser = Rx<Users?>(null);
+  final cloudName = 'dcthljxbl';
+  final uploadPreset = 'dompet-mal';
+
   @override
   void onInit() {
     super.onInit();
-    getCurrentUser();
+    getCurrentUser().then((_) => loadCurrentUserData());
+  }
+
+  Future<void> logout() async {
+    try {
+      isLoading.value = true;
+
+      // Sign out from Supabase
+      await supabase.auth.signOut();
+
+      // Clear SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear(); // Clears all data
+      // Or clear specific keys if you prefer:
+      // await prefs.setBool('isLoggedIn', false);
+      // await prefs.remove('userEmail');
+      // await prefs.remove('userName');
+      // await prefs.remove('userPhone');
+      // await prefs.remove('userId');
+      // await prefs.remove('accessToken');
+
+      Get.snackbar(
+        'Sukses',
+        'Berhasil logout',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      // Navigate to login page
+      Get.offAllNamed(Routes.LOGIN);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Gagal logout: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> getCurrentUser() async {
@@ -31,7 +81,7 @@ class ListUserController extends GetxController {
     currentUserId.value = prefs.getString('userId') ?? '';
   }
 
- Future<void> createUser() async {
+  Future<void> createUser() async {
     if (!formKey.currentState!.validate()) return;
 
     isLoading.value = true;
@@ -45,7 +95,8 @@ class ListUserController extends GetxController {
       }
 
       // Insert data ke table users
-      final hashedPassword = await PasswordHasher.hashPassword(passwordController.text);
+      final hashedPassword =
+          await PasswordHasher.hashPassword(passwordController.text);
       String userId = Uuid().v4();
       final userData = {
         'id': userId,
@@ -108,6 +159,7 @@ class ListUserController extends GetxController {
       isLoading.value = false;
     }
   }
+
   // Tambahkan helper method untuk format nomor telepon
   String formatPhoneNumber(String phone) {
     String cleanPhone = phone.replaceAll(RegExp(r'[^\d]'), '');
@@ -119,7 +171,6 @@ class ListUserController extends GetxController {
     }
     return '+$cleanPhone';
   }
-  
 
   Future<bool> isAdmin() async {
     try {
@@ -144,7 +195,6 @@ class ListUserController extends GetxController {
       return false;
     }
   }
-
 
   Future<void> deleteUser(String userId) async {
     try {
@@ -203,6 +253,122 @@ class ListUserController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> updateProfileWithImage({
+    required String name,
+    required String phone,
+  }) async {
+    try {
+      isLoading.value = true;
+
+      // 1. First update user data
+      final formattedPhoneNumber = formatPhoneNumber(phone);
+      final updatedData = {
+        'name': name,
+        'phone_number': formattedPhoneNumber,
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      await supabase
+          .from('users')
+          .update(updatedData)
+          .eq('id', currentUserId.value);
+
+      // 2. Handle image upload if selected
+      if (selectedImage.value != null) {
+        final bytes = await File(selectedImage.value!.path).readAsBytes();
+        final fileName = selectedImage.value!.path.split('/').last;
+
+        final formData = dio.FormData.fromMap({
+          'file': dio.MultipartFile.fromBytes(
+            bytes,
+            filename: fileName,
+          ),
+          'upload_preset': uploadPreset,
+        });
+
+        final response = await dio.Dio().post(
+          'https://api.cloudinary.com/v1_1/$cloudName/image/upload',
+          data: formData,
+        );
+
+        if (response.statusCode == 200) {
+          // Get the URL from Cloudinary response
+          String imageUrl = response.data['secure_url'];
+
+          // Update or create file record
+          final fileData = {
+            'module_class': 'users',
+            'module_id': currentUserId.value,
+            'file_name': imageUrl,
+            'file_type': 'image',
+            'updated_at': DateTime.now().toIso8601String(),
+          };
+
+          // Check if file exists
+          final existingFile = await supabase
+              .from('files')
+              .select()
+              .eq('module_class', 'users')
+              .eq('module_id', currentUserId.value)
+              .maybeSingle();
+
+          if (existingFile != null) {
+            // Update existing file
+            await supabase
+                .from('files')
+                .update(fileData)
+                .eq('id', existingFile['id']);
+          } else {
+            // Insert new file
+            fileData['created_at'] = DateTime.now().toIso8601String();
+            await supabase.from('files').insert(fileData);
+          }
+        }
+      }
+
+      // 3. Refresh data
+      await fetchUsers();
+      await loadCurrentUserData();
+
+      Get.snackbar(
+        'Success',
+        'Profile updated successfully',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      print('Error updating profile: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to update profile: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+      selectedImage.value = null;
+    }
+  }
+
+// Add this method to load current user data
+  Future<void> loadCurrentUserData() async {
+    try {
+      final users = await fetchUsers();
+      final currentUser = users.firstWhere(
+        (user) => user.id == currentUserId.value,
+        orElse: () => throw Exception('User not found'),
+      );
+
+      namaController.text = currentUser.name;
+      emailController.text = currentUser.email;
+      phoneController.text = currentUser.phoneNumber.replaceFirst('+62', '');
+
+      this.currentUser.value = currentUser;
+    } catch (e) {
+      print('Error loading user data: $e');
     }
   }
 
@@ -336,7 +502,6 @@ class ListUserController extends GetxController {
         ) ??
         false;
   }
-  
 
   void showEditDialog(BuildContext context, Users user) async {
     final nameController = TextEditingController(text: user.name);
@@ -429,10 +594,10 @@ class ListUserController extends GetxController {
 
   @override
   void onClose() {
-     namaController.dispose();
-  emailController.dispose();
-  passwordController.dispose();
-  phoneController.dispose();
-  super.onClose();
+    namaController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    phoneController.dispose();
+    super.onClose();
   }
 }
