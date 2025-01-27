@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class ProfileView extends GetView<ListUserController> {
   ProfileView({super.key});
@@ -36,47 +34,6 @@ class ProfileView extends GetView<ListUserController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Profile Image Section
-                      Center(
-                        child: Stack(
-                          children: [
-                            Obx(
-                              () => uploadController.imageUrl.isNotEmpty
-                                  ? Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      child: CircleAvatar(
-                                        radius: 18,
-                                        backgroundColor: Color(0xFF4B76D9),
-                                        backgroundImage: NetworkImage(
-                                            uploadController.imageUrl.value),
-                                        child: IconButton(
-                                          icon: Icon(Icons.camera_alt,
-                                              size: 18, color: Colors.white),
-                                          onPressed: () async {
-                                            final ImagePicker picker =
-                                                ImagePicker();
-                                            final XFile? image =
-                                                await picker.pickImage(
-                                              source: ImageSource.gallery,
-                                            );
-
-                                            if (image != null) {
-                                              uploadController
-                                                  .selectedImage.value = image;
-                                              await uploadController
-                                                  .uploadFileToCloudinary(
-                                                      image);
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    )
-                                  : CircularProgressIndicator(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Gap(24),
 
                       Text('Nama Lengkap',
                           style: GoogleFonts.openSans(

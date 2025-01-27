@@ -134,7 +134,7 @@ class EmailVerificationView extends GetView<EmailVerificationController> {
                 onPressed: controller.verifyOTP,
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 139),
+                      const EdgeInsets.symmetric(vertical: 15),
                   child: Text(
                     'VERIFIKASI',
                     style: GoogleFonts.openSans(
