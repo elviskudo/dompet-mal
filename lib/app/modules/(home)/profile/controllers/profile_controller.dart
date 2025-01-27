@@ -1,17 +1,25 @@
 import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/models/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileController extends GetxController {
-  final formKey = GlobalKey<FormState>();
-  RxString userId = ''.obs;
-  RxString userEmail = ''.obs;
+  final supabase = Supabase.instance.client;
+  final RxList<Users> usersList = <Users>[].obs;
+  RxBool isLoading = false.obs;
+  RxString roleUser = ''.obs;
+  RxString currentUserId = ''.obs;
   RxString userName = ''.obs;
   RxString userPhone = ''.obs;
-  RxBool isLoading = false.obs;
-  final supabase = Supabase.instance.client;
+  RxString userEmail = ''.obs;
+  final formKey = GlobalKey<FormState>();
+  final namaController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final phoneController = TextEditingController();
+  RxString selectedRoleId = ''.obs;
 
   @override
   void onInit() {
@@ -60,66 +68,54 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> updateProfile({
-    required String name,
-    required String phone,
-  }) async {
-    if (name.isEmpty || phone.isEmpty) {
+  Future<void> updateProfile(String id,
+      {required String name, required String phone}) async {
+    // Validasi input
+    if (id.isEmpty || name.isEmpty || phone.isEmpty) {
       Get.snackbar(
-        'Error',
-        'Semua bidang harus diisi',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    if (name == userName.value && phone == userPhone.value) {
-      Get.snackbar(
-        'Gagal',
-        'Tidak ada perubahan yang dibuat pada profil',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        duration: Duration(seconds: 2),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        margin: EdgeInsets.symmetric(vertical: 20),
+        "Terjadi Kesalahan",
+        "Nama dan Nomor Telepon wajib diisi",
         snackPosition: SnackPosition.BOTTOM,
-        snackStyle: SnackStyle.FLOATING,
-        forwardAnimationCurve: Curves.easeOut,
-        reverseAnimationCurve: Curves.easeIn,
       );
       return;
     }
-
     try {
-      isLoading.value = true;
+      var response = await supabase.from("users").update({
+        "name": namaController.text,
+        "phone": phoneController.text,
+      }).eq("id", id);
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userName', name);
-      await prefs.setString('userPhone', phone);
+      if (response.error == null) {
+        // Update berhasil: Simpan data baru ke SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString("name", namaController.text);
+        await prefs.setString("phone", phoneController.text);
 
-      userName.value = name;
-      userPhone.value = phone;
-
-      await Get.defaultDialog(
-        title: 'Sukses',
-        middleText: 'Profil berhasil diperbarui',
-        textConfirm: 'OK',
-        confirmTextColor: Colors.white,
-        onConfirm: () {
-          Get.back();
-          Get.offNamed(Routes.NAVIGATION);
-        },
-      );
+        // Tampilkan dialog sukses
+        Get.defaultDialog(
+          title: "Berhasil",
+          middleText: "Profil berhasil diperbarui!",
+          textConfirm: "OK",
+          onConfirm: () {
+            Get.back(); // Tutup dialog
+            Get.back(); // Kembali ke halaman sebelumnya
+          },
+        );
+      } else {
+        // Jika ada error dari Supabase
+        Get.snackbar(
+          "Terjadi Kesalahan",
+          response.error!.message,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
     } catch (e) {
+      // Jika ada error umum
       Get.snackbar(
-        'Error',
-        'Gagal memperbarui profil: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        "Terjadi Kesalahan",
+        "Tidak dapat memperbarui profil: $e",
+        snackPosition: SnackPosition.BOTTOM,
       );
-    } finally {
-      isLoading.value = false;
     }
   }
 
@@ -128,22 +124,31 @@ class ProfileController extends GetxController {
       isLoading.value = true;
       final prefs = await SharedPreferences.getInstance();
 
-      String? email = prefs.getString('userEmail');
-      String? name = prefs.getString('userName');
-      String? phone = prefs.getString('userPhone');
-      String? id = prefs.getString('userId');
+      userEmail.value = prefs.getString('userEmail') ?? '';
+      userName.value = prefs.getString('userName') ?? '';
+      userPhone.value = prefs.getString('userPhone') ?? '';
+      currentUserId.value = prefs.getString('userId') ?? '';
 
-      if (email != null && email.isNotEmpty) {
-        userEmail.value = email;
+      final response = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', currentUserId.value)
+          .single(); // Menggunakan single() untuk mendapatkan satu record
+
+      if (response != null) {
+        // Mengakses data menggunakan operator map
+        userEmail.value = response['email'] ?? '';
+        userName.value = response['name'] ?? '';
+        userPhone.value = response['phone'] ?? '';
+
+        // Update controller text
+        namaController.text = userName.value;
+        phoneController.text = userPhone.value;
+        emailController.text = userEmail.value;
       }
 
-      if (name != null && name.isNotEmpty) {
-        userName.value = name;
-      }
-
-      if (phone != null && phone.isNotEmpty) {
-        userPhone.value = phone;
-      }
+      print(
+          "ID: ${currentUserId.value}, Name: ${userName.value}, Phone: ${userPhone.value}");
     } catch (e) {
       print('Error loading user data: $e');
       Get.snackbar(
