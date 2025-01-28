@@ -300,7 +300,7 @@ class UploadDialog extends StatelessWidget {
             // Choose File Button
             ElevatedButton.icon(
               icon: const Icon(Icons.image),
-              label: const Text('Choose Image'),
+              label: Text('Choose Image'),
               onPressed: () async {
                 final ImagePicker picker = ImagePicker();
                 final XFile? image = await picker.pickImage(
@@ -327,7 +327,7 @@ class UploadDialog extends StatelessWidget {
                             await uploadController.saveFileInfo();
                             await uploadController.fetchFiles();
                           },
-                    child: const Text('Submit'),
+                    child: Text('Submit'),
                   )),
           ],
         ),
@@ -375,7 +375,7 @@ class UploadDialogImage extends StatelessWidget {
             // Choose File Button
             ElevatedButton.icon(
               icon: const Icon(Icons.image),
-              label: const Text('Choose Image'),
+              label: Text('Choose Image'),
               onPressed: () async {
                 final ImagePicker picker = ImagePicker();
                 final XFile? image = await picker.pickImage(
@@ -402,7 +402,7 @@ class UploadDialogImage extends StatelessWidget {
                             // Optionally, you can add an explicit refresh
                             await uploadController.fetchFiles();
                           },
-                    child: const Text('Submit'),
+                    child: Text('Submit'),
                   )),
           ],
         ),

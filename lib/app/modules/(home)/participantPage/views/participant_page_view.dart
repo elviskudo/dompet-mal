@@ -1,11 +1,8 @@
-import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/participantPage/controllers/participant_page_controller.dart';
+import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:dompet_mal/models/TransactionModel.dart';
-import 'package:dompet_mal/models/userModel.dart';
 
 class ParticipantPage extends StatelessWidget {
   final controller = Get.put(ParticipantPageController());
@@ -25,7 +22,7 @@ class ParticipantPage extends StatelessWidget {
     final String charityId = args['charityId'] ?? '';
 
     // Fetch data when the page loads
-    controller.fetchContributorsAndTransactions(charityId);
+    controller.fetchTransactions(charityId);
 
     return Scaffold(
       appBar: AppBar(
@@ -42,19 +39,17 @@ class ParticipantPage extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         }
 
-        if (controller.contributorsWithTransactions.isEmpty) {
-          return Center(child: Text('Belum ada partisipan'));
+        if (controller.transactions.isEmpty) {
+          return Center(child: Text('Belum ada transaksi'));
         }
 
         return ListView.builder(
-          itemCount: controller.contributorsWithTransactions.length,
+          itemCount: controller.transactions.length,
           padding: EdgeInsets.all(16.0),
           itemBuilder: (context, index) {
-            final data = controller.contributorsWithTransactions[index];
-            final contributor = data['contributor'] as Contributor;
-            final transactions = data['transactions'] as List<Transaction>;
-            final totalDonation = data['totalDonation'] as double;
-            final user = contributor.user;
+            final data = controller.transactions[index];
+            final transaction = data['transaction'] as Transaction;
+            final user = data['user'] as Map<String, dynamic>;
 
             return Container(
               margin: EdgeInsets.only(bottom: 16.0),
@@ -74,9 +69,7 @@ class ParticipantPage extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30.0,
-                    backgroundImage: NetworkImage(
-                      user?.imageUrl ?? 'https://via.placeholder.com/60',
-                    ),
+                    backgroundImage: NetworkImage(user['image_url']),
                     onBackgroundImageError: (_, __) {
                       // Handle error loading image
                       Icon(Icons.person);
@@ -88,27 +81,15 @@ class ParticipantPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          user?.name ?? 'Anonymous',
+                          user['name'],
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 4.0),
-                        // Show individual transactions
-                        ...transactions
-                            .map((trans) => Padding(
-                                  padding: EdgeInsets.only(top: 4.0),
-                                  child: Text(
-                                    'Donasi: ${formatRupiah(trans.donationPrice ?? 0)}',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 14.0),
-                                  ),
-                                ))
-                            .toList(),
-                        SizedBox(height: 4.0),
+                        SizedBox(height: 8.0),
                         Text(
-                          'Total: ${formatRupiah(totalDonation)}',
+                          'Donasi: ${formatRupiah(transaction.donationPrice ?? 0)}',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14.0,
@@ -117,8 +98,8 @@ class ParticipantPage extends StatelessWidget {
                         ),
                         SizedBox(height: 4.0),
                         Text(
-                          DateFormat('dd MMMM yyyy', 'id_ID').format(
-                            contributor.created_at ?? DateTime.now(),
+                          DateFormat('dd MMMM yyyy HH:mm', 'id_ID').format(
+                            transaction.createdAt ?? DateTime.now(),
                           ),
                           style: TextStyle(color: Colors.grey, fontSize: 12.0),
                         ),

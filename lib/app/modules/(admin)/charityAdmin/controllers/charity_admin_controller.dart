@@ -183,7 +183,8 @@ class CharityAdminController extends GetxController {
   Future<void> calculateCharitySummary() async {
     try {
       // Fetch all transactions
-      final donorsResponse = await supabase.from('transactions').select('*');
+      final donorsResponse =
+          await supabase.from('transactions').select().eq('status', 3);
 
       // Calculate total donations by summing donation prices
       final totalDonations = donorsResponse.fold(0.0,
@@ -348,7 +349,7 @@ class CharityAdminController extends GetxController {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Select Category'),
+          title: Text('Select Category'),
           content: Obx(
             () => isCategoriesLoading.value
                 ? Center(child: CircularProgressIndicator())
@@ -380,7 +381,7 @@ class CharityAdminController extends GetxController {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Select Company'),
+          title: Text('Select Company'),
           content: Obx(
             () => isCompaniesLoading.value
                 ? Center(child: CircularProgressIndicator())

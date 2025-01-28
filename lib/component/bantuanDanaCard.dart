@@ -1,4 +1,5 @@
 import 'package:avatar_stack/avatar_stack.dart';
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
@@ -12,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EmergencyFundSection extends StatefulWidget {
   final List<Charity> banners;
@@ -141,6 +143,48 @@ class EmergencyFundCard extends StatelessWidget {
     return formatter.format(amount ?? 0);
   }
 
+  List<Contributor> getUniqueContributors(List<Contributor> contributors) {
+    // Create a map using userId as key to ensure uniqueness
+    final Map<String?, Contributor> uniqueContributors = {};
+
+    for (var contributor in contributors) {
+      if (contributor.user?.id != null) {
+        // Only add if we haven't seen this user ID before
+        uniqueContributors.putIfAbsent(contributor.user?.id, () => contributor);
+      }
+    }
+
+    // Convert back to list
+    return uniqueContributors.values.toList();
+  }
+
+  // Modify the contributor section in the build method
+  Widget buildContributorSection(List<Contributor> contributors) {
+    final uniqueContributors = getUniqueContributors(contributors);
+
+    return Row(
+      children: [
+        Flexible(
+          child: AvatarStack(
+            height: 30,
+            avatars: uniqueContributors.map((contributor) {
+              return NetworkImage(
+                contributor.user?.imageUrl ?? 'https://via.placeholder.com/40',
+              );
+            }).toList(),
+          ),
+        ),
+        Text(
+          '${uniqueContributors.length} penyumbang',
+          style: GoogleFonts.poppins(
+            fontSize: 12,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
+
   double calculateProgress(int? total, int? targetTotal) {
     if (targetTotal == null || targetTotal == 0 || total == null) {
       return 0.0;
@@ -203,9 +247,9 @@ class EmergencyFundCard extends StatelessWidget {
                 backgroundColor: const Color(0xffFFA500),
                 foregroundColor: Colors.white,
               ),
-              child: const Text(
+              child: Text(
                 "Lanjutkan Pembayaran",
-                style: TextStyle(fontSize: 14),
+                style: GoogleFonts.poppins(fontSize: 14),
               ),
             );
           },
@@ -237,9 +281,9 @@ class EmergencyFundCard extends StatelessWidget {
         backgroundColor: const Color(0xff4B76D9),
         foregroundColor: Colors.white,
       ),
-      child: const Text(
+      child: Text(
         "Donasi",
-        style: TextStyle(fontSize: 14),
+        style: GoogleFonts.poppins(fontSize: 14),
       ),
     );
   }
@@ -287,9 +331,9 @@ class EmergencyFundCard extends StatelessWidget {
                 children: [
                   Text(
                     fund.title ?? 'Untitled Charity',
-                    style: const TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -311,9 +355,9 @@ class EmergencyFundCard extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Terkumpul',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 12,
                               color: Colors.grey,
                             ),
@@ -321,7 +365,7 @@ class EmergencyFundCard extends StatelessWidget {
                           Gap(2),
                           Text(
                             formatCurrency(fund.total),
-                            style: const TextStyle(
+                            style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600, fontSize: 12),
                           ),
                         ],
@@ -329,9 +373,9 @@ class EmergencyFundCard extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const Text(
+                          Text(
                             'Sisa hari',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 12,
                               color: Colors.grey,
                             ),
@@ -339,8 +383,8 @@ class EmergencyFundCard extends StatelessWidget {
                           Gap(2),
                           Text(
                             '35', // This was hardcoded in the original, you might want to calculate dynamically
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -349,26 +393,7 @@ class EmergencyFundCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: AvatarStack(
-                          height: 30,
-                          avatars: fund.contributors.map((contributor) {
-                            return NetworkImage(
-                              contributor.user?.imageUrl ??
-                                  'https://via.placeholder.com/40', // Update with actual avatar URL if available
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${fund.contributors.length} penyumbang',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                      ),
-                    ],
-                  ),
+                  buildContributorSection(fund.contributors),
                   Gap(8),
                   Container(
                     decoration:

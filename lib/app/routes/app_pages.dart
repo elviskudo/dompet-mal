@@ -50,8 +50,6 @@ import '../modules/(home)/onBoardingPage/bindings/on_boarding_page_binding.dart'
 import '../modules/(home)/onBoardingPage/views/on_boarding_page_view.dart';
 import '../modules/(home)/participantPage/bindings/participant_page_binding.dart';
 import '../modules/(home)/participantPage/views/participant_page_view.dart';
-import '../modules/(home)/participants/bindings/participants_binding.dart';
-import '../modules/(home)/participants/views/participants_view.dart';
 import '../modules/(home)/paymentAccountPage/bindings/payment_account_page_binding.dart';
 import '../modules/(home)/paymentAccountPage/views/payment_account_page_view.dart';
 import '../modules/(home)/paymentSuccess/bindings/payment_success_binding.dart';
@@ -171,11 +169,7 @@ class AppPages {
       page: () => const NavigationView(),
       binding: NavigationBinding(),
     ),
-    GetPage(
-      name: _Paths.PARTICIPANTS,
-      page: () => const ParticipantsView(),
-      binding: ParticipantsBinding(),
-    ),
+  
     GetPage(
       name: _Paths.SEND_MONEY,
       page: () => const SendMoneyView(),

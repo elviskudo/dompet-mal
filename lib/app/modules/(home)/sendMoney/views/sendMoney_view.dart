@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SendMoneyView extends GetView<SendMoneyController> {
   const SendMoneyView({super.key});
@@ -51,7 +52,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
                     Text(
                       'Unggah bukti transfer hanya jika kamu transfer via EDC atau setor tunai, atau jika transaksi bermasalah.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black87),
+                      style: GoogleFonts.poppins(color: Colors.black87),
                     ),
                     Gap(24),
                     Container(
@@ -70,9 +71,9 @@ class SendMoneyView extends GetView<SendMoneyController> {
                           'donationPrice': donationPrice,
                           'userId': userId,
                         }),
-                        child: const Text(
+                        child: Text(
                           "UNGGAH BUKTI TRANSFER",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
@@ -93,9 +94,9 @@ class SendMoneyView extends GetView<SendMoneyController> {
                           // Clear session and navigate to home
                           Get.toNamed(Routes.HOME);
                         },
-                        child: const Text(
+                        child: Text(
                           "KEMBALI KE BERANDA",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: Color.fromARGB(160, 49, 48, 54)),
@@ -124,7 +125,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
           Text(
             'Dompet mal sedang mengecek transaksimu',
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -139,7 +140,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
             child: Text(
               'Setelah uang kami terima, uang akan langsung dikirim ke rekening tujuan',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 color: Colors.black87,
               ),
@@ -160,8 +161,8 @@ class SendMoneyView extends GetView<SendMoneyController> {
             children: [
               Text(
                 "ID TRANSAKSI $idTransaksi",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: GoogleFonts.poppins
+                    (fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Gap(12),
               InkWell(
@@ -189,11 +190,11 @@ class SendMoneyView extends GetView<SendMoneyController> {
                 width: 50,
                 height: 50,
               ),
-              title: const Text(
+              title: Text(
                 "Kembarannya Tiada, Bantu Bayi Esha Operasi Segera!",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle: const Text("17 Januari 2022 10:00"),
+              subtitle: Text("17 Januari 2022 10:00"),
             ),
           ),
           const SizedBox(height: 16),

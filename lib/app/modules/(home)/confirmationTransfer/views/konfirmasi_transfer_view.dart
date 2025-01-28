@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../controllers/konfirmasi_transfer_controller.dart';
@@ -76,7 +77,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
       return Center(
         child: Text(
           'Data tidak ditemukan!',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       );
     }
@@ -121,11 +122,11 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
               padding: EdgeInsets.all(16),
               width: double.infinity,
               color: baseGray,
-              child: const Text(
+              child: Text(
                 "LAKUKAN TRANSFER KE REKENING",
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -167,16 +168,17 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                     children: [
                       Image.asset('assets/icons/dashicons_warning.png'),
                       Gap(8),
-                      const Text(
+                      Text(
                         "Pastikan nominal sesuai hingga 2 digit terakhir",
-                        style: TextStyle(color: Colors.black, fontSize: 13),
+                        style: GoogleFonts.poppins(
+                            color: Colors.black, fontSize: 13),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   Text(
                     "Transfer sebelum 12 Desember 22:41 WIB atau transaksimu akan dibatalkan otomatis oleh sistem.",
-                    style: TextStyle(color: Colors.grey[700]),
+                    style: GoogleFonts.poppins(color: Colors.grey[700]),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -197,9 +199,9 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
               padding: EdgeInsets.all(16),
               child: Column(
                 children: [
-                  const Text(
+                  Text(
                     "Sudah transfer melalui ATM/Internet/mobile banking? Klik tombol di bawah untuk mengonfirmasi. Dompet Mal tidak memproses transaksi yang belum dikonfirmasi.",
-                    style: TextStyle(color: Colors.grey),
+                    style: GoogleFonts.poppins(color: Colors.grey),
                   ),
                   const SizedBox(height: 16),
                   Column(
@@ -220,9 +222,9 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                             userId,
                             transactionId,
                           ),
-                          child: const Text(
+                          child: Text(
                             "TRANSFER SEKARANG",
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
@@ -244,9 +246,9 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                             Navigator.popUntil(
                                 context, (route) => route.isFirst);
                           },
-                          child: const Text(
+                          child: Text(
                             "BATALKAN TRANSAKSI",
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                                 color: Color.fromARGB(160, 49, 48, 54)),
@@ -312,20 +314,20 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                 ),
                 const SizedBox(height: 16),
                 // Judul
-                const Text(
+                Text(
                   'Sudah transfer ke rekening Dompet Mal?',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 12),
                 // Deskripsi
-                const Text(
+                Text(
                   'Transaksi baru akan diproses jika kamu sudah transfer ke rekening Dompet Mal melalui ATM, SMS Banking, Mobile Banking, atau Internet Banking.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
                 ),
                 const SizedBox(height: 24),
                 // Tombol aksi
@@ -347,9 +349,9 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                           // Clear session and navigate to home
                           Navigator.popUntil(context, (route) => route.isFirst);
                         },
-                        child: const Text(
+                        child: Text(
                           "BELUM",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: Color.fromARGB(160, 49, 48, 54)),
@@ -405,9 +407,9 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                             );
                           }
                         },
-                        child: const Text(
+                        child: Text(
                           "SUDAH",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
@@ -435,8 +437,8 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
             children: [
               Text(
                 "ID TRANSAKSI $idTransaksi",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: GoogleFonts.poppins(
+                    fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Gap(12),
               InkWell(
@@ -464,11 +466,11 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                 width: 50,
                 height: 50,
               ),
-              title: const Text(
+              title: Text(
                 "Kembarannya Tiada, Bantu Bayi Esha Operasi Segera!",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
-              subtitle: const Text("17 Januari 2022 10:00"),
+              subtitle: Text("17 Januari 2022 10:00"),
             ),
           ),
           const SizedBox(height: 16),
@@ -491,9 +493,9 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
             width: MediaQuery.of(context).size.width * 0.6,
             child: Text(
               nomorRekening,
-              style: const TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
@@ -516,7 +518,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                   border: Border.all(color: Colors.redAccent)),
               child: Text(
                 "Salin",
-                style: TextStyle(color: Colors.red),
+                style: GoogleFonts.poppins(color: Colors.red),
               ),
             ),
           )
@@ -527,7 +529,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
           //   onPressed: () {
 
           //   },
-          //   child: const Text("Salin"),
+          //   child: Text("Salin"),
           // ),
         ],
       ),
@@ -542,7 +544,7 @@ class ConfirmationModalComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Konfirmasi Modal"),
+        title: Text("Konfirmasi Modal"),
       ),
       body: const Center(
         child: Text("Halaman Konfirmasi Modal"),

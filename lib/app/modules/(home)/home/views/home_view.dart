@@ -1,4 +1,5 @@
 import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/listDonation/views/list_donation_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/CategoryGridIcon.dart';
@@ -30,6 +31,8 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     CharityAdminController charityController =
         Get.put(CharityAdminController());
+    TransactionsController transactionController =
+        Get.put(TransactionsController());
     var lebar = MediaQuery.of(context).size.width;
     var tinggi = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -40,6 +43,7 @@ class HomeView extends GetView<HomeController> {
           await charityController.fetchCategories();
           await charityController.fetchCompanies();
           await charityController.calculateCharitySummary();
+          await transactionController.getTransactions();
         },
         backgroundColor: Colors.white,
         child: SingleChildScrollView(

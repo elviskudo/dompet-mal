@@ -4,6 +4,8 @@ import 'package:dompet_mal/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class CATEGORYGrid extends StatelessWidget {
   final CategoriesController categoriesController =
@@ -68,10 +70,10 @@ class CATEGORYGrid extends StatelessWidget {
                         child: Text(
                           category.name ?? 'No Name',
                           maxLines: 3,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 10,
                             overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontSize: 10,
                             height: 1.4,
                           ),
                         ),
@@ -108,7 +110,7 @@ class CATEGORYGrid extends StatelessWidget {
                     child: Text(
                       "Lihat Semua",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 10,
                         height: 1.2,
                       ),

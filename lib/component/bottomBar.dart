@@ -72,7 +72,7 @@ class _BottombarState extends State<Bottombar> {
         unselectedFontSize: 12,
         iconSize: 30,
         selectedLabelStyle: GoogleFonts.quicksand(
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
           color: Colors.black,
         ),
         unselectedLabelStyle: GoogleFonts.quicksand(

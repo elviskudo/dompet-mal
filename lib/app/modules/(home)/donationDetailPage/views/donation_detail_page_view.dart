@@ -14,6 +14,7 @@ import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class DonationDetailView extends GetView<DonationDetailPageController> {
@@ -64,7 +65,8 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
         title: Text(
           charity["title"],
           maxLines: 1,
-          style: TextStyle(overflow: TextOverflow.ellipsis),
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.poppins(),
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -114,9 +116,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                 children: [
                   Text(
                     charity["title"] ?? 'Unknown',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   SizedBox(height: 16),
@@ -150,16 +152,16 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                               ),
                               child: Text(
                                 categoryName ?? "ss",
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                   color: Color(0xffFF7B00),
                                   fontSize: 12,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
                             Text(
                               '1 Hari 5 Jam 30 Menit',
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 color: Colors.grey[600],
                                 fontSize: 12,
                               ),
@@ -183,7 +185,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           alignment: Alignment.centerRight,
                           child: Text(
                             '${charity["progress"] <= 100 ? charity["progress"] : 100}%',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               color: Colors.grey[600],
                               fontSize: 14,
                             ),
@@ -191,9 +193,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         ),
                         Text(
                           'Terkumpul ${formatRupiah(charity["total"])}',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         SizedBox(
@@ -201,7 +203,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                         ),
                         Text(
                           'Target ${formatRupiah(charity["targetTotal"] ?? 0)}',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             color: Colors.grey[600],
                             fontSize: 14,
                           ),
@@ -214,9 +216,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                   ),
                   Text(
                     'Penyelenggara',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   SizedBox(height: 16),
@@ -237,9 +239,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                             children: [
                               Text(
                                 charity["companyName"] ?? "s",
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               SizedBox(width: 8),
@@ -252,7 +254,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           ),
                           Text(
                             'Penyelenggara terverifikasi',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               color: Color(0xff4B76D9),
                               fontSize: 14,
                             ),
@@ -269,16 +271,16 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       ),
                       Text(
                         'Detail Donasi',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       SizedBox(height: 4.0),
                       Text(
                         DateFormat('dd MMMM yyyy', 'id_ID')
                             .format(charity["created_at"]),
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           color: Colors.grey[500],
                           fontSize: 14.0,
                         ),
@@ -292,9 +294,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                             children: [
                               Text(
                                 'Dompet Mal',
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                   fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               InkWell(
@@ -303,7 +305,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                                 },
                                 child: Text(
                                   'Lihat Semuanya >',
-                                  style: TextStyle(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 12.0,
                                     color: Colors.black87,
                                   ),
@@ -313,7 +315,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           ),
                           Obx(() => Text(
                                 charity["description"] ?? "",
-                                style: TextStyle(fontSize: 14.0),
+                                style: GoogleFonts.poppins(fontSize: 14.0),
                                 maxLines:
                                     isExpanded.value ? null : collapsedLines,
                                 overflow: isExpanded.value
@@ -348,9 +350,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       ),
                       Text(
                         'Partisipan',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       SizedBox(
@@ -373,9 +375,9 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           ),
                           Text(
                             (charity["contributors"] as List).length.toString(),
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           SizedBox(
@@ -383,7 +385,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           ),
                           Text(
                             'Partisipan',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 14.0,
                               color: Colors.grey,
                               fontWeight: FontWeight.normal,
@@ -462,7 +464,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                           ),
                           child: Text(
                             'Lanjut pembayaran',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,

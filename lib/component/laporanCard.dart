@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Widget laporanCard(BuildContext context, bankName, harga, tanggal) {
   final num formattedHarga =
@@ -37,7 +38,7 @@ Widget laporanCard(BuildContext context, bankName, harga, tanggal) {
                           Gap(8),
                           Text(
                             'Dompet Mal',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 14.0,
                               color: Colors.black87,
                             ),
@@ -46,7 +47,7 @@ Widget laporanCard(BuildContext context, bankName, harga, tanggal) {
                       ),
                       Text(
                         DateFormat('dd MMMM yyyy').format(tanggal),
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 14.0,
                           color: Colors.grey,
                         ),
@@ -56,15 +57,15 @@ Widget laporanCard(BuildContext context, bankName, harga, tanggal) {
                   SizedBox(height: 16.0),
                   Text(
                     'Pecairan Dana Rp ${currencyFormat.format(formattedHarga)}',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   SizedBox(height: 8.0),
                   Text(
                     'Ke rekening ${bankName} **** **** ****\n0060 a/n PEDULI SAHABAT',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 14.0,
                     ),
                   ),

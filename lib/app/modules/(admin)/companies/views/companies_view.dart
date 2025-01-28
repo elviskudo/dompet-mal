@@ -10,11 +10,9 @@ class CompaniesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
-      backgroundColor: Colors.white,
-
-        title: const Text('Companies'),
+        backgroundColor: Colors.white,
+        title: Text('Companies'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -69,7 +67,7 @@ class CompaniesView extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Add Company'),
+          title: Text('Add Company'),
           content: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -118,7 +116,7 @@ class CompaniesView extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child: Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -133,7 +131,7 @@ class CompaniesView extends StatelessWidget {
                   Navigator.of(context).pop();
                 }
               },
-              child: const Text('Add'),
+              child: Text('Add'),
             ),
           ],
         );
@@ -152,7 +150,7 @@ class CompaniesView extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Edit Company'),
+          title: Text('Edit Company'),
           content: SingleChildScrollView(
             child: Column(
               children: [
@@ -172,7 +170,7 @@ class CompaniesView extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child: Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -188,7 +186,7 @@ class CompaniesView extends StatelessWidget {
                 );
                 Navigator.of(context).pop();
               },
-              child: const Text('Update'),
+              child: Text('Update'),
             ),
           ],
         );

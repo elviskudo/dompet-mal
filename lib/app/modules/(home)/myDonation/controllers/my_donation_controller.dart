@@ -3,6 +3,7 @@ import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyDonationController extends GetxController {
   //TODO: Implement MyDonationController
@@ -137,7 +138,7 @@ class MyDonationController extends GetxController {
                       padding: EdgeInsets.all(16),
                       child: Text(
                         'Tidak ada hasil yang ditemukan',
-                        style: TextStyle(color: Colors.grey),
+                        style: GoogleFonts.poppins(color: Colors.grey),
                       ),
                     ),
                 ],

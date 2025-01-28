@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DanaDonasiLangsung {
   final dynamic totalBudgets;
@@ -51,9 +52,9 @@ class TotalDanaDonasi extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Total dana donasi langsung',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colors.black87,
                       ),
@@ -63,7 +64,7 @@ class TotalDanaDonasi extends StatelessWidget {
                 Gap(4),
                 Text(
                   formatCurrency(danaDonasiLangsung.totalBudgets),
-                  style: const TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
@@ -74,14 +75,14 @@ class TotalDanaDonasi extends StatelessWidget {
                   children: [
                     Text(
                       '${NumberFormat.decimalPattern('id_ID').format(danaDonasiLangsung.totalDonaturs)} ',
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 11,
                         color: Colors.black,
                       ),
                     ),
                     Text(
                       'penyumbang',
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 11,
                         color: Colors.black54,
                       ),

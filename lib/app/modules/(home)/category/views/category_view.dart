@@ -5,6 +5,7 @@ import 'package:dompet_mal/models/Category.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/category_controller.dart';
 
@@ -34,7 +35,7 @@ class CategoryView extends GetView<CategoriesController> {
           ),
           itemCount: controller.categories.length,
           itemBuilder: (context, index) {
-             Category category = controller.categories[index];
+            Category category = controller.categories[index];
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -68,9 +69,9 @@ class CategoryView extends GetView<CategoriesController> {
                   category.name ?? '',
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  style: TextStyle(
-                    fontSize: 10,
                     overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
                   ),
                 ),
               ],

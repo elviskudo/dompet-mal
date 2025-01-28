@@ -18,7 +18,7 @@ class ListUserView extends GetView<ListUserController> {
 
         if (snapshot.hasError || !(snapshot.data ?? false)) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Access Denied')),
+            appBar: AppBar(title: Text('Access Denied')),
             body: const Center(
               child: Text('You do not have permission to access this page.'),
             ),
@@ -36,7 +36,7 @@ class ListUserView extends GetView<ListUserController> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('User List'),
+                Text('User List'),
                 Gap(20),
               ],
             ),

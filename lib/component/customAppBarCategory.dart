@@ -1,5 +1,6 @@
 import 'package:dompet_mal/color/color.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -34,7 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.only(top: 16.0),
         child: Text(
           title,
-          style: TextStyle(
+          style: GoogleFonts.poppins(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -85,7 +86,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             SizedBox(width: 8), // Jarak antara gambar dan teks
             Text(
               name,
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 color: secondary,
                 fontSize: 14,
               ),

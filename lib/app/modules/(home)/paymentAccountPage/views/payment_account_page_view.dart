@@ -1,6 +1,7 @@
 import 'package:dompet_mal/app/modules/(admin)/bankAdmin/controllers/bank_admin_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PaymentAccountPageView extends GetView<BankAdminController> {
@@ -25,12 +26,12 @@ class PaymentAccountPageView extends GetView<BankAdminController> {
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () => Get.back(),
               ),
-              const Text(
+              Text(
                 'Kirim Donasi',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -45,11 +46,11 @@ class PaymentAccountPageView extends GetView<BankAdminController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Pilih Rekening Pembayaran',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -99,9 +100,9 @@ class PaymentAccountPageView extends GetView<BankAdminController> {
                                 children: [
                                   Text(
                                     account.name ?? 'No Name', // Nama bank
-                                    style: const TextStyle(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -113,7 +114,7 @@ class PaymentAccountPageView extends GetView<BankAdminController> {
                                           'No Account Number',
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
-                                      style: TextStyle(),
+                                      style: GoogleFonts.poppins(),
                                     ),
                                   ), // Nomor rekening
                                 ],

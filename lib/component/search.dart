@@ -3,6 +3,8 @@ import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class SearchBars extends StatelessWidget {
   final TextEditingController controller;
@@ -91,7 +93,7 @@ class SearchBars extends StatelessWidget {
                 ),
               ),
               hintText: 'Coba cari "Bencana Alam"',
-              hintStyle: TextStyle(
+              hintStyle: GoogleFonts.poppins(
                 color: Colors.grey[400],
                 fontSize: 14,
               ),

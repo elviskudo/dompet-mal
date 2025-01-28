@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/aggrement_controller.dart';
 
@@ -10,13 +11,13 @@ class AggrementView extends GetView<AggrementController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AggrementView'),
+        title: Text('AggrementView'),
         centerTitle: true,
       ),
-      body: const Center(
+      body:  Center(
         child: Text(
           'AggrementView is working',
-          style: TextStyle(fontSize: 20),
+          style: GoogleFonts.poppins(fontSize: 20),
         ),
       ),
     );

@@ -23,7 +23,6 @@ abstract class Routes {
   static const REPORT = _Paths.REPORT;
   static const PROFILE = _Paths.PROFILE;
   static const NAVIGATION = _Paths.NAVIGATION;
-  static const PARTICIPANTS = _Paths.PARTICIPANTS;
   static const DONATION_DETAIL_PAGE = _Paths.DONATION_DETAIL_PAGE;
   static const PARTICIPANT_PAGE = _Paths.PARTICIPANT_PAGE;
   static const PAYMENT = _Paths.PAYMENT;

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/app/modules/(home)/sendMoney2/controllers/send_money2_controller.dart';
@@ -9,6 +10,7 @@ import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SendMoney2View extends GetView<SendMoney2Controller> {
@@ -30,9 +32,9 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
               children: [
                 Text(
                   'Pilih Sumber Gambar',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -143,7 +145,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                 SizedBox(height: 20),
                 Text(
                   'Sedang mengirim bukti transfer...',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: Colors.black87,
                   ),
@@ -157,10 +159,13 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
   }
 
   // Function to show success dialog
-  void _showSuccessDialog(BuildContext context) async {
+  Future<void> _showSuccessDialog(BuildContext context) async {
     final TransactionsController controller = Get.put(TransactionsController());
     final CharityAdminController charityController =
         Get.put(CharityAdminController());
+
+    final ContributorAdminController contributorController =
+        Get.put(ContributorAdminController());
     final args = Get.arguments as Map<String, dynamic>;
     final transactionId = args?['idTransaksi'] as String? ?? '';
     final transactionNumber = args?['transactionNumber'] as String? ?? '';
@@ -210,6 +215,16 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
       await charityController.updateCharityTotal(
           charityId, newTotal, newProgress);
 
+      final existingContributor = await contributorController
+          .checkExistingContributor(userId, charityId);
+      if (existingContributor == null) {
+        contributorController.selectedUserId.value = userId;
+        contributorController.selectedCharityId.value = charityId;
+        await contributorController.addContributor();
+      }
+
+      await contributorController.fetchContributors();
+      await contributorController.fetchCharity();
       await charityController.fetchCharitiesWithContributors();
       await charityController.calculateCharitySummary();
 
@@ -235,7 +250,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                   SizedBox(height: 20),
                   Text(
                     'Bukti transfer terkirim',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       color: Colors.black87,
                     ),
@@ -274,7 +289,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
         ),
         title: Text(
           'Kirim Uang',
-          style: TextStyle(
+          style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 18,
           ),
@@ -322,7 +337,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                   controller.selectedImage.value == null
                       ? "UNGGAH BUKTI TRANSFER"
                       : "KIRIM BUKTI TRANSFER",
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
@@ -342,7 +357,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                   onPressed: () => _showImageSourceDialog(context),
                   child: Text(
                     "UBAH GAMBAR",
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Color.fromARGB(160, 49, 48, 54),
@@ -361,7 +376,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
                 onPressed: () => Get.toNamed(Routes.NAVIGATION),
                 child: Text(
                   "KEMBALI KE BERANDA",
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: Color.fromARGB(160, 49, 48, 54),
@@ -389,12 +404,11 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     _showLoadingDialog(context);
     await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
-    _showSuccessDialog(context);
+    await _showSuccessDialog(context);
     await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
-
-    // Navigate to home or next screen
-    Get.toNamed(Routes.PAYMENT_SUCCESS);
-    Get.toNamed(Routes.NAVIGATION);
+    Get.offNamed(
+      Routes.PAYMENT_SUCCESS,
+    );
   }
 }

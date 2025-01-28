@@ -4,6 +4,9 @@ import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
 import 'package:shimmer/shimmer.dart';
 
 class BannerSlider extends StatefulWidget {
@@ -23,6 +26,22 @@ class BannerSlider extends StatefulWidget {
 class _BannerSliderState extends State<BannerSlider> {
   int _currentIndex = 0;
 
+  String formatRupiah(num value) {
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
+    return formatter.format(value);
+  }
+
+  double calculateProgress(int? total, int? targetTotal) {
+    if (targetTotal == null || targetTotal == 0 || total == null) {
+      return 0.0;
+    }
+    return total / targetTotal;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,117 +58,160 @@ class _BannerSliderState extends State<BannerSlider> {
                     orElse: () => Category(name: 'Unknown Category'),
                   )
                   .name!;
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.symmetric(horizontal: 0.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.transparent,
-                ),
-                child: Stack(
-                  children: [
-                    // Background image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.network(
-                        banner.image! ?? 'https://via.placeholder.com/150',
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: 200,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[300],
-                            child: const Icon(Icons.image, size: 50),
-                          );
-                        },
-                      ),
-                    ),
-                    // Gradient overlay
-                    Container(
-                      decoration: BoxDecoration(
+              double progressValue =
+                  calculateProgress(banner.total, banner.targetTotal);
+
+              return GestureDetector(
+                onTap: () {
+                  Get.toNamed("/donation-detail-page", arguments: {
+                    "categoryName": categoryName,
+                    "charity": {
+                      "id": banner.id! ?? "",
+                      "title": banner.title! ?? "",
+                      "image": banner.image! ?? "",
+                      "progress": banner.progress ?? 0,
+                      "total": banner.total ?? 0,
+                      "targetTotal": banner.targetTotal ?? 0,
+                      "description": banner.description ?? '',
+                      "categoryId": banner.categoryId ?? '',
+                      "companyName": banner.companyName ?? "",
+                      "companyImage": banner.companyImage ?? "",
+                      "created_at": banner.created_at,
+                      "contributors": banner.contributors
+                          .map((contributor) => {
+                                "imageUrl": contributor.user?.imageUrl ??
+                                    'https://via.placeholder.com/40'
+                              })
+                          .toList()
+                    }
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.symmetric(horizontal: 0.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.transparent,
+                  ),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
                         borderRadius: BorderRadius.circular(15),
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.black.withOpacity(0.6),
-                            Colors.transparent,
-                          ],
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
+                        child: Image.network(
+                          banner.image! ?? 'https://via.placeholder.com/150',
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: 200,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[300],
+                              child: const Icon(Icons.image, size: 50),
+                            );
+                          },
                         ),
                       ),
-                    ),
-                    // Content overlay
-                    Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            banner.title! ?? "",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black,
-                                  offset: Offset(1, 1),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black.withOpacity(0.6),
+                              Colors.transparent,
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            banner.description! ?? "",
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black,
-                                  offset: Offset(1, 1),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          ElevatedButton(
-                            onPressed: () {
-                              Get.toNamed("/donation-detail-page", arguments: {
-                                "categoryName": categoryName,
-                                "charity": {
-                                  "title": banner.title! ?? "",
-                                  "image": banner.image! ?? "",
-                                  "progress": banner.progress ?? 0,
-                                  "total": banner.total ?? 0,
-                                  "targetTotal": banner.targetTotal ?? 0
-                                }
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xffFFA450),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: const Text(
-                              "Daftarkan sekarang",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 13),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              banner.title! ?? "",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black,
+                                    offset: Offset(1, 1),
+                                    blurRadius: 4,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              banner.description! ?? "",
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.poppins(
+                                color: Colors.white70,
+                                fontSize: 12,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black,
+                                    offset: Offset(1, 1),
+                                    blurRadius: 4,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              formatRupiah(banner.total ?? 0),
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black,
+                                    offset: Offset(1, 1),
+                                    blurRadius: 4,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: () {
+                                Get.toNamed("/donation-detail-page",
+                                    arguments: {
+                                      "categoryName": categoryName,
+                                      "charity": {
+                                        "title": banner.title! ?? "",
+                                        "image": banner.image! ?? "",
+                                        "progress": banner.progress ?? 0,
+                                        "total": banner.total ?? 0,
+                                        "targetTotal": banner.targetTotal ?? 0
+                                      }
+                                    });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xffFFA450),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: Text(
+                                "Daftarkan sekarang",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white, fontSize: 13),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -167,7 +229,7 @@ class _BannerSliderState extends State<BannerSlider> {
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.banners!.asMap().entries.map((entry) {
+            children: widget.banners.asMap().entries.map((entry) {
               return Container(
                 width: 8.0,
                 height: 8.0,

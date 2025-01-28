@@ -14,14 +14,12 @@ class CategoriesView extends GetView<CategoriesController> {
         child: Icon(Icons.add),
       ),
       appBar: AppBar(
-      backgroundColor: Colors.white,
-
-        title: const Text('Categories'),
+        backgroundColor: Colors.white,
+        title: Text('Categories'),
         centerTitle: true,
         actions: [],
       ),
       backgroundColor: Colors.white,
-
       body: Obx(
         () => controller.isLoading.value
             ? const Center(child: CircularProgressIndicator())
@@ -125,19 +123,19 @@ class CategoriesView extends GetView<CategoriesController> {
   void _showDeleteConfirmation(String id) {
     Get.dialog(
       AlertDialog(
-        title: const Text('Delete Category'),
-        content: const Text('Are you sure you want to delete this category?'),
+        title: Text('Delete Category'),
+        content: Text('Are you sure you want to delete this category?'),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            child: Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
               controller.deleteCategory(id);
               Get.back();
             },
-            child: const Text('Delete'),
+            child: Text('Delete'),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
           ),
         ],

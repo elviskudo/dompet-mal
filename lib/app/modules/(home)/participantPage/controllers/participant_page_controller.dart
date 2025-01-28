@@ -5,73 +5,73 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ParticipantPageController extends GetxController {
   final supabase = Supabase.instance.client;
-  var contributorsWithTransactions = <Map<String, dynamic>>[].obs;
+  var transactions = <Map<String, dynamic>>[].obs;
   var isLoading = false.obs;
 
-  Future<void> fetchContributorsAndTransactions(String charityId) async {
+  Future<void> fetchTransactions(String charityId) async {
     try {
       isLoading.value = true;
 
-      // First, fetch contributors for this charity
-      final contributorsResponse =
-          await supabase.from('contributors').select('''
-          *,
-          users:user_id (*)
-        ''').eq('charity_id', charityId);
+      // Fetch transactions for the charity
+      final transactionsResponse = await supabase
+          .from('transactions')
+          .select(
+              'id, bank_id, charity_id, user_id, transaction_number, status, donation_price, created_at, updated_at')
+          .eq('charity_id', charityId)
+          .eq('status', 3)
+          .order('created_at', ascending: false);
 
-      // Modified transactions query to explicitly select all fields
-      final transactionsResponse =
-          await supabase.from('transactions').select('''
-          id,
-          bank_id,
-          charity_id,
-          user_id,
-          status,
-          transaction_number,
-          donation_price,
-          created_at,
-          updated_at
-        ''').eq('charity_id', charityId).eq('status', 1);
+      // Map untuk menyimpan transaksi yang digroup
+      final Map<String, Map<String, dynamic>> groupedTransactions = {};
 
-      print('Raw transactions response: $transactionsResponse'); // Debug print
+      for (final transData in transactionsResponse) {
+        final key = '${transData['user_id']}-${transData['charity_id']}';
 
-      // Convert responses to proper models
-      final List<Map<String, dynamic>> contributorsData = [];
+        if (groupedTransactions.containsKey(key)) {
+          // Jika key sudah ada, tambahkan donation_price ke total
+          groupedTransactions[key]!['donation_price'] +=
+              transData['donation_price'] ?? 0;
+        } else {
+          // Jika key belum ada, tambahkan transaksi baru
+          groupedTransactions[key] = Map<String, dynamic>.from(transData);
+        }
+      }
 
-      for (var contributorData in contributorsResponse) {
-        final contributor = Contributor.fromJson(contributorData);
+      // Ambil data user untuk setiap transaksi yang digroup
+      final transactionsList = [];
+      for (final groupedTrans in groupedTransactions.values) {
+        final userId = groupedTrans['user_id'];
 
-        // Find all transactions for this user in this charity
-        final userTransactions = transactionsResponse
-            .where((trans) => trans['user_id'] == contributor.userId)
-            .map((trans) {
-          print('Processing transaction: $trans'); // Debug print
-          return Transaction.fromJson(trans);
-        }).toList();
+        // Fetch user data
+        final userResponse = await supabase
+            .from('users')
+            .select('id, name')
+            .eq('id', userId)
+            .single();
 
-        // Calculate total donation from transactions
-        final totalDonation = userTransactions.fold<double>(
-          0,
-          (sum, trans) {
-            final donationAmount = trans.donationPrice ?? 0;
-            print('Adding donation: $donationAmount'); // Debug print
-            return sum + donationAmount;
+        final fileResponse = await supabase
+            .from('files')
+            .select('file_name')
+            .eq('module_class', 'users')
+            .eq('module_id', userId)
+            .single();
+
+        final imageUrl = fileResponse['file_name'] ?? '';
+
+        transactionsList.add({
+          'transaction': Transaction.fromJson(groupedTrans),
+          'user': {
+            'name': userResponse['name'] ?? 'Anonymous',
+            'image_url': imageUrl
           },
-        );
-
-        contributorsData.add({
-          'contributor': contributor,
-          'transactions': userTransactions,
-          'totalDonation': totalDonation,
-          'lastTransaction':
-              userTransactions.isNotEmpty ? userTransactions.first : null,
         });
       }
 
-      contributorsWithTransactions.value = contributorsData;
+      // Set hasil ke transaksi
+      transactions.value = List<Map<String, dynamic>>.from(transactionsList);
     } catch (e) {
-      print('Error fetching data: $e');
-      Get.snackbar('Error', 'Failed to fetch participants data');
+      print('Error fetching transactions: $e');
+      Get.snackbar('Error', 'Failed to fetch transactions data');
     } finally {
       isLoading.value = false;
     }

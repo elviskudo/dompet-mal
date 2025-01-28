@@ -2,6 +2,7 @@ import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BannerDanaOperasional extends StatefulWidget {
   const BannerDanaOperasional({
@@ -40,7 +41,7 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
               // Handle tap
               //  Get.
               Get.toNamed("/donation-detail-page",
-                  arguments:{ dummyDataListCategoryBanner[4]});
+                  arguments: {dummyDataListCategoryBanner[4]});
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -70,7 +71,7 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
                       children: [
                         Text(
                           "Bantu Dana Operasional",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.blue[600],
@@ -79,7 +80,7 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
                         const SizedBox(height: 4),
                         Text(
                           "Kebaikan mu membantu kami",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 12,
                             color: Colors.grey[600],
                             fontWeight: FontWeight.w300,

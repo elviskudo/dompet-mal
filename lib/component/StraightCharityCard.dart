@@ -9,6 +9,7 @@ import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -94,7 +95,11 @@ class StraightCharityComponent extends StatelessWidget {
                 backgroundColor: const Color(0xffFFA500),
                 foregroundColor: Colors.white,
               ),
-              child: const Text("Lanjutkan Pembayaran"),
+              child: Text(
+                "Lanjutkan Pembayaran",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(fontSize: 12),
+              ),
             );
           },
         );
@@ -124,7 +129,7 @@ class StraightCharityComponent extends StatelessWidget {
         backgroundColor: const Color(0xff4B76D9),
         foregroundColor: Colors.white,
       ),
-      child: const Text("Donasi"),
+      child: Text("Donasi"),
     );
   }
 
@@ -215,9 +220,9 @@ class StraightCharityComponent extends StatelessWidget {
                           height: 32,
                           child: Text(
                             banner.title ?? 'Untitled Charity',
-                            style: const TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               height: 1.2,
                             ),
                             maxLines: 2,
@@ -233,15 +238,15 @@ class StraightCharityComponent extends StatelessWidget {
                                     Category(name: 'Unknown Category'),
                               )
                               .name!,
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 11,
                             color: Colors.grey[800],
                           ),
                         ),
                         const SizedBox(height: 2),
-                        const Text(
+                        Text(
                           'Dana yang disetorkan',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 11,
                             color: Colors.black54,
                           ),
@@ -250,16 +255,16 @@ class StraightCharityComponent extends StatelessWidget {
                         Text(
                           formatCurrency(
                               banner.total ?? 0), // Nilai default 0 jika null
-                          style: const TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
 
                         const SizedBox(height: 12),
-                        const Text(
+                        Text(
                           'Waktu Penyerahan',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 11,
                             color: Colors.black54,
                           ),
@@ -267,7 +272,7 @@ class StraightCharityComponent extends StatelessWidget {
                         const SizedBox(height: 12),
                         Text(
                           '${formatDate(banner.created_at!)}',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 11,
                             color: Colors.black54,
                           ),
@@ -275,7 +280,7 @@ class StraightCharityComponent extends StatelessWidget {
                         const SizedBox(height: 2),
                         // Text(
                         //   formatDate(banner.created_at! ?? DateTime.now()),
-                        //   style: const TextStyle(
+                        //   style: GoogleFonts.poppins(
                         //     fontSize: 12,
                         //     fontWeight: FontWeight.w600,
                         //   ),

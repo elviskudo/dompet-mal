@@ -26,9 +26,9 @@ class ListPaymentView extends GetView<TransactionsController> {
     print('userid :${controller.userId}');
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'List Pembayaran',
-          style: TextStyle(color: Colors.black),
+          style: GoogleFonts.poppins(color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0.5,

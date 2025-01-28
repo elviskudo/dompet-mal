@@ -1,6 +1,7 @@
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -160,7 +161,7 @@ class EmailVerificationController extends GetxController {
                     SizedBox(height: 15),
                     Text(
                       'Verifikasi berhasil',
-                      style: TextStyle(fontSize: 16),
+                      style: GoogleFonts.poppins(fontSize: 16),
                     ),
                   ],
                 ),
@@ -209,7 +210,7 @@ class EmailVerificationController extends GetxController {
                 SizedBox(height: 15),
                 Text(
                   'Sedang verifikasi akun..',
-                  style: TextStyle(fontSize: 16),
+                  style: GoogleFonts.poppins(fontSize: 16),
                 ),
               ],
             ),
@@ -245,7 +246,7 @@ class EmailVerificationController extends GetxController {
                 SizedBox(height: 15),
                 Text(
                   'Verifikasi berhasil',
-                  style: TextStyle(fontSize: 16),
+                  style: GoogleFonts.poppins(fontSize: 16),
                 ),
               ],
             ),

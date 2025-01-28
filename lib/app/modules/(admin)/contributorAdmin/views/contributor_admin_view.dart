@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/models/userModel.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ContributorAdminView extends GetView<ContributorAdminController> {
   const ContributorAdminView({super.key});
@@ -10,14 +11,13 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
 
-        title: const Text('Contributor Management'),
+        title: Text('Contributor Management'),
         centerTitle: true,
         // backgroundColor: Colors.blue[700],
       ),
       backgroundColor: Colors.white,
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -34,9 +34,9 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                   children: [
                     Text(
                       'Add New Contributor',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         color: Colors.blue[700],
                       ),
                     ),
@@ -56,7 +56,7 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                                             user.id ==
                                             controller.selectedUserId.value)
                                         .name,
-                                style: const TextStyle(fontSize: 16),
+                                style: GoogleFonts.poppins(fontSize: 16),
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue[100],
@@ -86,7 +86,7 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                                             charity.id ==
                                             controller.selectedCharityId.value)
                                         .title!,
-                                style: const TextStyle(fontSize: 16),
+                                style: GoogleFonts.poppins(fontSize: 16),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -138,9 +138,9 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Add Contributor',
-                        style: TextStyle(fontSize: 16),
+                        style: GoogleFonts.poppins(fontSize: 16),
                       ),
                     ),
                   ],
@@ -171,12 +171,13 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                           backgroundColor: Colors.blue[100],
                           child: Text(
                             user?.name?.substring(0, 1) ?? '?',
-                            style: TextStyle(color: Colors.blue[800]),
+                            style: GoogleFonts.poppins(color: Colors.blue[800]),
                           ),
                         ),
                         title: Text(
                           user?.name ?? 'Unknown User',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style:
+                              GoogleFonts.poppins(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +185,7 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                             Text(charity!.title!),
                             Text(
                               'Added: ${contributor.created_at.toString().split('.')[0]}',
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                   color: Colors.grey[600], fontSize: 12),
                             ),
                           ],
@@ -323,7 +324,7 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Update Contributor'),
+          title: Text('Update Contributor'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -332,26 +333,26 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => _showUserSelectionDialog(context),
-                child: const Text('Change User'),
+                child: Text('Change User'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => _showCharitySelectionDialog(context),
-                child: const Text('Change Charity'),
+                child: Text('Change Charity'),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child: Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
                 controller.updateContributor(contributorId!);
                 Navigator.of(context).pop();
               },
-              child: const Text('Update'),
+              child: Text('Update'),
             ),
           ],
         );

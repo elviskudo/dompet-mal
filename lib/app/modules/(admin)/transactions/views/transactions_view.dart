@@ -6,6 +6,7 @@ import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:dompet_mal/models/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
@@ -33,7 +34,7 @@ class TransactionsView extends GetView<TransactionsController> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Transactions'),
+        title: Text('Transactions'),
         centerTitle: true,
       ),
       body: Obx(
@@ -74,9 +75,9 @@ class TransactionsView extends GetView<TransactionsController> {
                                 child: Text(
                                   transaction.transactionNumber ??
                                       'No Transaction Number',
-                                  style: const TextStyle(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
@@ -91,7 +92,7 @@ class TransactionsView extends GetView<TransactionsController> {
                                 ),
                                 child: Text(
                                   _getStatusText(transaction.status),
-                                  style: const TextStyle(
+                                  style: GoogleFonts.poppins(
                                     color: Colors.white,
                                     fontSize: 12,
                                   ),
@@ -148,17 +149,17 @@ class TransactionsView extends GetView<TransactionsController> {
             width: 80,
             child: Text(
               label,
-              style: const TextStyle(
+              style: GoogleFonts.poppins(
                 color: Colors.grey,
                 fontSize: 14,
               ),
             ),
           ),
-          const Text(': '),
+          Text(': '),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -297,7 +298,7 @@ class TransactionsView extends GetView<TransactionsController> {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            child: Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -337,20 +338,19 @@ class TransactionsView extends GetView<TransactionsController> {
   void _showDeleteConfirmation(String id) {
     Get.dialog(
       AlertDialog(
-        title: const Text('Delete Transaction'),
-        content:
-            const Text('Are you sure you want to delete this transaction?'),
+        title: Text('Delete Transaction'),
+        content: Text('Are you sure you want to delete this transaction?'),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            child: Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
               controller.deleteTransaction(id);
               Get.back();
             },
-            child: const Text('Delete'),
+            child: Text('Delete'),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
           ),
         ],

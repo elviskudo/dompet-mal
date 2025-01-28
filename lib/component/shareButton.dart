@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ShareButton extends StatelessWidget {
   final String contentToShare;
@@ -74,11 +75,11 @@ Salam Dompet Mal,
             children: [
               Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: const Text(
+                child: Text(
                   'Bagikan ke:',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -251,7 +252,7 @@ class _ShareOption extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               label,
-              style: const TextStyle(fontSize: 12),
+              style: GoogleFonts.poppins(fontSize: 12),
             ),
           ],
         ),

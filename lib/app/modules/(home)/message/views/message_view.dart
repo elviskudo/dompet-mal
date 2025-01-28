@@ -46,9 +46,9 @@ class _MessageViewState extends State<MessageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Pesan',
-          style: TextStyle(color: Colors.black),
+          style: GoogleFonts.poppins(color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0.5,
@@ -99,7 +99,7 @@ class _MessageViewState extends State<MessageView> {
                               message['username'],
                               style: GoogleFonts.openSans(
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.black,
                               ),
                             ),

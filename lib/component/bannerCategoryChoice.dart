@@ -1,4 +1,5 @@
 import 'package:avatar_stack/avatar_stack.dart';
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/donationDetailPage/views/donation_detail_page_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BannerKategori extends StatefulWidget {
   final List<Charity> banners;
@@ -29,6 +31,49 @@ class BannerKategori extends StatefulWidget {
 class _BannerKategoriState extends State<BannerKategori> {
   final TransactionsController transactionController =
       Get.put(TransactionsController());
+
+  List<Contributor> getUniqueContributors(List<Contributor> contributors) {
+    // Create a map using userId as key to ensure uniqueness
+    final Map<String?, Contributor> uniqueContributors = {};
+
+    for (var contributor in contributors) {
+      if (contributor.user?.id != null) {
+        // Only add if we haven't seen this user ID before
+        uniqueContributors.putIfAbsent(contributor.user?.id, () => contributor);
+      }
+    }
+
+    // Convert back to list
+    return uniqueContributors.values.toList();
+  }
+
+  // Modify the contributor section in the build method
+  Widget buildContributorSection(List<Contributor> contributors) {
+    final uniqueContributors = getUniqueContributors(contributors);
+
+    return Row(
+      children: [
+        Flexible(
+          child: AvatarStack(
+            height: 30,
+            avatars: uniqueContributors.map((contributor) {
+              return NetworkImage(
+                contributor.user?.imageUrl ?? 'https://via.placeholder.com/40',
+              );
+            }).toList(),
+          ),
+        ),
+        Text(
+          '${uniqueContributors.length} penyumbang',
+          style: GoogleFonts.poppins(
+            fontSize: 12,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
+
   // Format currency
   String formatRupiah(num value) {
     final formatter = NumberFormat.currency(
@@ -92,9 +137,10 @@ class _BannerKategoriState extends State<BannerKategori> {
                 backgroundColor: const Color(0xffFFA500),
                 foregroundColor: Colors.white,
               ),
-              child: const Text(
+              child: Text(
                 "Lanjutkan Pembayaran",
-                style: TextStyle(fontSize: 12),
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(fontSize: 12),
               ),
             );
           },
@@ -125,9 +171,9 @@ class _BannerKategoriState extends State<BannerKategori> {
         backgroundColor: const Color(0xff4B76D9),
         foregroundColor: Colors.white,
       ),
-      child: const Text(
+      child: Text(
         "Donasi",
-        style: TextStyle(fontSize: 12),
+        style: GoogleFonts.poppins(fontSize: 12),
       ),
     );
   }
@@ -236,9 +282,9 @@ class _BannerKategoriState extends State<BannerKategori> {
                           color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: const Text(
+                        child: Text(
                           '120 hari',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             color: Colors.black,
                             fontSize: 12,
                           ),
@@ -259,9 +305,9 @@ class _BannerKategoriState extends State<BannerKategori> {
                           children: [
                             Text(
                               banner.title ?? 'Unnamed Charity',
-                              style: const TextStyle(
+                              style: GoogleFonts.poppins(
                                 fontSize: 14,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.black,
                               ),
                               maxLines: 2,
@@ -277,7 +323,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                                         Category(name: 'Unknown Category'),
                                   )
                                   .name!,
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 fontSize: 12,
                                 color: Colors.grey[800],
                               ),
@@ -299,7 +345,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             const SizedBox(height: 4),
                             Text(
                               'Terkumpul',
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 fontSize: 12,
                                 color: Colors.grey[600],
                               ),
@@ -307,7 +353,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             const SizedBox(height: 4),
                             Text(
                               formatRupiah(banner.total ?? 0),
-                              style: const TextStyle(
+                              style: GoogleFonts.poppins(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black,
@@ -315,30 +361,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: AvatarStack(
-                                height: 30,
-                                avatars: banner.contributors.map((contributor) {
-                                  print(
-                                      'user avatar: ${contributor.user?.imageUrl}');
-                                  return NetworkImage(
-                                    contributor.user?.imageUrl ??
-                                        'https://via.placeholder.com/40',
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                            Text(
-                              '${banner.contributors.length} penyumbang',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
+                        buildContributorSection(banner.contributors),
                         Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10)),

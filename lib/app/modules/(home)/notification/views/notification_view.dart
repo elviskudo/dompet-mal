@@ -12,9 +12,9 @@ class NotificationView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Notifikasi',
-          style: TextStyle(color: Colors.black),
+          style: GoogleFonts.poppins(color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0.5,
@@ -60,7 +60,7 @@ class NotificationView extends StatelessWidget {
                       monthYear,
                       style: GoogleFonts.openSans(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         color: Colors.black,
                       ),
                     ),
@@ -108,7 +108,7 @@ class NotificationView extends StatelessWidget {
                                       notification['title'],
                                       style: GoogleFonts.openSans(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w600,
                                         color: Colors.black,
                                       ),
                                     ),

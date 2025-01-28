@@ -57,11 +57,30 @@ class TransactionsController extends GetxController {
       isLoading.value = true;
       final response = await supabase
           .from('transactions')
-          .select()
+          .select(
+              'id, bank_id, charity_id, user_id, transaction_number, status, donation_price, created_at, updated_at')
           .order('created_at', ascending: false);
 
-      transactions.value =
-          (response as List).map((item) => Transaction.fromJson(item)).toList();
+      // Map untuk menyimpan transaksi yang digroup
+      final Map<String, Map<String, dynamic>> groupedTransactions = {};
+
+      for (final item in response) {
+        final key = '${item['user_id']}-${item['charity_id']}';
+
+        if (groupedTransactions.containsKey(key)) {
+          // Jika key sudah ada, tambahkan donation_price ke total
+          groupedTransactions[key]!['donation_price'] +=
+              item['donation_price'] ?? 0;
+        } else {
+          // Jika key belum ada, tambahkan transaksi baru
+          groupedTransactions[key] = Map<String, dynamic>.from(item);
+        }
+      }
+
+      // Konversi hasil group menjadi daftar transaksi
+      transactions.value = groupedTransactions.values
+          .map((item) => Transaction.fromJson(item))
+          .toList();
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch transactions: $e');
     } finally {

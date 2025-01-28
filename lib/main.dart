@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app/routes/app_pages.dart';
@@ -28,7 +29,6 @@ void main() async {
         theme: ThemeData(useMaterial3: true),
       ),
     );
-    
   } catch (e) {
     print('Database connection failed: $e');
     // Tampilkan dialog error atau handling sesuai kebutuhan
@@ -45,14 +45,14 @@ void main() async {
                   size: 48,
                 ),
                 const SizedBox(height: 16),
-                const Text(
+                Text(
                   'Koneksi database gagal',
-                  style: TextStyle(fontSize: 18),
+                  style: GoogleFonts.poppins(fontSize: 18),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   e.toString(),
-                  style: const TextStyle(fontSize: 14),
+                  style: GoogleFonts.poppins(fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -61,7 +61,7 @@ void main() async {
                     // Implementasi retry logic di sini
                     main();
                   },
-                  child: const Text('Coba Lagi'),
+                  child: Text('Coba Lagi'),
                 ),
               ],
             ),

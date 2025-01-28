@@ -9,6 +9,7 @@ import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
@@ -174,7 +175,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                     ), //
                     Text(
                       selectedBankAccount.value!.name!,
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                           fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     Padding(
@@ -183,7 +184,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                         selectedBankAccount.value!.accountNumber!,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: const TextStyle(
+                        style: GoogleFonts.poppins(
                             color: Colors.grey,
                             fontSize: 16,
                             fontWeight: FontWeight.w600),
@@ -193,9 +194,9 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                 );
               } else {
                 // Show default text when no argument
-                return const Text(
+                return Text(
                   'Rekening Pembayaran',
-                  style: TextStyle(fontSize: 16),
+                  style: GoogleFonts.poppins(fontSize: 16),
                 );
               }
             }),
@@ -215,9 +216,9 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
               ),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             ),
-            child: const Text(
+            child: Text(
               'Pilih',
-              style: TextStyle(fontSize: 14, color: Colors.white),
+              style: GoogleFonts.poppins(fontSize: 14, color: Colors.white),
             ),
           ),
         ],
@@ -255,9 +256,9 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const Text(
+              Text(
                 'Masukkan Nominal Donasi\nUntuk Dana Operasional',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
@@ -289,7 +290,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                           ),
                           child: Text(
                             formatRupiah(amount),
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: donationController.donationAmount.value ==
@@ -311,11 +312,11 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                 ),
                 child: Row(
                   children: [
-                    const Text(
+                    Text(
                       'Rp',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -364,7 +365,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
               const SizedBox(height: 8),
               Text(
                 'Min. donasi sebesar Rp.10.000',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 12,
                   color: Colors.grey[600],
                 ),
@@ -462,9 +463,9 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                       ),
                       child: donationController.isLoading.value
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
+                          : Text(
                               'Lanjut pembayaran',
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

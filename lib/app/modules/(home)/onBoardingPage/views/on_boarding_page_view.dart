@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OnboardingPageView extends StatefulWidget {
   const OnboardingPageView({Key? key}) : super(key: key);
@@ -102,16 +103,16 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                 children: [
                   Text(
                     slides[currentSlide]["title"]!,
-                    style: const TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     slides[currentSlide]["description"]!,
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       color: Colors.grey[600],
                     ),
@@ -139,9 +140,9 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Masuk dengan ID Email',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.w600),
@@ -157,9 +158,9 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                         'assets/images/google.png',
                         height: 24,
                       ),
-                      label: const Text(
+                      label: Text(
                         'Masuk dengan akun Google',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                             color: Color(0xff313036),
                             fontSize: 18,
                             fontWeight: FontWeight.w600),
@@ -177,20 +178,20 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           'Belum punya akun?',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                               color: Colors.grey,
                               fontWeight: FontWeight.w400,
                               fontSize: 14),
                         ),
                         TextButton(
                           onPressed: _navigateToRegister,
-                          child: const Text(
+                          child: Text(
                             'DAFTAR',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               color: Color(0xff4B76D9),
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),

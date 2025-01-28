@@ -12,7 +12,7 @@ class BankAdminView extends GetView<BankAdminController> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Bank Admin'),
+        title: Text('Bank Admin'),
         centerTitle: true,
       ),
       body: Obx(() {
@@ -39,7 +39,7 @@ class BankAdminView extends GetView<BankAdminController> {
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: const Text('Update Bank'),
+                          title: Text('Update Bank'),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -68,7 +68,7 @@ class BankAdminView extends GetView<BankAdminController> {
                                 );
                                 Navigator.of(context).pop();
                               },
-                              child: const Text('Update'),
+                              child: Text('Update'),
                             ),
                           ],
                         ),
@@ -93,7 +93,7 @@ class BankAdminView extends GetView<BankAdminController> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Create Bank'),
+              title: Text('Create Bank'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -121,7 +121,7 @@ class BankAdminView extends GetView<BankAdminController> {
                     );
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Create'),
+                  child: Text('Create'),
                 ),
               ],
             ),
