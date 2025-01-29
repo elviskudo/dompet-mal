@@ -39,14 +39,14 @@ class ProfileController extends GetxController {
 
       // Clear SharedPreferences
       final prefs = await SharedPreferences.getInstance();
-      await prefs.clear(); // Clears all data
+      // await prefs.clear(); // Clears all data
       // Or clear specific keys if you prefer:
-      // await prefs.setBool('isLoggedIn', false);
-      // await prefs.remove('userEmail');
-      // await prefs.remove('userName');
-      // await prefs.remove('userPhone');
-      // await prefs.remove('userId');
-      // await prefs.remove('accessToken');
+      await prefs.setBool('isLoggedIn', false);
+      await prefs.remove('userEmail');
+      await prefs.remove('userName');
+      await prefs.remove('userPhone');
+      await prefs.remove('userId');
+      await prefs.remove('accessToken');
 
       Get.snackbar(
         'Sukses',

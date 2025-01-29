@@ -1,47 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../controllers/on_boarding_page_controller.dart';
 
-class OnboardingPageView extends StatefulWidget {
+class OnboardingPageView extends GetView<OnBoardingPageController> {
   const OnboardingPageView({Key? key}) : super(key: key);
-
-  @override
-  State<OnboardingPageView> createState() => _OnboardingPageViewState();
-}
-
-class _OnboardingPageViewState extends State<OnboardingPageView> {
-  final CarouselSliderController carouselController =
-      CarouselSliderController();
-  int currentSlide = 0;
-
-  final List<Map<String, String>> slides = [
-    {
-      "image": "https://picsum.photos/id/237/400/600",
-      "title": "Exercitation veniam consequat sunt nostrud",
-      "description":
-          "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat"
-    },
-    {
-      "image": "https://picsum.photos/id/238/400/600",
-      "title": "Slide 2 Title",
-      "description": "Description for slide 2"
-    },
-    {
-      "image": "https://picsum.photos/id/239/400/600",
-      "title": "Slide 3 Title",
-      "description": "Description for slide 3"
-    },
-  ];
-
-  void _navigateToLogin() {
-    Get.toNamed('/login');
-  }
-
-  void _navigateToRegister() {
-    Get.toNamed('/register');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,17 +15,13 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
         children: [
           // Background carousel
           CarouselSlider(
-            carouselController: carouselController,
+            carouselController: controller.carouselController,
             options: CarouselOptions(
               height: MediaQuery.of(context).size.height,
               viewportFraction: 1.0,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  currentSlide = index;
-                });
-              },
+              onPageChanged: controller.onPageChanged,
             ),
-            items: slides.map((slide) {
+            items: controller.slides.map((slide) {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
@@ -83,7 +44,6 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
             child: Image.asset(
               'assets/images/splash.png',
               height: 32,
-              // color: Colors.white, // Logo menjadi putih agar kontras
             ),
           ),
 
@@ -92,47 +52,47 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
             alignment: Alignment.bottomCenter,
             child: Container(
               padding: const EdgeInsets.all(24.0),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.vertical(
+                borderRadius: BorderRadius.vertical(
                   top: Radius.circular(16),
                 ),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    slides[currentSlide]["title"]!,
-                    style: GoogleFonts.poppins(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  Obx(() => Text(
+                        controller.slides[controller.currentSlide.value]["title"]!,
+                        style: GoogleFonts.poppins(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                      )),
                   const SizedBox(height: 8),
-                  Text(
-                    slides[currentSlide]["description"]!,
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  Obx(() => Text(
+                        controller.slides[controller.currentSlide.value]["description"]!,
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                        ),
+                        textAlign: TextAlign.center,
+                      )),
                   const SizedBox(height: 16),
-                  DotsIndicator(
-                    dotsCount: slides.length,
-                    position: currentSlide,
-                    decorator: const DotsDecorator(
-                      activeColor: Color(0xff4B76D9),
-                      size: Size(8.0, 8.0),
-                      activeSize: Size(8.0, 8.0),
-                    ),
-                  ),
+                  Obx(() => DotsIndicator(
+                        dotsCount: controller.slides.length,
+                        position: controller.currentSlide.value,
+                        decorator: const DotsDecorator(
+                          activeColor: Color(0xff4B76D9),
+                          size: Size(8.0, 8.0),
+                          activeSize: Size(8.0, 8.0),
+                        ),
+                      )),
                   const SizedBox(height: 24),
-                  Container(
+                  SizedBox(
                     height: 55,
                     child: ElevatedButton(
-                      onPressed: _navigateToLogin,
+                      onPressed: controller.navigateToLogin,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xff4B76D9),
                         minimumSize: const Size(double.infinity, 48),
@@ -143,17 +103,18 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                       child: Text(
                         'Masuk dengan ID Email',
                         style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600),
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Container(
+                  SizedBox(
                     height: 55,
                     child: OutlinedButton.icon(
-                      onPressed: _navigateToLogin,
+                      onPressed: controller.loginWithGoogle,
                       icon: Image.asset(
                         'assets/images/google.png',
                         height: 24,
@@ -161,9 +122,10 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                       label: Text(
                         'Masuk dengan akun Google',
                         style: GoogleFonts.poppins(
-                            color: Color(0xff313036),
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600),
+                          color: const Color(0xff313036),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 48),
@@ -174,23 +136,24 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 16),
+                    margin: const EdgeInsets.only(top: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Belum punya akun?',
                           style: GoogleFonts.poppins(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14),
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                          ),
                         ),
                         TextButton(
-                          onPressed: _navigateToRegister,
+                          onPressed: controller.navigateToRegister,
                           child: Text(
                             'DAFTAR',
                             style: GoogleFonts.poppins(
-                              color: Color(0xff4B76D9),
+                              color: const Color(0xff4B76D9),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
