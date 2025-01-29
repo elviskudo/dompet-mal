@@ -47,7 +47,12 @@ class AdminPanelController extends GetxController {
 
       // Clear SharedPreferences
       final prefs = await SharedPreferences.getInstance();
-      await prefs.clear();
+      await prefs.setBool('isLoggedIn', false);
+      await prefs.remove('userEmail');
+      await prefs.remove('userName');
+      await prefs.remove('userPhone');
+      await prefs.remove('userId');
+      await prefs.remove('accessToken');
 
       Get.snackbar(
         'Success',
