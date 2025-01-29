@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class RegisterController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -122,24 +123,25 @@ class RegisterController extends GetxController {
         throw 'Role default untuk "member" tidak ditemukan';
       }
 
-      // Register user dengan Supabase Auth
-      final AuthResponse res = await supabase.auth.signUp(
-        email: emailController.text.toLowerCase(),
-        password: passwordController.text,
-      );
+      // // Register user dengan Supabase Auth
+      // final AuthResponse res = await supabase.auth.signUp(
+      //   email: emailController.text.toLowerCase(),
+      //   password: passwordController.text,
+      // );
 
-      if (res.user == null) throw 'Gagal membuat akun';
+      // if (res.user == null) throw 'Gagal membuat akun';
+      String idUser = Uuid().v4();
 
       // Insert data ke table users
       final hashedPassword =
           await PasswordHasher.hashPassword(passwordController.text);
       final userData = {
-        'id': res.user!.id,
+        'id': idUser,
         'name': namaController.text,
         'email': emailController.text.toLowerCase(),
         'password': hashedPassword,
         'phone_number': formattedPhoneNumber,
-        'access_token': res.session?.accessToken ?? '',
+        'access_token': '',
         'created_at': DateTime.now().toIso8601String(),
         'updated_at': DateTime.now().toIso8601String(),
       };
@@ -148,7 +150,7 @@ class RegisterController extends GetxController {
 
       // Insert ke table user_roles
       final userRoleData = {
-        'user_id': res.user!.id,
+        'user_id': idUser,
         'role_id': defaultRoleId,
         'created_at': DateTime.now().toIso8601String(),
         'updated_at': DateTime.now().toIso8601String(),
@@ -159,7 +161,7 @@ class RegisterController extends GetxController {
       // Insert default profile image ke table files
       final fileData = {
         'module_class': 'users',
-        'module_id': res.user!.id,
+        'module_id': idUser,
         'file_name': defaultProfileImage,
         'file_type': 'webp',
         'created_at': DateTime.now().toIso8601String(),
@@ -169,10 +171,10 @@ class RegisterController extends GetxController {
       await supabase.from('files').insert(fileData);
 
       // Simpan data sementara di local storage
-      storage.write('temp_user_data', {
-        'email': emailController.text,
-        'name': namaController.text,
-      });
+      // storage.write('temp_user_data', {
+      //   'email': emailController.text,
+      //   'name': namaController.text,
+      // });
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userEmail', userData['email'] ?? '');
