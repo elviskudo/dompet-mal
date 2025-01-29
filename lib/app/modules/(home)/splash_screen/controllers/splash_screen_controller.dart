@@ -1,13 +1,33 @@
 import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashScreenController extends GetxController {
+class SplashScreenController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   static const String ONBOARDING_SHOWN_KEY = 'onboarding_shown';
-
+  late AnimationController animationController;
+  late Animation<double> scaleAnimation;
   @override
   void onInit() {
     super.onInit();
+    // Inisialisasi AnimationController
+    animationController = AnimationController(
+      duration: Duration(milliseconds: 1500),
+      vsync:
+          this, // Sekarang 'this' valid karena controller memiliki mixin TickerProvider
+    );
+
+    // Setup animation
+    scaleAnimation = Tween<double>(begin: 0.8, end: 1).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.elasticOut,
+      ),
+    );
+
+    // Jalankan animasi
+    animationController.forward();
     checkFirstTime();
   }
 
@@ -37,5 +57,11 @@ class SplashScreenController extends GetxController {
         Get.offAllNamed('/login');
       }
     }
+  }
+
+  @override
+  void onClose() {
+    animationController.dispose();
+    super.onClose();
   }
 }
