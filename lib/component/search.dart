@@ -1,6 +1,5 @@
 import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
-import 'package:dompet_mal/app/modules/(home)/listDonation/views/list_donation_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/animatedSearchHint.dart';
 import 'package:dompet_mal/models/Category.dart';
@@ -8,33 +7,50 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// First, modify the SearchBars class to handle both title and category searches
-class SearchBars extends StatelessWidget {
+class SearchBars extends StatefulWidget {
   final TextEditingController controller;
-  final CategoriesController categoriesController =
-      Get.put<CategoriesController>(CategoriesController());
-  final CharityAdminController charityController =
-      Get.put<CharityAdminController>(CharityAdminController());
 
-  SearchBars({
+  const SearchBars({
     super.key,
     required this.controller,
   });
 
+  @override
+  State<SearchBars> createState() => _SearchBarsState();
+}
+
+class _SearchBarsState extends State<SearchBars> {
+  final FocusNode _focusNode = FocusNode();
+  final CategoriesController categoriesController =
+      Get.put<CategoriesController>(CategoriesController());
+
+  final CharityAdminController charityController =
+      Get.put<CharityAdminController>(CharityAdminController());
+  bool _isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      _isFocused = _focusNode.hasFocus;
+    });
+  }
+
   void handleSearch(String searchTerm) {
     if (searchTerm.isEmpty) return;
 
-    // First, try to find a matching category
     final category = findCategoryByTitle(searchTerm);
 
     if (category != null) {
-      // If category is found, navigate to ListDonation with category filter
       Get.toNamed(Routes.ListDonation, arguments: {
         'category': category,
         'searchTerm': searchTerm,
       });
     } else {
-      // If no category found, search by title
       Get.toNamed(Routes.ListDonation, arguments: {
         'searchTerm': searchTerm,
       });
@@ -72,7 +88,8 @@ class SearchBars extends StatelessWidget {
         ),
         child: Center(
           child: TextField(
-            controller: controller,
+            controller: widget.controller,
+            focusNode: _focusNode,
             onSubmitted: handleSearch,
             decoration: InputDecoration(
               prefixIcon: Padding(
@@ -88,7 +105,7 @@ class SearchBars extends StatelessWidget {
                   ),
                   child: Center(
                     child: InkWell(
-                      onTap: () => handleSearch(controller.text),
+                      onTap: () => handleSearch(widget.controller.text),
                       child: Image.asset(
                         'assets/icons/search.png',
                         width: 24,
@@ -99,7 +116,6 @@ class SearchBars extends StatelessWidget {
                   ),
                 ),
               ),
-              hintText: 'Cari berdasarkan kategori atau judul donasi',
               hintStyle: GoogleFonts.poppins(
                 color: Colors.grey[400],
                 fontSize: 14,
@@ -109,19 +125,27 @@ class SearchBars extends StatelessWidget {
                 horizontal: 16.0,
                 vertical: 16.0,
               ),
-              label: AnimatedSearchHint(
-                hintTexts: const [
-                  'kemanusiaan',
-                  'bencana alam',
-                  'pendidikan',
-                  'kesehatan',
-                  // Add more hint texts as needed
-                ],
-              ),
+              label: (!_isFocused && widget.controller.text.isEmpty)
+                  ? AnimatedSearchHint(
+                      hintTexts: const [
+                        'kemanusiaan',
+                        'bencana alam',
+                        'pendidikan',
+                        'kesehatan',
+                      ],
+                    )
+                  : null,
             ),
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    super.dispose();
   }
 }
