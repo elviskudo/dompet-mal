@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
 import 'package:dompet_mal/models/BankAccountModel.dart';
+import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -189,7 +191,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
               color: baseGray,
               height: 6,
             ),
-            Section_IdTransaksi(context, idTransaksi),
+            Section_IdTransaksi(charityId: charityId, idTransaksi: idTransaksi,),
             Container(
               width: lebar,
               color: baseGray,
@@ -427,57 +429,6 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
     );
   }
 
-  Padding Section_IdTransaksi(BuildContext context, String idTransaksi) {
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                "ID TRANSAKSI $idTransaksi",
-                style: GoogleFonts.poppins(
-                    fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              Gap(12),
-              InkWell(
-                onTap: () {
-                  Clipboard.setData(ClipboardData(text: idTransaksi));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text("Nominal transfer disalin ke clipboard")),
-                  );
-                },
-                hoverColor: Colors.white,
-                child: Image.asset('assets/icons/icon_copy.png'),
-              )
-            ],
-          ),
-          const SizedBox(height: 16),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: ListTile(
-              leading: Image.asset(
-                'assets/images/foto_bayi_sekarat.png', // Ganti dengan path gambar
-                width: 50,
-                height: 50,
-              ),
-              title: Text(
-                "Kembarannya Tiada, Bantu Bayi Esha Operasi Segera!",
-                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text("17 Januari 2022 10:00"),
-            ),
-          ),
-          const SizedBox(height: 16),
-        ],
-      ),
-    );
-  }
 
   Container _inputCopyTransfer(String nomorRekening, BuildContext context) {
     return Container(
@@ -531,6 +482,108 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
           //   },
           //   child: Text("Salin"),
           // ),
+        ],
+      ),
+    );
+  }
+}
+
+class Section_IdTransaksi extends StatelessWidget {
+  final String idTransaksi;
+  final String charityId;
+
+  Section_IdTransaksi({
+    required this.idTransaksi,
+    required this.charityId,
+    // required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+  final CharityAdminController controller = Get.put(CharityAdminController());
+
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                "ID TRANSAKSI $idTransaksi",
+                style: GoogleFonts.poppins(
+                    fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Gap(12),
+              InkWell(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: idTransaksi));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text("Nominal transfer disalin ke clipboard")),
+                  );
+                },
+                hoverColor: Colors.white,
+                child: Image.asset('assets/icons/icon_copy.png'),
+              )
+            ],
+          ),
+          const SizedBox(height: 16),
+          FutureBuilder<Charity?>(
+            future: controller.getCharityById(charityId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              
+              if (snapshot.hasError) {
+                return Center(child: Text('Error loading charity data'));
+              }
+
+              final charity = snapshot.data;
+              if (charity == null) {
+                return Center(child: Text('Charity not found'));
+              }
+
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ListTile(
+                  leading: charity.image != null && charity.image!.isNotEmpty
+                      ? Image.network(
+                          charity.image!,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/placeholder.png',
+                              width: 50,
+                              height: 50,
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          'assets/images/placeholder.png',
+                          width: 50,
+                          height: 50,
+                        ),
+                  title: Text(
+                    charity.title ?? 'No Title',
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    charity.created_at != null
+                        ? DateFormat('dd MMMM yyyy HH:mm').format(charity.created_at!)
+                        : 'Date not available',
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 16),
         ],
       ),
     );

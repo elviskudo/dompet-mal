@@ -146,6 +146,69 @@ class CharityAdminController extends GetxController {
     }
   }
 
+  // Add this method to your CharityAdminController class
+
+  Future<Charity?> getCharityById(String charityId) async {
+    try {
+      // Fetch charity data
+      final response = await supabase
+          .from('charities')
+          .select('*, companies(*)')
+          .eq('id', charityId)
+          .eq('status', 1)
+          .single();
+
+      if (response == null) {
+        return null;
+      }
+
+      // Create charity object
+      final charity = Charity.fromJson(response);
+
+      // Fetch charity image from files table
+      final fileResponse = await supabase
+          .from('files')
+          .select('file_name')
+          .eq('module_class', 'charities')
+          .eq('module_id', charityId)
+          .limit(1)
+          .maybeSingle();
+
+      if (fileResponse != null) {
+        charity.image = fileResponse['file_name'];
+      }
+
+      // Fetch company image if company_id exists
+      if (charity.companyId != null) {
+        final companyFileResponse = await supabase
+            .from('files')
+            .select('file_name')
+            .eq('module_class', 'companies')
+            .eq('module_id', charity.companyId!)
+            .limit(1)
+            .maybeSingle();
+
+        if (companyFileResponse != null) {
+          charity.companyImage = companyFileResponse['file_name'];
+        }
+      }
+
+      // Set company name from the joined companies table data
+      charity.companyName = response['companies']?['name'];
+
+      return charity;
+    } catch (e) {
+      errorMessage.value = 'Failed to fetch charity: ${e.toString()}';
+      print('Error fetching charity: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to fetch charity details',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return null;
+    }
+  }
+
   // Fetch categories
   Future<void> fetchCategories() async {
     try {

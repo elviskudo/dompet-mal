@@ -74,7 +74,7 @@ class EmailVerificationController extends GetxController {
 
       print('Magic Link sent to email');
     } catch (e) {
-      print('Error: $e');
+      print('Error send otp: $e');
     }
   }
 
