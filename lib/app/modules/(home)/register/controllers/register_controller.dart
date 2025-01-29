@@ -22,7 +22,8 @@ class RegisterController extends GetxController {
   final formattedPhone = ''.obs;
   final storage = GetStorage();
   final supabase = Supabase.instance.client;
-
+  final defaultProfileImage =
+      'https://res.cloudinary.com/dcthljxbl/image/upload/v1738161418/bycisnwjaqzyxddx7ome.webp';
   @override
   void onInit() {
     super.onInit();
@@ -125,8 +126,6 @@ class RegisterController extends GetxController {
       final AuthResponse res = await supabase.auth.signUp(
         email: emailController.text.toLowerCase(),
         password: passwordController.text,
-        
-        // phone: phoneController.text,
       );
 
       if (res.user == null) throw 'Gagal membuat akun';
@@ -157,6 +156,18 @@ class RegisterController extends GetxController {
 
       await supabase.from('user_roles').insert(userRoleData);
 
+      // Insert default profile image ke table files
+      final fileData = {
+        'module_class': 'users',
+        'module_id': res.user!.id,
+        'file_name': defaultProfileImage,
+        'file_type': 'webp',
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      await supabase.from('files').insert(fileData);
+
       // Simpan data sementara di local storage
       storage.write('temp_user_data', {
         'email': emailController.text,
@@ -168,6 +179,7 @@ class RegisterController extends GetxController {
       await prefs.setString('userId', userData['id'] ?? '');
       await prefs.setString('userName', userData['name'] ?? '');
       await prefs.setString('userPhone', userData['phone_number'] ?? '');
+      await prefs.setString('userProfileImage', defaultProfileImage);
 
       Get.snackbar(
         'Sukses',
