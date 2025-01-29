@@ -41,7 +41,10 @@ class CategoryView extends GetView<CategoriesController> {
               children: [
                 InkWell(
                   onTap: () {
-                    Get.toNamed(Routes.ListDonation, arguments: category);
+                    Get.toNamed(Routes.ListDonation, arguments: {
+                      'category': category,
+                      'searchTerm': '',
+                    });
                   },
                   child: Container(
                     padding: EdgeInsets.all(12),
@@ -69,7 +72,7 @@ class CategoryView extends GetView<CategoriesController> {
                   category.name ?? '',
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(
                     fontSize: 10,
                   ),

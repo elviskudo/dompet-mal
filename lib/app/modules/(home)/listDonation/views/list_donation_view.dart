@@ -7,43 +7,80 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ListDonationView extends StatelessWidget {
+  final CharityAdminController charityController =
+      Get.find<CharityAdminController>();
+  final RxString searchTerm = ''.obs;
+
   ListDonationView({super.key});
 
-  // Use the CharityAdminController to fetch charities
-  CharityAdminController charityController = Get.put(CharityAdminController());
+  // Fungsi helper untuk mendapatkan nama kategori
+  String? getCategoryName(String? categoryId) {
+    return charityController.categories.value
+        .firstWhereOrNull((cat) => cat.id.toString() == categoryId)
+        ?.name;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Category? categoryId = Get.arguments as Category?;
+    final Map<String, dynamic>? args = Get.arguments as Map<String, dynamic>?;
+    final Category? category = args?['category'] as Category?;
+    final String? searchText = args?['searchTerm'] as String?;
+
+    if (searchText != null) {
+      searchTerm.value = searchText;
+    }
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: categoryId != null ? 'Donasi ${categoryId.name}' : 'Donasi',
+        title: category != null ? 'Donasi ${category.name}' : 'Donasi',
         onSortPressed: () => showSortDialog(context),
         onFilterPressed: () => showSearchDialog(context),
       ),
       backgroundColor: Colors.white,
       body: Obx(() {
-        // Check if charities are loading
         if (charityController.isCharitiesLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
-        // Filter charities if a category is selected
-        final filteredCharities = categoryId?.id != null
-            ? charityController.charities
-                .where((charity) =>
-                    charity.categoryId == categoryId!.id.toString())
-                .toList()
-            : charityController.charities;
+        List<Charity> filtered =
+            List<Charity>.from(charityController.charities);
+
+        // Apply category filter if category is selected
+        if (category != null) {
+          filtered = filtered
+              .where((charity) => charity.categoryId == category.id.toString())
+              .toList();
+        }
+
+        // Apply search term filter if search term exists
+        if (searchTerm.value.isNotEmpty) {
+          filtered = filtered.where((charity) {
+            final String searchLower = searchTerm.value.toLowerCase();
+            final String? title = charity.title?.toLowerCase();
+            final String? categoryName =
+                getCategoryName(charity.categoryId)?.toLowerCase();
+
+            return (title?.contains(searchLower) ?? false) ||
+                (categoryName?.contains(searchLower) ?? false);
+          }).toList();
+        }
 
         return SingleChildScrollView(
           child: Column(
             children: [
+              if (searchTerm.value.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'Hasil pencarian untuk "${searchTerm.value}"',
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
               Container(
-                padding: EdgeInsetsDirectional.all(24),
-                child: filteredCharities.isEmpty
-                    ? Center(
+                padding: const EdgeInsetsDirectional.all(24),
+                child: filtered.isEmpty
+                    ? const Center(
                         child: Padding(
                           padding: EdgeInsets.only(top: 100),
                           child: Text('Tidak ada data ditemukan'),
@@ -51,7 +88,7 @@ class ListDonationView extends StatelessWidget {
                       )
                     : BannerKategori(
                         category: charityController.categories.value,
-                        banners: filteredCharities,
+                        banners: filtered,
                         maxItems: 0,
                       ),
               ),

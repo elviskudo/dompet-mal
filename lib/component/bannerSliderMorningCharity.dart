@@ -101,7 +101,7 @@ class _BannerSliderState extends State<BannerSlider> {
                           banner.image! ?? 'https://via.placeholder.com/150',
                           fit: BoxFit.cover,
                           width: double.infinity,
-                          height: 200,
+                          height: 215,
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
                               color: Colors.grey[300],
@@ -194,6 +194,7 @@ class _BannerSliderState extends State<BannerSlider> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xffFFA450),
+                                minimumSize: Size(80, 28),
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 20,
                                 ),

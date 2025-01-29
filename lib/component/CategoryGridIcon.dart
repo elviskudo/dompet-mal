@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class CATEGORYGrid extends StatelessWidget {
   final CategoriesController categoriesController =
       Get.put(CategoriesController());
@@ -40,7 +39,10 @@ class CATEGORYGrid extends StatelessWidget {
                 Category category = displayCategories[index];
                 return InkWell(
                   onTap: () {
-                    Get.toNamed(Routes.ListDonation, arguments: category);
+                    Get.toNamed(Routes.ListDonation, arguments: {
+                      'category': category,
+                      'searchTerm': '',
+                    });
                   },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -70,7 +72,7 @@ class CATEGORYGrid extends StatelessWidget {
                         child: Text(
                           category.name ?? 'No Name',
                           maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
+                          overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             fontSize: 10,

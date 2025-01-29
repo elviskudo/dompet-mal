@@ -47,6 +47,36 @@ class _BannerKategoriState extends State<BannerKategori> {
     return uniqueContributors.values.toList();
   }
 
+  String calculateRemainingDays(String? targetDateStr) {
+    if (targetDateStr == null) return 'N/A';
+
+    try {
+      // Parse target date string ke DateTime
+      final targetDate = DateTime.parse(targetDateStr);
+      final now = DateTime.now();
+
+      // Hitung selisih hari dari sekarang sampai target date
+      final difference = targetDate.difference(now);
+      final days = difference.inDays;
+
+      if (days < 0) {
+        return 'Berakhir';
+      } else if (days == 0) {
+        // Jika tersisa kurang dari 24 jam, hitung jam
+        final hours = difference.inHours;
+        if (hours > 0) {
+          return '$hours jam';
+        }
+        return 'Hari Terakhir';
+      } else {
+        return '$days hari';
+      }
+    } catch (e) {
+      print('Error parsing date: $e');
+      return 'N/A';
+    }
+  }
+
   // Modify the contributor section in the build method
   Widget buildContributorSection(List<Contributor> contributors) {
     final uniqueContributors = getUniqueContributors(contributors);
@@ -283,7 +313,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Text(
-                          '120 hari',
+                          calculateRemainingDays(banner.targetDate),
                           style: GoogleFonts.poppins(
                             color: Colors.black,
                             fontSize: 12,

@@ -59,7 +59,7 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
           // Cards section
           SizedBox(
             height: MediaQuery.of(context).size.height *
-                0.51, // Adjust the height to fit the cards
+                0.54, // Adjust the height to fit the cards
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,
@@ -141,6 +141,36 @@ class EmergencyFundCard extends StatelessWidget {
       decimalDigits: 0,
     );
     return formatter.format(amount ?? 0);
+  }
+
+  String calculateRemainingDays(String? targetDateStr) {
+    if (targetDateStr == null) return 'N/A';
+
+    try {
+      // Parse target date string ke DateTime
+      final targetDate = DateTime.parse(targetDateStr);
+      final now = DateTime.now();
+
+      // Hitung selisih hari dari sekarang sampai target date
+      final difference = targetDate.difference(now);
+      final days = difference.inDays;
+
+      if (days < 0) {
+        return 'Berakhir';
+      } else if (days == 0) {
+        // Jika tersisa kurang dari 24 jam, hitung jam
+        final hours = difference.inHours;
+        if (hours > 0) {
+          return '$hours jam';
+        }
+        return 'Hari Terakhir';
+      } else {
+        return '$days hari';
+      }
+    } catch (e) {
+      print('Error parsing date: $e');
+      return 'N/A';
+    }
   }
 
   List<Contributor> getUniqueContributors(List<Contributor> contributors) {
@@ -298,6 +328,7 @@ class EmergencyFundCard extends StatelessWidget {
           orElse: () => Category(name: 'Unknown Category'),
         )
         .name!;
+
     return Card(
       shadowColor: Colors.black,
       color: Colors.white,
@@ -382,7 +413,8 @@ class EmergencyFundCard extends StatelessWidget {
                           ),
                           Gap(2),
                           Text(
-                            '35', // This was hardcoded in the original, you might want to calculate dynamically
+                            calculateRemainingDays(fund
+                                .targetDate), // This was hardcoded in the original, you might want to calculate dynamically
                             style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w600,
                               fontSize: 12,

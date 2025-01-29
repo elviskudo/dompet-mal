@@ -36,9 +36,19 @@ class StraightCharityComponent extends StatelessWidget {
     return formatter.format(amount);
   }
 
-  String formatDate(DateTime date) {
-    final formatter = DateFormat('d MMMM yyyy', 'id_ID');
-    return formatter.format(date);
+  String formatDate(String? dateStr) {
+    if (dateStr == null) return '-';
+
+    try {
+      // Parse string ke DateTime
+      DateTime date = DateTime.parse(dateStr);
+      // Format ke bahasa Indonesia
+      final formatter = DateFormat('d MMMM yyyy', 'id_ID');
+      return formatter.format(date);
+    } catch (e) {
+      print('Error parsing date: $e');
+      return '-';
+    }
   }
 
   Widget _buildDonationButton(BuildContext context, String charityId,
@@ -271,7 +281,7 @@ class StraightCharityComponent extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          '${formatDate(banner.created_at!)}',
+                          '${formatDate(banner.targetDate!)}',
                           style: GoogleFonts.poppins(
                             fontSize: 11,
                             color: Colors.black54,

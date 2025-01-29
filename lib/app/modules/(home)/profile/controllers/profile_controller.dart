@@ -1,3 +1,4 @@
+import 'package:dompet_mal/app/modules/(admin)/upload/controllers/upload_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/models/userModel.dart';
 import 'package:flutter/material.dart';
@@ -20,13 +21,14 @@ class ProfileController extends GetxController {
   final passwordController = TextEditingController();
   final phoneController = TextEditingController();
   RxString selectedRoleId = ''.obs;
+  final UploadController uploadController = Get.put(UploadController());
+  RxString profileImageUrl = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    loadUserData();
+    loadUserData().then((_) => loadProfileImage()); // Ubah menjadi sequential
   }
-
 
   Future<void> logout() async {
     try {
@@ -69,6 +71,69 @@ class ProfileController extends GetxController {
     }
   }
 
+  Future<void> updateProfileWithImage(
+      {required String name, required String phone}) async {
+    try {
+      isLoading.value = true;
+
+      // Update profile info dulu
+      await updateProfile(currentUserId.value, name: name, phone: phone);
+
+      // Jika ada image yang dipilih
+      if (uploadController.selectedImage.value != null) {
+        // Set module class dan ID
+        uploadController.selectedModuleClass.value = 'users';
+        uploadController.selectedModuleId.value = currentUserId.value;
+
+        // Cek existing file
+        try {
+          final existingFile = await uploadController.supabase
+              .from('files')
+              .select()
+              .eq('module_class', 'users')
+              .eq('module_id', currentUserId.value)
+              .single();
+
+          if (existingFile != null) {
+            uploadController.existingFileId.value = existingFile['id'];
+          } else {
+            uploadController.existingFileId.value = '';
+          }
+        } catch (e) {
+          print('No existing file found: $e');
+          uploadController.existingFileId.value = '';
+        }
+
+        // Upload file ke Cloudinary
+        await uploadController
+            .uploadFileToCloudinary(uploadController.selectedImage.value!);
+
+        // Save file info menggunakan logika yang sudah ada
+        await uploadController.saveFileInfo();
+
+        // Reload profile image
+        await loadProfileImage();
+      }
+
+      Get.snackbar(
+        'Success',
+        'Profile updated successfully',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      print('Error updating profile with image: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to update profile: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> updateProfile(String id,
       {required String name, required String phone}) async {
     // Validasi input
@@ -80,38 +145,23 @@ class ProfileController extends GetxController {
       );
       return;
     }
+
     try {
-      var response = await supabase.from("users").update({
+      // Ubah cara update ke Supabase
+      await supabase.from("users").update({
         "name": namaController.text,
-        "phone": phoneController.text,
+        "phone_number": phoneController.text,
       }).eq("id", id);
 
-      if (response.error == null) {
-        // Update berhasil: Simpan data baru ke SharedPreferences
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString("name", namaController.text);
-        await prefs.setString("phone", phoneController.text);
+      // Jika sampai sini berarti update berhasil
+      // Update SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("userName", namaController.text);
+      await prefs.setString("userPhone", phoneController.text);
 
-        // Tampilkan dialog sukses
-        Get.defaultDialog(
-          title: "Berhasil",
-          middleText: "Profil berhasil diperbarui!",
-          textConfirm: "OK",
-          onConfirm: () {
-            Get.back(); // Tutup dialog
-            Get.back(); // Kembali ke halaman sebelumnya
-          },
-        );
-      } else {
-        // Jika ada error dari Supabase
-        Get.snackbar(
-          "Terjadi Kesalahan",
-          response.error!.message,
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      }
+      // Tampilkan dialog sukses
     } catch (e) {
-      // Jika ada error umum
+      // Handle error
       Get.snackbar(
         "Terjadi Kesalahan",
         "Tidak dapat memperbarui profil: $e",
@@ -140,7 +190,7 @@ class ProfileController extends GetxController {
         // Mengakses data menggunakan operator map
         userEmail.value = response['email'] ?? '';
         userName.value = response['name'] ?? '';
-        userPhone.value = response['phone'] ?? '';
+        userPhone.value = response['phone_number'] ?? '';
 
         // Update controller text
         namaController.text = userName.value;
@@ -160,6 +210,27 @@ class ProfileController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> loadProfileImage() async {
+    try {
+      final response = await uploadController.supabase
+          .from('files')
+          .select()
+          .eq('module_class', 'users')
+          .eq('module_id', currentUserId.value)
+          .single();
+
+      print('Profile image response: $response');
+
+      if (response != null) {
+        profileImageUrl.value = response['file_name'];
+        print('Profile image URL: ${profileImageUrl.value}');
+      }
+    } catch (e) {
+      print('Error loading profile image: $e');
+      profileImageUrl.value = '';
     }
   }
 }
