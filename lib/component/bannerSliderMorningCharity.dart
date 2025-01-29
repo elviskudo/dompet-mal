@@ -184,11 +184,25 @@ class _BannerSliderState extends State<BannerSlider> {
                                     arguments: {
                                       "categoryName": categoryName,
                                       "charity": {
+                                        "id": banner.id! ?? "",
                                         "title": banner.title! ?? "",
                                         "image": banner.image! ?? "",
                                         "progress": banner.progress ?? 0,
                                         "total": banner.total ?? 0,
-                                        "targetTotal": banner.targetTotal ?? 0
+                                        "targetTotal": banner.targetTotal ?? 0,
+                                        "description": banner.description ?? '',
+                                        "categoryId": banner.categoryId ?? '',
+                                        "companyName": banner.companyName ?? "",
+                                        "companyImage":
+                                            banner.companyImage ?? "",
+                                        "created_at": banner.created_at,
+                                        "contributors": banner.contributors
+                                            .map((contributor) => {
+                                                  "imageUrl": contributor
+                                                          .user?.imageUrl ??
+                                                      'https://via.placeholder.com/40'
+                                                })
+                                            .toList()
                                       }
                                     });
                               },
@@ -217,7 +231,7 @@ class _BannerSliderState extends State<BannerSlider> {
               );
             },
             options: CarouselOptions(
-              height: 200,
+              height: 215,
               viewportFraction: 0.9,
               enlargeCenterPage: true,
               onPageChanged: (index, reason) {

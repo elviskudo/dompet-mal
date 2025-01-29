@@ -11,7 +11,8 @@ class PaymentSuccessView extends GetView<PaymentSuccessController> {
 
   @override
   Widget build(BuildContext context) {
-    // Tangkap argumen yang dikirim melalui Get.offAllNamed
+    final args = Get.arguments as Map<String, dynamic>;
+    final donationPrice = double.parse(args['donationPrice'] as String? ?? '0');
 
     return WillPopScope(
       onWillPop: () async {
@@ -92,18 +93,18 @@ class PaymentSuccessView extends GetView<PaymentSuccessController> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      // Format jumlah pembayaran dengan argumen 'donationPrice'
                       NumberFormat.currency(
                         locale: 'id_ID',
                         symbol: 'Rp',
                         decimalDigits: 0,
-                      ).format(10000),
+                      ).format(
+                          donationPrice), // Use the captured donationPrice here
                       style: GoogleFonts.openSans(
                         color: Colors.white,
                         fontSize: 32,
                         fontWeight: FontWeight.w600,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],

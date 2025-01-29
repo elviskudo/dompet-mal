@@ -407,8 +407,13 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     await _showSuccessDialog(context);
     await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
+    final args = Get.arguments as Map<String, dynamic>;
+    final donationPrice = args['donationPrice'] as String? ?? '0';
     Get.offNamed(
       Routes.PAYMENT_SUCCESS,
+      arguments: {
+        'donationPrice': donationPrice,
+      },
     );
   }
 }
