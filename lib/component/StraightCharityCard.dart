@@ -52,7 +52,7 @@ class StraightCharityComponent extends StatelessWidget {
   }
 
   Widget _buildDonationButton(BuildContext context, String charityId,
-      String categoryName, double lebar) {
+      String categoryName, double lebar, String targetDate) {
     return Obx(() {
       final latestTransaction = transactionController.transactions
           .where((t) =>
@@ -62,7 +62,8 @@ class StraightCharityComponent extends StatelessWidget {
         ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName, lebar);
+        return _normalDonationButton(context, charityId, categoryName, lebar,
+            targetDate);
       }
 
       final status = latestTransaction.first.status;
@@ -114,13 +115,14 @@ class StraightCharityComponent extends StatelessWidget {
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName, lebar);
+        return _normalDonationButton(context, charityId, categoryName, lebar,
+            targetDate);
       }
     });
   }
 
   Widget _normalDonationButton(BuildContext context, String charityId,
-      String categoryName, double lebar) {
+      String categoryName, double lebar, String targetDate) {
     return ElevatedButton(
       onPressed: () {
         Get.bottomSheet(
@@ -128,6 +130,7 @@ class StraightCharityComponent extends StatelessWidget {
             kategoriId: charityId,
             charityId: charityId,
             kategori: categoryName,
+            targetDate: targetDate,
           ),
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
@@ -184,7 +187,8 @@ class StraightCharityComponent extends StatelessWidget {
                             "imageUrl": contributor.user?.imageUrl ??
                                 'https://via.placeholder.com/40'
                           })
-                      .toList()
+                      .toList(),
+                  "targetDate": banner.targetDate
                 }
               });
             },
@@ -305,6 +309,7 @@ class StraightCharityComponent extends StatelessWidget {
                             banner.id!,
                             categoryName,
                             lebar,
+                            banner.targetDate!,
                           ),
                         )
                       ],

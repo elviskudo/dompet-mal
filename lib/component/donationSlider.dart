@@ -18,12 +18,14 @@ class SlidingDonationSheet extends StatefulWidget {
   final String kategoriId;
   final String kategori;
   final String charityId;
+  final String targetDate;
 
   const SlidingDonationSheet({
     Key? key,
     required this.kategoriId,
     required this.kategori,
     required this.charityId,
+    required this.targetDate,
   }) : super(key: key);
   State<SlidingDonationSheet> createState() => _SlidingDonationSheetState();
 }

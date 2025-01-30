@@ -102,7 +102,8 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
                                       "imageUrl": contributor.user?.imageUrl ??
                                           'https://via.placeholder.com/40'
                                     })
-                                .toList()
+                                .toList(),
+                            "targetDate": banner.targetDate
                           }
                         });
                       },
@@ -299,6 +300,7 @@ class EmergencyFundCard extends StatelessWidget {
             kategoriId: charityId,
             charityId: charityId,
             kategori: categoryName,
+            targetDate: fund.targetDate!,
           ),
           isScrollControlled: true,
           backgroundColor: Colors.transparent,

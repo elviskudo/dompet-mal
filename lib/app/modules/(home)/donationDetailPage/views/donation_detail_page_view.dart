@@ -47,6 +47,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
 
     final charity = detail['charity'];
     final categoryName = detail['categoryName'] ?? 'Kategori tidak tersedia';
+    final targetDate = detail['targetDate'];
     double calculateProgress(int? total, int? targetTotal) {
       if (targetTotal == null || targetTotal == 0 || total == null) {
         return 0.0;
@@ -57,6 +58,39 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
 
     double progressValue =
         calculateProgress(charity["total"], charity["targetTotal"]);
+    String calculateRemainingDays(String? targetDateStr) {
+      if (targetDateStr == null) return 'N/A';
+
+      try {
+        // Parse target date string ke DateTime
+        final targetDate = DateTime.parse(targetDateStr);
+        final now = DateTime.now();
+
+        // Hitung selisih hari dari sekarang sampai target date
+        final difference = targetDate.difference(now);
+        final days = difference.inDays;
+
+        if (days < 0) {
+          return 'Berakhir';
+        } else if (days == 0) {
+          // Jika tersisa kurang dari 24 jam, hitung jam
+          final hours = difference.inHours;
+          if (hours > 0) {
+            return '$hours jam';
+          }
+          return 'Hari Terakhir';
+        } else {
+          return '$days hari';
+        }
+      } catch (e) {
+        print('Error parsing date: $e');
+        return 'N/A';
+      }
+    }
+
+    print("Target Date Raw: ${charity["targetDate"]}");
+    print("Target Date Type: ${charity["targetDate"].runtimeType}");
+    print("Target Date: ${charity["targetDate"]}");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -160,7 +194,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                               ),
                             ),
                             Text(
-                              '1 Hari 5 Jam 30 Menit',
+                              calculateRemainingDays(charity["targetDate"]),
                               style: GoogleFonts.poppins(
                                 color: Colors.grey[600],
                                 fontSize: 12,
@@ -450,6 +484,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                                 kategoriId: charity["categoryId"] ?? "",
                                 charityId: charity["id"] ?? "",
                                 kategori: categoryName ?? "",
+                                targetDate: targetDate ?? "",
                               ),
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,

@@ -190,6 +190,7 @@ class _BannerKategoriState extends State<BannerKategori> {
             kategoriId: charityId,
             charityId: charityId,
             kategori: categoryName,
+            targetDate: calculateRemainingDays(widget.banners.first.targetDate),
           ),
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
