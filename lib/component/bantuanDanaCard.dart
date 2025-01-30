@@ -224,7 +224,7 @@ class EmergencyFundCard extends StatelessWidget {
   }
 
   Widget _buildDonationButton(
-      BuildContext context, String charityId, String categoryName) {
+      BuildContext context, String charityId, String categoryName,String title) {
     return Obx(() {
       final latestTransaction = transactionController.transactions
           .where((t) =>
@@ -234,7 +234,7 @@ class EmergencyFundCard extends StatelessWidget {
         ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName);
+        return _normalDonationButton(context, charityId, categoryName, title);
       }
 
       final status = latestTransaction.first.status;
@@ -285,13 +285,13 @@ class EmergencyFundCard extends StatelessWidget {
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName);
+        return _normalDonationButton(context, charityId, categoryName, title);
       }
     });
   }
 
   Widget _normalDonationButton(
-      BuildContext context, String charityId, String categoryName) {
+      BuildContext context, String charityId, String categoryName, String title) {
     return ElevatedButton(
       onPressed: () {
         Get.bottomSheet(
@@ -299,6 +299,7 @@ class EmergencyFundCard extends StatelessWidget {
             kategoriId: charityId,
             charityId: charityId,
             kategori: categoryName,
+            title: title,
           ),
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
@@ -435,6 +436,7 @@ class EmergencyFundCard extends StatelessWidget {
                       context,
                       fund.id!,
                       categoryName,
+                      fund.title!
                     ),
                   )
                 ],

@@ -115,7 +115,7 @@ class _BannerKategoriState extends State<BannerKategori> {
   }
 
   Widget _buildDonationButton(BuildContext context, String charityId,
-      String categoryName, double lebar) {
+      String categoryName, double lebar, String title) {
     return Obx(() {
       final latestTransaction = transactionController.transactions
           .where((t) =>
@@ -125,7 +125,7 @@ class _BannerKategoriState extends State<BannerKategori> {
         ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName, lebar);
+        return _normalDonationButton(context, charityId, categoryName, lebar, title);
       }
 
       final status = latestTransaction.first.status;
@@ -176,13 +176,13 @@ class _BannerKategoriState extends State<BannerKategori> {
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName, lebar);
+        return _normalDonationButton(context, charityId, categoryName, lebar, title);
       }
     });
   }
 
   Widget _normalDonationButton(BuildContext context, String charityId,
-      String categoryName, double lebar) {
+      String categoryName, double lebar, String title) {
     return ElevatedButton(
       onPressed: () {
         Get.bottomSheet(
@@ -190,6 +190,7 @@ class _BannerKategoriState extends State<BannerKategori> {
             kategoriId: charityId,
             charityId: charityId,
             kategori: categoryName,
+            title: title,
           ),
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
@@ -401,6 +402,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             banner.id!,
                             categoryName,
                             lebar,
+                            banner.title ?? ""
                           ),
                         )
                       ],

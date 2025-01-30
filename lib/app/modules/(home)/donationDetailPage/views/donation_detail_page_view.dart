@@ -419,11 +419,16 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       SizedBox(
                         height: 32,
                       ),
-                      Obx(
-                        () {
-                          if (transactionsController.transactions.isNotEmpty) {
-                            final latestTransaction =
-                                transactionsController.transactions.first;
+                      Obx(() {
+                        final relevantTransactions = transactionsController
+                            .transactions
+                            .where((t) => t.charityId == charity["id"])
+                            .toList();
+
+                        if (relevantTransactions.isNotEmpty) {
+                          final latestTransaction = relevantTransactions.first;
+                          // Tampilkan card hanya jika status delivered (3)
+                          if (latestTransaction.status == 3) {
                             return laporanCard(
                               context,
                               transactionsController.banks
@@ -434,44 +439,77 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                                   .toStringAsFixed(0),
                               latestTransaction.createdAt!,
                             );
-                          } else {
-                            return CircularProgressIndicator();
                           }
-                        },
-                      ),
+                        }
+                        return SizedBox
+                            .shrink(); // Tidak menampilkan apa-apa jika tidak ada transaksi atau status bukan 3
+                      }),
                       Gap(26),
-                      Container(
-                        width: double.infinity,
-                        height: 60,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.bottomSheet(
-                              SlidingDonationSheet(
-                                kategoriId: charity["categoryId"] ?? "",
-                                charityId: charity["id"] ?? "",
-                                kategori: categoryName ?? "",
-                              ),
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff4B76D9),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Lanjut pembayaran',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
+                     Container(
+  width: double.infinity,
+  height: 60,
+  child: Obx(() {
+    final totalDonation = charity["total"] ?? 0;
+    final targetTotal = charity["targetTotal"] ?? 0;
+    
+    // Calculate progress percentage with proper decimal handling
+    final progress = targetTotal > 0 
+        ? ((totalDonation / targetTotal) * 100).roundToDouble()
+        : 0.0;
+    
+    // Check completed status - using exact 100% comparison
+    final isCompleted = progress == 100.0;
+    
+    final relevantTransactions = transactionsController
+        .transactions
+        .where((t) => t.charityId == charity["id"])
+        .toList();
+    final hasDeliveredTransaction = relevantTransactions.any((t) => t.status == 3);
+
+    // Determine button text based on state
+    String buttonText;
+    if (hasDeliveredTransaction) {
+      buttonText = 'Penyerahan Dana';
+    } else if (isCompleted) {
+      buttonText = 'Target Tercapai';
+    } else {
+      buttonText = 'Lanjut pembayaran';
+    }
+
+    return ElevatedButton(
+      onPressed: hasDeliveredTransaction || isCompleted ? null : () {
+        Get.bottomSheet(
+          SlidingDonationSheet(
+            kategoriId: charity["categoryId"] ?? "",
+            charityId: charity["id"] ?? "",
+            kategori: categoryName ?? "",
+            title: charity["title"] ?? "",
+          ),
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isCompleted ? Colors.green : const Color(0xff4B76D9),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        disabledBackgroundColor: hasDeliveredTransaction 
+            ? Colors.grey[300]  // Abu-abu untuk status penyerahan dana
+            : Colors.green,    // Hijau untuk target tercapai
+      ),
+      child: Text(
+        buttonText,
+        style: GoogleFonts.poppins(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }),
+)
                     ],
                   ),
                 ],
