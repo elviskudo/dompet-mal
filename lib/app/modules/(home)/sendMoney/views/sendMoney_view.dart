@@ -1,18 +1,22 @@
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/sendMoney/controllers/sendMoney_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/AppBar.dart';
+import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class SendMoneyView extends GetView<SendMoneyController> {
   const SendMoneyView({super.key});
   @override
   Widget build(BuildContext context) {
+    final charityController = Get.put(CharityAdminController());
     var tinggi = MediaQuery.of(context).size.height;
     var lebar = MediaQuery.of(context).size.width;
     var default_id_transaksi = '#DM110703412';
@@ -152,6 +156,10 @@ class SendMoneyView extends GetView<SendMoneyController> {
   }
 
   Padding Section_IdTransaksi(BuildContext context, String idTransaksi) {
+    final charityController = Get.find<CharityAdminController>();
+    final args = Get.arguments as Map<String, dynamic>?;
+    final charityId = args?['charityId'] as String? ?? '';
+
     return Padding(
       padding: EdgeInsets.all(16),
       child: Column(
@@ -161,16 +169,14 @@ class SendMoneyView extends GetView<SendMoneyController> {
             children: [
               Text(
                 "ID TRANSAKSI $idTransaksi",
-                style: GoogleFonts.poppins
-                    (fontSize: 16, fontWeight: FontWeight.bold),
+                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Gap(12),
               InkWell(
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: idTransaksi));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text("Nominal transfer disalin ke clipboard")),
+                    const SnackBar(content: Text("ID Transaksi disalin ke clipboard")),
                   );
                 },
                 hoverColor: Colors.white,
@@ -179,27 +185,66 @@ class SendMoneyView extends GetView<SendMoneyController> {
             ],
           ),
           const SizedBox(height: 16),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: ListTile(
-              leading: Image.asset(
-                'assets/images/foto_bayi_sekarat.png', // Ganti dengan path gambar
-                width: 50,
-                height: 50,
-              ),
-              title: Text(
-                "Kembarannya Tiada, Bantu Bayi Esha Operasi Segera!",
-                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text("17 Januari 2022 10:00"),
-            ),
+          FutureBuilder<Charity?>(
+            future: charityController.getCharityById(charityId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'Error loading charity data',
+                    style: GoogleFonts.poppins(color: Colors.red),
+                  ),
+                );
+              }
+
+              final charity = snapshot.data!;
+              
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ListTile(
+                  leading: charity.image != null && charity.image!.isNotEmpty
+                      ? Image.network(
+                          charity.image!,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/foto_bayi_sekarat.png',
+                              width: 50,
+                              height: 50,
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          'assets/images/foto_bayi_sekarat.png',
+                          width: 50,
+                          height: 50,
+                        ),
+                  title: Text(
+                    charity.title ?? 'No Title Available',
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    charity.created_at != null 
+                        ? DateFormat('dd MMMM yyyy HH:mm').format(charity.created_at!)
+                        : 'Date not available',
+                  ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16),
         ],
       ),
     );
   }
+
 }
