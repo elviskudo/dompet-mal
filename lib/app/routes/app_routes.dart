@@ -23,7 +23,6 @@ abstract class Routes {
   static const REPORT = _Paths.REPORT;
   static const PROFILE = _Paths.PROFILE;
   static const NAVIGATION = _Paths.NAVIGATION;
-  static const PARTICIPANTS = _Paths.PARTICIPANTS;
   static const DONATION_DETAIL_PAGE = _Paths.DONATION_DETAIL_PAGE;
   static const PARTICIPANT_PAGE = _Paths.PARTICIPANT_PAGE;
   static const PAYMENT = _Paths.PAYMENT;
@@ -40,6 +39,7 @@ abstract class Routes {
   static const CHARITY_ADMIN = _Paths.CHARITY_ADMIN;
   static const UPLOAD = _Paths.UPLOAD;
   static const COMPANIES = _Paths.COMPANIES;
+  static const TRANSACTIONS = _Paths.TRANSACTIONS;
   static const BANK_ADMIN = _Paths.BANK_ADMIN;
 }
 
@@ -82,5 +82,6 @@ abstract class _Paths {
   static const CHARITY_ADMIN = '/charity-admin';
   static const UPLOAD = '/upload';
   static const COMPANIES = '/companies';
+  static const TRANSACTIONS = '/transactions';
   static const BANK_ADMIN = '/bank-admin';
 }

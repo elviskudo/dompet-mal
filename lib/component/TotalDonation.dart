@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DanaDonasiLangsung {
   final dynamic totalBudgets;
@@ -50,9 +52,9 @@ class TotalDanaDonasi extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Total dana donasi langsung',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colors.black87,
                       ),
@@ -62,7 +64,7 @@ class TotalDanaDonasi extends StatelessWidget {
                 Gap(4),
                 Text(
                   formatCurrency(danaDonasiLangsung.totalBudgets),
-                  style: const TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
@@ -73,14 +75,14 @@ class TotalDanaDonasi extends StatelessWidget {
                   children: [
                     Text(
                       '${NumberFormat.decimalPattern('id_ID').format(danaDonasiLangsung.totalDonaturs)} ',
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 11,
                         color: Colors.black,
                       ),
                     ),
                     Text(
                       'penyumbang',
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 11,
                         color: Colors.black54,
                       ),
@@ -98,6 +100,79 @@ class TotalDanaDonasi extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TotalDanaDonasiSkeleton extends StatelessWidget {
+  const TotalDanaDonasiSkeleton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.white,
+      margin: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: 180,
+                    height: 16,
+                    color: Colors.white,
+                  ),
+                ),
+                Gap(4),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: 150,
+                    height: 22,
+                    color: Colors.white,
+                  ),
+                ),
+                Gap(4),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: 100,
+                    height: 14,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
                   Icons.add,
                   color: Colors.white,
                   size: 30,

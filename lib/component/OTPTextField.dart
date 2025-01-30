@@ -1,6 +1,8 @@
-import 'package:dompet_mal/app/modules/email_verification/controllers/email_verification_controller.dart';
+import 'package:dompet_mal/app/modules/(home)/email_verification/controllers/email_verification_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:google_fonts/google_fonts.dart';
 
 class OTPTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -55,7 +57,7 @@ class OTPTextField extends StatelessWidget {
           textAlign: TextAlign.center,
           keyboardType: TextInputType.number,
           maxLength: 6, // Allow paste of 6 digits
-          style: TextStyle(
+          style: GoogleFonts.poppins(
             fontSize: 24,
             fontWeight: FontWeight.w600,
           ),

@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
+
 Charity charityFromJson(String str) => Charity.fromJson(json.decode(str));
 
 String charityToJson(Charity data) => json.encode(data.toJson());
@@ -11,30 +13,37 @@ String charityToJson(Charity data) => json.encode(data.toJson());
 class Charity {
   String? id;
   String? categoryId;
+  String? image;
+  List<Contributor> contributors = [];
   String? companyId;
   String? title;
   String? description;
+  String? companyImage;
+  String? companyName;
   int? progress;
   int? total;
-  int targetTotal;
-  DateTime? targetDate;
+  int? targetTotal;
+  String? targetDate;
   DateTime? created_at;
   DateTime? updated_at;
   int? status;
 
   Charity({
-    required this.id,
-    required this.categoryId,
-    required this.companyId,
-    required this.title,
-    required this.description,
-    required this.progress,
+    this.id,
+    this.categoryId,
+    this.companyId,
+    this.title,
+    this.description,
+    this.progress,
     this.total,
-    required this.targetTotal,
-    required this.targetDate,
-    required this.created_at,
-    required this.updated_at,
-    required this.status,
+    this.image,
+    this.companyName,
+    this.companyImage,
+    this.targetDate,
+    this.created_at,
+    this.updated_at,
+    this.status,
+    this.contributors = const [],
   });
 
   factory Charity.fromJson(Map<String, dynamic> json) => Charity(
@@ -44,11 +53,7 @@ class Charity {
         title: json["title"],
         description: json["description"],
         progress: json["progress"],
-        total: json["total"],
-        targetTotal: json["target_total"],
-        targetDate: json["target_date"] == null
-            ? null
-            : DateTime.parse(json["target_date"]),
+        targetDate: json["target_date"],
         created_at: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -67,7 +72,7 @@ class Charity {
         "progress": progress,
         "total": total,
         "target_total": targetTotal,
-        "target_date": targetDate?.toIso8601String(),
+        "target_date": targetDate,
         "created_at":
             created_at?.toIso8601String() ?? DateTime.now().toIso8601String(),
         "updated_at": updated_at?.toIso8601String(),

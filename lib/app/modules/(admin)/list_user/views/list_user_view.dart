@@ -18,7 +18,7 @@ class ListUserView extends GetView<ListUserController> {
 
         if (snapshot.hasError || !(snapshot.data ?? false)) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Access Denied')),
+            appBar: AppBar(title: Text('Access Denied')),
             body: const Center(
               child: Text('You do not have permission to access this page.'),
             ),
@@ -26,11 +26,17 @@ class ListUserView extends GetView<ListUserController> {
         }
 
         return Scaffold(
+          floatingActionButton: IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => showCreateDialog(context),
+          ),
+          backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Colors.white,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('User List'),
+                Text('User List'),
                 Gap(20),
               ],
             ),
@@ -88,6 +94,120 @@ class ListUserView extends GetView<ListUserController> {
               );
             },
           ),
+        );
+      },
+    );
+  }
+
+  void showCreateDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Create New User'),
+          content: SingleChildScrollView(
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: controller.namaController,
+                    decoration: InputDecoration(labelText: 'Name'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter name';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: controller.emailController,
+                    decoration: InputDecoration(labelText: 'Email'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter email';
+                      }
+                      if (!GetUtils.isEmail(value)) {
+                        return 'Please enter valid email';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: controller.passwordController,
+                    decoration: InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter password';
+                      }
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: controller.phoneController,
+                    decoration: InputDecoration(labelText: 'Phone Number'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter phone number';
+                      }
+                      return null;
+                    },
+                  ),
+                  FutureBuilder<List<Map<String, String>>>(
+                    future: controller.fetchRoles(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      }
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Text('No roles available');
+                      }
+                      return DropdownButtonFormField<String>(
+                        value: controller.selectedRoleId.value.isEmpty
+                            ? null
+                            : controller.selectedRoleId.value,
+                        items: snapshot.data!.map((role) {
+                          return DropdownMenuItem(
+                            value: role['id'],
+                            child: Text(role['name']!),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          controller.selectedRoleId.value = value ?? '';
+                        },
+                        decoration: InputDecoration(labelText: 'Role'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a role';
+                          }
+                          return null;
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: Text('Cancel'),
+            ),
+            Obx(() => TextButton(
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () => controller.createUser(),
+                  child: controller.isLoading.value
+                      ? CircularProgressIndicator()
+                      : Text('Create'),
+                )),
+          ],
         );
       },
     );

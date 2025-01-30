@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 final List<Map<String, dynamic>> donations = [
   {
@@ -52,20 +53,20 @@ class ReportList extends StatelessWidget {
                       Row(
                         children: [
                           Image.asset(
-                            'icons/dompet.png',
+                            'assets/icons/dompet.png',
                             width: 32,
                           ),
                           SizedBox(width: 6),
                           Text(
                             'Dompet Mal',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600, fontSize: 16),
                           ),
                         ],
                       ),
                       Text(
                         formattedDate,
-                        style: TextStyle(color: Colors.grey),
+                        style: GoogleFonts.poppins(color: Colors.grey),
                       ),
                     ],
                   ),
@@ -78,15 +79,16 @@ class ReportList extends StatelessWidget {
                   Gap(14),
                   Text(
                     'Pencairan Dana $formattedTotalDonasi',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
                       fontSize: 16,
                     ),
                   ),
                   SizedBox(height: 5),
                   Text(
                     'Ke rekening Mandiri *** **** **** ****\n 0060 a/n PEDULI SAHABAT',
-                    style: TextStyle(color: Colors.black87, fontSize: 16),
+                    style: GoogleFonts.poppins(
+                        color: Colors.black87, fontSize: 16),
                   ),
                 ],
               ),

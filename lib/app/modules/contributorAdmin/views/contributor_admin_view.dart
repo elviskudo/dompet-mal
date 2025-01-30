@@ -1,6 +1,6 @@
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:dompet_mal/app/modules/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/models/userModel.dart';
 
 class ContributorAdminView extends GetView<ContributorAdminController> {

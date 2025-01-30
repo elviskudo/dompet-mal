@@ -1,5 +1,6 @@
 import 'package:dompet_mal/color/color.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -16,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onFilterPressed,
   });
   @override
-  Size get preferredSize => Size.fromHeight(100);
+  Size get preferredSize => Size.fromHeight(130);
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +31,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       //   icon: Icon(Icons.arrow_back, color: Colors.black),
       //   onPressed: () => Navigator.pop(context),
       // ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
+      title: Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: Text(
+          title,
+          style: GoogleFonts.poppins(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(40),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border(
@@ -54,10 +58,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Button_filter(
-                  lebar, 'icons/icon_sort.png', 'Urutkan', onSortPressed),
-              Button_filter(
-                  lebar, 'icons/icon_filter.png', 'Filter', onFilterPressed),
+              Button_filter(lebar, 'assets/icons/icon_sort.png', 'Urutkan',
+                  onSortPressed),
+              Button_filter(lebar, 'assets/icons/icon_filter.png', 'Filter',
+                  onFilterPressed),
             ],
           ),
         ),
@@ -68,7 +72,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Container Button_filter(
       double lebar, String img, String name, Function()? onFilterPressed) {
     return Container(
-      width: lebar * 0.25,
+      // width: lebar * 0.25,
       child: OutlinedButton(
         onPressed: onFilterPressed,
         child: Row(
@@ -82,7 +86,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             SizedBox(width: 8), // Jarak antara gambar dan teks
             Text(
               name,
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 color: secondary,
                 fontSize: 14,
               ),
@@ -90,7 +94,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
         style: OutlinedButton.styleFrom(
-          padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
           side: BorderSide(color: secondary),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),

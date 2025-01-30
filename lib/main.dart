@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app/routes/app_pages.dart';
@@ -16,17 +17,6 @@ void main() async {
     );
 
     // Cek koneksi dengan mencoba query sederhana
-    final supabase = Supabase.instance.client;
-
-    var users = await supabase.from('users').select().limit(10);
-    print('users: $users');
-    print('============================================================');
-    var roles = await supabase.from('roles').select().limit(10);
-    print('role: $roles');
-    print('============================================================');
-
-    var user_roles = await supabase.from('user_roles').select().limit(10);
-    print('user roles: $user_roles');
 
     print('Database connection successful!');
 
@@ -55,14 +45,14 @@ void main() async {
                   size: 48,
                 ),
                 const SizedBox(height: 16),
-                const Text(
+                Text(
                   'Koneksi database gagal',
-                  style: TextStyle(fontSize: 18),
+                  style: GoogleFonts.poppins(fontSize: 18),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   e.toString(),
-                  style: const TextStyle(fontSize: 14),
+                  style: GoogleFonts.poppins(fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -71,7 +61,7 @@ void main() async {
                     // Implementasi retry logic di sini
                     main();
                   },
-                  child: const Text('Coba Lagi'),
+                  child: Text('Coba Lagi'),
                 ),
               ],
             ),

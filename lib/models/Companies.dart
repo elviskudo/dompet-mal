@@ -1,19 +1,19 @@
 import 'package:uuid/uuid.dart';
 
 class Companies {
-  final String? id;
-  final String? name;
-  final String? logoUrl;
-  final String? email;
-  final String? phoneNumber;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  String? id;
+  String? name;
+  String? email;
+  String? image;
+  String? phoneNumber;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
   Companies({
     this.id,
     this.name,
-    this.logoUrl,
     this.email,
+    this.image,
     this.phoneNumber,
     this.createdAt,
     this.updatedAt,
@@ -23,7 +23,6 @@ class Companies {
   factory Companies.fromJson(Map<String, dynamic> json) => Companies(
         id: json['id'],
         name: json['name'],
-        logoUrl: json['logo_url'],
         email: json['email'],
         phoneNumber: json['phone_number'],
         createdAt: json["created_at"] == null
@@ -38,7 +37,6 @@ class Companies {
   Map<String, dynamic> toJson() => {
         "id": id ?? const Uuid().v4(),
         'name': name,
-        'logo_url': logoUrl,
         'email': email,
         'phone_number': phoneNumber,
         "created_at":

@@ -22,10 +22,27 @@ class CompaniesController extends GetxController {
       final response = await supabase
           .from('companies')
           .select()
-          .order('created_at', ascending: false);
+          .order('name', ascending: true);
       print('res: $response');
-      companiesList.value =
-          (response as List).map((item) => Companies.fromJson(item)).toList();
+      List<Companies> companiesWithImages = [];
+      for (var item in response) {
+        final companies = Companies.fromJson(item);
+
+        final fileResponse = await supabase
+            .from('files')
+            .select('file_name')
+            .eq('module_class', 'companies')
+            .eq('module_id', companies.id!)
+            .limit(1)
+            .maybeSingle();
+
+        if (fileResponse != null) {
+          companies.image = fileResponse['file_name'];
+        }
+
+        companiesWithImages.add(companies);
+      }
+      companiesList.value = companiesWithImages;
     } catch (e) {
       Get.snackbar('Error', e.toString());
     } finally {

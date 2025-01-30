@@ -4,15 +4,18 @@ import 'package:dompet_mal/app/modules/(admin)/categories/views/categories_view.
 import 'package:dompet_mal/app/modules/(admin)/companies/views/companies_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/views/list_user_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/transactions/views/transactions_view.dart';
 import 'package:dompet_mal/app/modules/(admin)/upload/controllers/upload_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/upload/views/upload_view.dart';
-import 'package:dompet_mal/app/modules/bankAdmin/controllers/bank_admin_controller.dart';
-import 'package:dompet_mal/app/modules/bankAdmin/views/bank_admin_view.dart';
-import 'package:dompet_mal/app/modules/charityAdmin/controllers/charity_admin_controller.dart';
-import 'package:dompet_mal/app/modules/charityAdmin/views/charity_admin_view.dart';
-import 'package:dompet_mal/app/modules/contributorAdmin/controllers/contributor_admin_controller.dart';
-import 'package:dompet_mal/app/modules/contributorAdmin/views/contributor_admin_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/bankAdmin/controllers/bank_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/bankAdmin/views/bank_admin_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/views/charity_admin_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/views/contributor_admin_view.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,22 +28,24 @@ class AdminPanelView extends GetView<AdminPanelController> {
     Get.put(UploadController());
     Get.put(CategoriesController());
     Get.put(ContributorAdminController());
+    Get.put(TransactionsController());
     Get.put(CharityAdminController());
     Get.put(BankAdminController());
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           // Main Content
           Obx(() {
             return Container(
-              padding: EdgeInsets.only(top: 84, left: 16, right: 16),
+              padding: EdgeInsets.only(top: 110, left: 16, right: 16),
               child: _getPage(controller.selectedIndex.value),
             );
           }),
 
           // Menu Button
           Positioned(
-            top: 20,
+            top: 52,
             left: 28,
             child: Row(
               children: [
@@ -87,7 +92,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
           ),
 
           Positioned(
-            top: 20,
+            top: 52,
             right: 28, // Menggunakan posisi dari kanan
             child: Tooltip(
               message: 'Logout',
@@ -139,7 +144,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
                 child: Material(
                   elevation: 16,
                   child: Container(
-                    // color: Colors.blue,
+                    color: Colors.white,
                     child: Column(
                       children: [
                         const SizedBox(height: 40),
@@ -189,6 +194,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
         _buildMenuItem(3, 'Companies', Icons.compare_rounded),
         _buildMenuItem(4, 'Contributor', Icons.shape_line),
         _buildMenuItem(5, 'Charity', Icons.health_and_safety_sharp),
+        _buildMenuItem(6, 'Transaction', Icons.wallet),
         _buildMenuItem(7, 'Bank Account', Icons.branding_watermark_rounded),
       ],
     );
@@ -227,15 +233,16 @@ class AdminPanelView extends GetView<AdminPanelController> {
         return const UploadView();
       case 3:
         return CompaniesView();
-        case 4:
+      case 4:
         return ContributorAdminView();
-        case 5:
+      case 5:
         return CharityAdminView();
-        case 7:
+      case 6:
+        return TransactionsView();
+      case 7:
         return BankAdminView();
       default:
         return ListUserView();
-        
     }
   }
 }

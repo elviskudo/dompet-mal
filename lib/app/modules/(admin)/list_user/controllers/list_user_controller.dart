@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/helper/PasswordHasher.dart';
 import 'package:dompet_mal/models/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
+import 'package:dio/dio.dart' as dio;
 
 class ListUserController extends GetxController {
   final supabase = Supabase.instance.client;
@@ -11,16 +17,159 @@ class ListUserController extends GetxController {
   RxBool isLoading = false.obs;
   RxString roleUser = ''.obs;
   RxString currentUserId = ''.obs;
+  final formKey = GlobalKey<FormState>();
+  final namaController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final phoneController = TextEditingController();
+  RxString selectedRoleId = ''.obs;
+
+  final Rx<XFile?> selectedImage = Rx<XFile?>(null);
+  final Rx<Users?> currentUser = Rx<Users?>(null);
+  final cloudName = 'dcthljxbl';
+  final uploadPreset = 'dompet-mal';
 
   @override
   void onInit() {
     super.onInit();
-    getCurrentUser();
+    getCurrentUser().then((_) => loadCurrentUserData());
+  }
+
+  Future<void> logout() async {
+    try {
+      isLoading.value = true;
+
+      // Sign out from Supabase
+      await supabase.auth.signOut();
+
+      // Clear SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear(); // Clears all data
+      // Or clear specific keys if you prefer:
+      // await prefs.setBool('isLoggedIn', false);
+      // await prefs.remove('userEmail');
+      // await prefs.remove('userName');
+      // await prefs.remove('userPhone');
+      // await prefs.remove('userId');
+      // await prefs.remove('accessToken');
+
+      Get.snackbar(
+        'Sukses',
+        'Berhasil logout',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      // Navigate to login page
+      Get.offAllNamed(Routes.LOGIN);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Gagal logout: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> getCurrentUser() async {
     final prefs = await SharedPreferences.getInstance();
     currentUserId.value = prefs.getString('userId') ?? '';
+  }
+
+  Future<void> createUser() async {
+    if (!formKey.currentState!.validate()) return;
+
+    isLoading.value = true;
+
+    try {
+      final formattedPhoneNumber = formatPhoneNumber(phoneController.text);
+
+      // Use selected role ID instead of fetching default role
+      if (selectedRoleId.value.isEmpty) {
+        throw 'Please select a role';
+      }
+
+      // Insert data ke table users
+      final hashedPassword =
+          await PasswordHasher.hashPassword(passwordController.text);
+      String userId = Uuid().v4();
+      final userData = {
+        'id': userId,
+        'name': namaController.text,
+        'email': emailController.text.toLowerCase(),
+        'password': hashedPassword,
+        'phone_number': formattedPhoneNumber,
+        'access_token': '',
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      await supabase.from('users').insert(userData);
+
+      // Insert ke table user_roles dengan selected role
+      final userRoleData = {
+        'user_id': userId,
+        'role_id': selectedRoleId.value,
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      await supabase.from('user_roles').insert(userRoleData);
+
+      Get.snackbar(
+        'Sukses',
+        'User berhasil dibuat',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+
+      // Clear form
+      namaController.clear();
+      emailController.clear();
+      passwordController.clear();
+      phoneController.clear();
+      selectedRoleId.value = ''; // Reset selected role
+
+      // Refresh user list
+      await fetchUsers();
+
+      Get.back(); // Tutup dialog form
+    } catch (error) {
+      print('Error creating user: $error');
+      String errorMessage = 'Terjadi kesalahan saat membuat user';
+
+      if (error is PostgrestException) {
+        if (error.code == '23505') {
+          errorMessage = 'Email sudah terdaftar';
+        }
+      }
+
+      Get.snackbar(
+        'Error',
+        errorMessage,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Tambahkan helper method untuk format nomor telepon
+  String formatPhoneNumber(String phone) {
+    String cleanPhone = phone.replaceAll(RegExp(r'[^\d]'), '');
+    if (cleanPhone.startsWith('0')) {
+      cleanPhone = cleanPhone.substring(1);
+    }
+    if (!cleanPhone.startsWith('62')) {
+      cleanPhone = '62$cleanPhone';
+    }
+    return '+$cleanPhone';
   }
 
   Future<bool> isAdmin() async {
@@ -107,6 +256,122 @@ class ListUserController extends GetxController {
     }
   }
 
+  Future<void> updateProfileWithImage({
+    required String name,
+    required String phone,
+  }) async {
+    try {
+      isLoading.value = true;
+
+      // 1. First update user data
+      final formattedPhoneNumber = formatPhoneNumber(phone);
+      final updatedData = {
+        'name': name,
+        'phone_number': formattedPhoneNumber,
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      await supabase
+          .from('users')
+          .update(updatedData)
+          .eq('id', currentUserId.value);
+
+      // 2. Handle image upload if selected
+      if (selectedImage.value != null) {
+        final bytes = await File(selectedImage.value!.path).readAsBytes();
+        final fileName = selectedImage.value!.path.split('/').last;
+
+        final formData = dio.FormData.fromMap({
+          'file': dio.MultipartFile.fromBytes(
+            bytes,
+            filename: fileName,
+          ),
+          'upload_preset': uploadPreset,
+        });
+
+        final response = await dio.Dio().post(
+          'https://api.cloudinary.com/v1_1/$cloudName/image/upload',
+          data: formData,
+        );
+
+        if (response.statusCode == 200) {
+          // Get the URL from Cloudinary response
+          String imageUrl = response.data['secure_url'];
+
+          // Update or create file record
+          final fileData = {
+            'module_class': 'users',
+            'module_id': currentUserId.value,
+            'file_name': imageUrl,
+            'file_type': 'image',
+            'updated_at': DateTime.now().toIso8601String(),
+          };
+
+          // Check if file exists
+          final existingFile = await supabase
+              .from('files')
+              .select()
+              .eq('module_class', 'users')
+              .eq('module_id', currentUserId.value)
+              .maybeSingle();
+
+          if (existingFile != null) {
+            // Update existing file
+            await supabase
+                .from('files')
+                .update(fileData)
+                .eq('id', existingFile['id']);
+          } else {
+            // Insert new file
+            fileData['created_at'] = DateTime.now().toIso8601String();
+            await supabase.from('files').insert(fileData);
+          }
+        }
+      }
+
+      // 3. Refresh data
+      await fetchUsers();
+      await loadCurrentUserData();
+
+      Get.snackbar(
+        'Success',
+        'Profile updated successfully',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      print('Error updating profile: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to update profile: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+      selectedImage.value = null;
+    }
+  }
+
+// Add this method to load current user data
+  Future<void> loadCurrentUserData() async {
+    try {
+      final users = await fetchUsers();
+      final currentUser = users.firstWhere(
+        (user) => user.id == currentUserId.value,
+        orElse: () => throw Exception('User not found'),
+      );
+
+      namaController.text = currentUser.name;
+      emailController.text = currentUser.email;
+      phoneController.text = currentUser.phoneNumber.replaceFirst('+62', '');
+
+      this.currentUser.value = currentUser;
+    } catch (e) {
+      print('Error loading user data: $e');
+    }
+  }
+
   Future<void> updateUserRole(String userId, String roleId) async {
     try {
       isLoading.value = true;
@@ -152,6 +417,19 @@ class ListUserController extends GetxController {
 
         final roleName = roles['name'] ?? 'member';
 
+        // Fetch user image from files
+        String? imageUrl;
+        final fileResponse = await supabase
+            .from('files')
+            .select('file_name')
+            .eq('module_class', 'users')
+            .eq('module_id', user['id'])
+            .maybeSingle();
+
+        if (fileResponse != null) {
+          imageUrl = fileResponse['file_name'];
+        }
+
         users.add(Users(
           id: user['id'] as String,
           name: user['name'] as String,
@@ -159,6 +437,7 @@ class ListUserController extends GetxController {
           role: roleName,
           phoneNumber: user['phone_number'] as String,
           accessToken: user['access_token'] as String,
+          imageUrl: imageUrl, // Added image URL
           createdAt: DateTime.parse(user['created_at'] as String),
           updatedAt: DateTime.parse(user['updated_at'] as String),
         ));
@@ -315,6 +594,10 @@ class ListUserController extends GetxController {
 
   @override
   void onClose() {
+    namaController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    phoneController.dispose();
     super.onClose();
   }
 }

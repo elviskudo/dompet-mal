@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
@@ -22,7 +23,7 @@ class SectionHeader extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -31,7 +32,7 @@ class SectionHeader extends StatelessWidget {
             onPressed: onActionPressed,
             child: Text(
               actionText,
-              style: const TextStyle(fontSize: 12, color: Colors.blue),
+              style: GoogleFonts.poppins(fontSize: 12, color: Colors.blue),
             ),
           ),
         ],

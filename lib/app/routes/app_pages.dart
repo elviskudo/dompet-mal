@@ -1,5 +1,5 @@
-import 'package:dompet_mal/app/modules/bankAdmin/bindings/bank_admin_binding.dart';
-import 'package:dompet_mal/app/modules/bankAdmin/views/bank_admin_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/bankAdmin/bindings/bank_admin_binding.dart';
+import 'package:dompet_mal/app/modules/(admin)/bankAdmin/views/bank_admin_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/(admin)/admin_panel/bindings/admin_panel_binding.dart';
@@ -12,71 +12,71 @@ import '../modules/(admin)/list_user/bindings/list_user_binding.dart';
 import '../modules/(admin)/list_user/views/list_user_view.dart';
 import '../modules/(admin)/upload/bindings/upload_binding.dart';
 import '../modules/(admin)/upload/views/upload_view.dart';
-import '../modules/Report/bindings/report_binding.dart';
-import '../modules/Report/views/report_view.dart';
-import '../modules/aggrement/bindings/aggrement_binding.dart';
-import '../modules/aggrement/views/aggrement_view.dart';
-import '../modules/category/bindings/category_binding.dart';
-import '../modules/category/views/category_view.dart';
-import '../modules/charityAdmin/bindings/charity_admin_binding.dart';
-import '../modules/charityAdmin/views/charity_admin_view.dart';
-import '../modules/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
-import '../modules/confirmationTransfer/views/konfirmasi_transfer_view.dart';
-import '../modules/contributorAdmin/bindings/contributor_admin_binding.dart';
-import '../modules/contributorAdmin/views/contributor_admin_view.dart';
-import '../modules/donationDetailPage/bindings/donation_detail_page_binding.dart';
-import '../modules/donationDetailPage/views/donation_detail_page_view.dart';
-import '../modules/email_verification/bindings/email_verification_binding.dart';
-import '../modules/email_verification/views/email_verification_view.dart';
-import '../modules/forgot_password/bindings/forgot_password_binding.dart';
-import '../modules/forgot_password/views/forgot_password_view.dart';
-import '../modules/forgotpass_verification/bindings/forgotpass_verification_binding.dart';
-import '../modules/forgotpass_verification/views/forgotpass_verification_view.dart';
-import '../modules/home/bindings/home_binding.dart';
-import '../modules/home/views/home_view.dart';
-import '../modules/listDonation/bindings/list_donation_binding.dart';
-import '../modules/listDonation/views/list_donation_view.dart';
-import '../modules/listPayment/bindings/list_payment_binding.dart';
-import '../modules/listPayment/views/list_payment_view.dart';
-import '../modules/login/bindings/login_binding.dart';
-import '../modules/login/views/login_view.dart';
-import '../modules/message/bindings/message_binding.dart';
-import '../modules/message/views/message_view.dart';
-import '../modules/navigation/bindings/navigation_binding.dart';
-import '../modules/navigation/views/navigation_view.dart';
-import '../modules/notification/bindings/notification_binding.dart';
-import '../modules/notification/views/notification_view.dart';
-import '../modules/onBoardingPage/bindings/on_boarding_page_binding.dart';
-import '../modules/onBoardingPage/views/on_boarding_page_view.dart';
-import '../modules/participantPage/bindings/participant_page_binding.dart';
-import '../modules/participantPage/views/participant_page_view.dart';
-import '../modules/participants/bindings/participants_binding.dart';
-import '../modules/participants/views/participants_view.dart';
-import '../modules/paymentAccountPage/bindings/payment_account_page_binding.dart';
-import '../modules/paymentAccountPage/views/payment_account_page_view.dart';
-import '../modules/paymentSuccess/bindings/payment_success_binding.dart';
-import '../modules/paymentSuccess/views/payment_success_view.dart';
-import '../modules/profile/bindings/profile_binding.dart';
-import '../modules/profile/views/profile_view.dart';
-import '../modules/quran/bindings/quran_binding.dart';
-import '../modules/quran/views/quran_view.dart';
-import '../modules/register/bindings/register_binding.dart';
-import '../modules/register/views/register_view.dart';
-import '../modules/reset_pass/bindings/reset_pass_binding.dart';
-import '../modules/reset_pass/views/reset_pass_view.dart';
-import '../modules/sendMoney/bindings/sendMoney_binding.dart';
-import '../modules/sendMoney/views/sendMoney_view.dart';
-import '../modules/sendMoney2/bindings/send_money2_binding.dart';
-import '../modules/sendMoney2/views/send_money2_view.dart';
-import '../modules/splash_screen/bindings/splash_screen_binding.dart';
-import '../modules/splash_screen/views/splash_screen_view.dart';
+import '../modules/(home)/Report/bindings/report_binding.dart';
+import '../modules/(home)/Report/views/report_view.dart';
+import '../modules/(home)/aggrement/bindings/aggrement_binding.dart';
+import '../modules/(home)/aggrement/views/aggrement_view.dart';
+import '../modules/(home)/category/bindings/category_binding.dart';
+import '../modules/(home)/category/views/category_view.dart';
+import '../modules/(admin)/charityAdmin/bindings/charity_admin_binding.dart';
+import '../modules/(admin)/charityAdmin/views/charity_admin_view.dart';
+import '../modules/(home)/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
+import '../modules/(home)/confirmationTransfer/views/konfirmasi_transfer_view.dart';
+import '../modules/(admin)/contributorAdmin/bindings/contributor_admin_binding.dart';
+import '../modules/(admin)/contributorAdmin/views/contributor_admin_view.dart';
+import '../modules/(home)/donationDetailPage/bindings/donation_detail_page_binding.dart';
+import '../modules/(home)/donationDetailPage/views/donation_detail_page_view.dart';
+import '../modules/(home)/email_verification/bindings/email_verification_binding.dart';
+import '../modules/(home)/email_verification/views/email_verification_view.dart';
+import '../modules/(home)/forgot_password/bindings/forgot_password_binding.dart';
+import '../modules/(home)/forgot_password/views/forgot_password_view.dart';
+import '../modules/(home)/forgotpass_verification/bindings/forgotpass_verification_binding.dart';
+import '../modules/(home)/forgotpass_verification/views/forgotpass_verification_view.dart';
+import '../modules/(home)/home/bindings/home_binding.dart';
+import '../modules/(home)/home/views/home_view.dart';
+import '../modules/(home)/listDonation/bindings/list_donation_binding.dart';
+import '../modules/(home)/listDonation/views/list_donation_view.dart';
+import '../modules/(home)/listPayment/bindings/list_payment_binding.dart';
+import '../modules/(home)/listPayment/views/list_payment_view.dart';
+import '../modules/(home)/login/bindings/login_binding.dart';
+import '../modules/(home)/login/views/login_view.dart';
+import '../modules/(home)/message/bindings/message_binding.dart';
+import '../modules/(home)/message/views/message_view.dart';
+import '../modules/(home)/navigation/bindings/navigation_binding.dart';
+import '../modules/(home)/navigation/views/navigation_view.dart';
+import '../modules/(home)/notification/bindings/notification_binding.dart';
+import '../modules/(home)/notification/views/notification_view.dart';
+import '../modules/(home)/onBoardingPage/bindings/on_boarding_page_binding.dart';
+import '../modules/(home)/onBoardingPage/views/on_boarding_page_view.dart';
+import '../modules/(home)/participantPage/bindings/participant_page_binding.dart';
+import '../modules/(home)/participantPage/views/participant_page_view.dart';
+import '../modules/(home)/paymentAccountPage/bindings/payment_account_page_binding.dart';
+import '../modules/(home)/paymentAccountPage/views/payment_account_page_view.dart';
+import '../modules/(home)/paymentSuccess/bindings/payment_success_binding.dart';
+import '../modules/(home)/paymentSuccess/views/payment_success_view.dart';
+import '../modules/(home)/profile/bindings/profile_binding.dart';
+import '../modules/(home)/profile/views/profile_view.dart';
+import '../modules/(home)/quran/bindings/quran_binding.dart';
+import '../modules/(home)/quran/views/quran_view.dart';
+import '../modules/(home)/register/bindings/register_binding.dart';
+import '../modules/(home)/register/views/register_view.dart';
+import '../modules/(home)/reset_pass/bindings/reset_pass_binding.dart';
+import '../modules/(home)/reset_pass/views/reset_pass_view.dart';
+import '../modules/(home)/sendMoney/bindings/sendMoney_binding.dart';
+import '../modules/(home)/sendMoney/views/sendMoney_view.dart';
+import '../modules/(home)/sendMoney2/bindings/send_money2_binding.dart';
+import '../modules/(home)/sendMoney2/views/send_money2_view.dart';
+import '../modules/(home)/splash_screen/bindings/splash_screen_binding.dart';
+import '../modules/(home)/splash_screen/views/splash_screen_view.dart';
+import '../modules/(admin)/transactions/bindings/transactions_binding.dart';
+import '../modules/(admin)/transactions/views/transactions_view.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.LOGIN;
+  static const INITIAL = Routes.SPLASH_SCREEN;
 
   static final routes = [
     GetPage(
@@ -106,7 +106,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SEND_MONEY2,
-      page: () => const SendMoney2View(),
+      page: () => SendMoney2View(),
       binding: SendMoney2Binding(),
     ),
     GetPage(
@@ -161,19 +161,15 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PROFILE,
-      page: () => const ProfileView(),
-      binding: ProfileBinding(),
+      page: () =>  ProfileView(),
+      binding: ListUserBinding(),
     ),
     GetPage(
       name: _Paths.NAVIGATION,
       page: () => const NavigationView(),
       binding: NavigationBinding(),
     ),
-    GetPage(
-      name: _Paths.PARTICIPANTS,
-      page: () => const ParticipantsView(),
-      binding: ParticipantsBinding(),
-    ),
+  
     GetPage(
       name: _Paths.SEND_MONEY,
       page: () => const SendMoneyView(),
@@ -186,7 +182,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SEND_MONEY2,
-      page: () => const SendMoney2View(),
+      page: () => SendMoney2View(),
       binding: SendMoney2Binding(),
     ),
     GetPage(
@@ -258,6 +254,11 @@ class AppPages {
       name: _Paths.COMPANIES,
       page: () => CompaniesView(),
       binding: CompaniesBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRANSACTIONS,
+      page: () => const TransactionsView(),
+      binding: TransactionsBinding(),
     ),
     GetPage(
       name: _Paths.BANK_ADMIN,

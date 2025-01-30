@@ -1,43 +1,7 @@
+import 'package:dompet_mal/models/Category.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
-
-class Category {
-  String? id;
-  String? name;
-  String? description;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-
-  Category({
-    this.id,
-    this.name,
-    this.description,
-    this.createdAt,
-    this.updatedAt,
-  });
-
-  factory Category.fromJson(Map<String, dynamic> json) => Category(
-        id: json["id"],
-        name: json["name"],
-        description: json["description"],
-        createdAt: json["created_at"] == null
-            ? null
-            : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null
-            ? null
-            : DateTime.parse(json["updated_at"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id ?? const Uuid().v4(),
-        "name": name,
-        "description": description,
-        "created_at":
-            createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
-      };
-}
 
 class CategoriesController extends GetxController {
   final SupabaseClient supabase = Supabase.instance.client;
@@ -57,10 +21,28 @@ class CategoriesController extends GetxController {
       final response = await supabase
           .from('categories')
           .select()
-          .order('created_at', ascending: false);
+          .order('name', ascending: true);
 
-      categories.value =
-          (response as List).map((item) => Category.fromJson(item)).toList();
+      List<Category> categoriesWithImages = [];
+      for (var item in response) {
+        final category = Category.fromJson(item);
+
+        final fileResponse = await supabase
+            .from('files')
+            .select('file_name')
+            .eq('module_class', 'categories')
+            .eq('module_id', category.id!)
+            .limit(1)
+            .maybeSingle();
+
+        if (fileResponse != null) {
+          category.imageUrl = fileResponse['file_name'];
+        }
+
+        categoriesWithImages.add(category);
+      }
+
+      categories.value = categoriesWithImages;
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch categories: $e');
     } finally {
@@ -90,11 +72,16 @@ class CategoriesController extends GetxController {
       await supabase
           .from('categories')
           .update(category.toJson())
-          .eq('id', category.id as Object);
+          .eq('id', category.id as Object)
+          .order(
+            'name',
+            ascending: false,
+          );
       await getCategories(); // Refresh the list
       Get.snackbar('Success', 'Category updated successfully');
     } catch (e) {
       Get.snackbar('Error', 'Failed to update category: $e');
+      print('error: $e');
     } finally {
       isLoading.value = false;
     }

@@ -1,5 +1,5 @@
 // ignore_for_file: unused_field, file_names, use_key_in_widget_constructors, library_private_types_in_public_api
-import 'package:dompet_mal/app/modules/home/views/home_view.dart';
+import 'package:dompet_mal/app/modules/(home)/home/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -72,7 +72,7 @@ class _BottombarState extends State<Bottombar> {
         unselectedFontSize: 12,
         iconSize: 30,
         selectedLabelStyle: GoogleFonts.quicksand(
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
           color: Colors.black,
         ),
         unselectedLabelStyle: GoogleFonts.quicksand(

@@ -1,22 +1,67 @@
-import 'package:dompet_mal/app/modules/listDonation/views/list_donation_view.dart';
+import 'package:dompet_mal/app/modules/(admin)/categories/controllers/categories_controller.dart';
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
-import 'package:dompet_mal/models/pilihanKategoriModel.dart';
+import 'package:dompet_mal/component/animatedSearchHint.dart';
+import 'package:dompet_mal/models/Category.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class SearchBars extends StatelessWidget {
+class SearchBars extends StatefulWidget {
   final TextEditingController controller;
 
   const SearchBars({
     super.key,
     required this.controller,
   });
+
+  @override
+  State<SearchBars> createState() => _SearchBarsState();
+}
+
+class _SearchBarsState extends State<SearchBars> {
+  final FocusNode _focusNode = FocusNode();
+  final CategoriesController categoriesController =
+      Get.put<CategoriesController>(CategoriesController());
+
+  final CharityAdminController charityController =
+      Get.put<CharityAdminController>(CharityAdminController());
+  bool _isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      _isFocused = _focusNode.hasFocus;
+    });
+  }
+
+  void handleSearch(String searchTerm) {
+    if (searchTerm.isEmpty) return;
+
+    final category = findCategoryByTitle(searchTerm);
+
+    if (category != null) {
+      Get.toNamed(Routes.ListDonation, arguments: {
+        'category': category,
+        'searchTerm': searchTerm,
+      });
+    } else {
+      Get.toNamed(Routes.ListDonation, arguments: {
+        'searchTerm': searchTerm,
+      });
+    }
+  }
+
   Category? findCategoryByTitle(String title) {
     try {
-      // Asumsikan categories adalah list kategori dari model Anda
-      return categories.firstWhere(
-        (category) => category.name.toLowerCase().contains(title.toLowerCase()),
-        orElse: () => throw Exception('Category not found'),
+      return categoriesController.categories.firstWhereOrNull(
+        (category) =>
+            category.name!.toLowerCase().contains(title.toLowerCase()),
       );
     } catch (e) {
       print('Error finding category: $e');
@@ -43,31 +88,12 @@ class SearchBars extends StatelessWidget {
         ),
         child: Center(
           child: TextField(
-            controller: controller,
-            onSubmitted: (value) {
-              if (value.isEmpty) return;
-
-              // Cari kategori berdasarkan input
-              final category = findCategoryByTitle(value);
-
-              if (category != null) {
-                // Jika kategori ditemukan, navigasi dengan kategori sebagai argument
-                Get.toNamed(Routes.ListDonation, arguments: category);
-              } else {
-                // Jika kategori tidak ditemukan, tampilkan snackbar
-                Get.snackbar(
-                  'Kategori tidak ditemukan',
-                  'Silakan coba kata kunci lain',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.red,
-                  colorText: Colors.white,
-                );
-              }
-            },
+            controller: widget.controller,
+            focusNode: _focusNode,
+            onSubmitted: handleSearch,
             decoration: InputDecoration(
               prefixIcon: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 6.0, vertical: 0),
+                padding: const EdgeInsets.symmetric(horizontal: 6.0),
                 child: Container(
                   padding: EdgeInsets.all(4),
                   margin: EdgeInsets.only(right: 6),
@@ -78,20 +104,19 @@ class SearchBars extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Center(
-                      child: InkWell(
-                    hoverColor: Colors.black45,
-                    onTap: () {},
-                    child: Image.asset(
-                      'icons/search.png',
-                      width: 24,
-                      color: Colors.black,
-                      height: 24,
+                    child: InkWell(
+                      onTap: () => handleSearch(widget.controller.text),
+                      child: Image.asset(
+                        'assets/icons/search.png',
+                        width: 24,
+                        color: Colors.black,
+                        height: 24,
+                      ),
                     ),
-                  )),
+                  ),
                 ),
               ),
-              hintText: 'Coba cari "Bencana Alam"',
-              hintStyle: TextStyle(
+              hintStyle: GoogleFonts.poppins(
                 color: Colors.grey[400],
                 fontSize: 14,
               ),
@@ -100,11 +125,27 @@ class SearchBars extends StatelessWidget {
                 horizontal: 16.0,
                 vertical: 16.0,
               ),
+              label: (!_isFocused && widget.controller.text.isEmpty)
+                  ? AnimatedSearchHint(
+                      hintTexts: const [
+                        'kemanusiaan',
+                        'bencana alam',
+                        'pendidikan',
+                        'kesehatan',
+                      ],
+                    )
+                  : null,
             ),
-            textAlignVertical: TextAlignVertical.center,
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    super.dispose();
   }
 }

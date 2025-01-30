@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class appbar2 extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -30,7 +31,7 @@ class appbar2 extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Text(
         title,
-        style: TextStyle(color: titleColor),
+        style: GoogleFonts.poppins(color: titleColor),
       ),
       actions: [
         isIconMore
