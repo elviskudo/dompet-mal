@@ -94,8 +94,8 @@ class ContributorAdminController extends GetxController {
       filteredCharities.value = charities.value;
     } else {
       filteredCharities.value = charities.value.where((charity) {
-        return charity.title.toLowerCase().contains(query.toLowerCase()) ||
-               charity.description.toLowerCase().contains(query.toLowerCase());
+        return charity.title!.toLowerCase().contains(query.toLowerCase()) ||
+               charity.description!.toLowerCase().contains(query.toLowerCase());
       }).toList();
     }
   }

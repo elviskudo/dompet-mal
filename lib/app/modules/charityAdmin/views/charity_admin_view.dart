@@ -103,14 +103,14 @@ class CharityAdminView extends GetView<CharityAdminController> {
                       elevation: 4,  
                       margin: const EdgeInsets.symmetric(vertical: 8),  
                       child: ListTile(  
-                        title: Text(charity.title),  
+                        title: Text(charity.title!),  
                         subtitle: Text('Progress: ${charity.progress}%'),  
                         trailing: PopupMenuButton(  
                           onSelected: (value) {  
                             if (value == 'edit') {  
                               _showEditCharityBottomSheet(context, charity);  
                             } else if (value == 'delete') {  
-                              _showDeleteConfirmDialog(context, charity.id);  
+                              _showDeleteConfirmDialog(context, charity.id!);  
                             }  
                           },  
                           itemBuilder: (context) => [  
@@ -171,13 +171,13 @@ void _showAddCharityBottomSheet(BuildContext context) {
 // Metode untuk menampilkan bottom sheet edit charity  
 void _showEditCharityBottomSheet(BuildContext context, Charity charity) {
   // controller.resetFormFields();
-  controller.titleController.text = charity.title;
-  controller.descriptionController.text = charity.description;
+  controller.titleController.text = charity.title!;
+  controller.descriptionController.text = charity.description!;
   controller.progressController.text = charity.progress.toString();
   controller.targetTotalController.text = charity.targetTotal.toString();
-  controller.targetDateController.text = charity.targetDate.toIso8601String();
-  controller.selectedCategoryId.value = charity.categoryId;
-  controller.selectedCompanyId.value = charity.companyId;
+  controller.targetDateController.text = charity.targetDate!.toIso8601String();
+  controller.selectedCategoryId.value = charity.categoryId!;
+  controller.selectedCompanyId.value = charity.companyId!;
 
   showModalBottomSheet(
     context: context,

@@ -75,17 +75,18 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                                   _showCharitySelectionDialog(context),
                               icon: const Icon(Icons.heart_broken),
                               label: Text(
-                                controller.selectedCharityId.value.isEmpty
-                                    ? 'Select Charity'
-                                    : controller.charities
-                                        .firstWhere((charity) =>
-                                            charity.id ==
-                                            controller.selectedCharityId.value)
-                                        .title,
-                                style: const TextStyle(fontSize: 16),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+  controller.selectedCharityId.value.isEmpty
+      ? 'Select Charity'
+      : controller.charities
+          .firstWhere(
+            (charity) => charity.id == controller.selectedCharityId.value,
+            // orElse: () => null, // Return null if no match is found
+          )?.title ?? 'Unknown Charity', // Use fallback value if null
+  style: const TextStyle(fontSize: 16),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+),
+
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue[100],
                                 foregroundColor: Colors.blue[800],
@@ -177,7 +178,7 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(charity!.title),
+                            Text(charity!.title!),
                             Text(
                               'Added: ${contributor.created_at.toString().split('.')[0]}',
                               style: TextStyle(
@@ -295,11 +296,11 @@ class ContributorAdminView extends GetView<ContributorAdminController> {
                       itemBuilder: (context, index) {
                         final charity = controller.filteredCharities[index];
                         return ListTile(
-                          title: Text(charity.title),
-                          subtitle: Text(charity.description,
+                          title: Text(charity.title!),
+                          subtitle: Text(charity.description!,
                               maxLines: 1, overflow: TextOverflow.ellipsis),
                           onTap: () {
-                            controller.selectedCharityId.value = charity.id;
+                            controller.selectedCharityId.value = charity.id!;
                             Navigator.of(context).pop();
                           },
                         );
