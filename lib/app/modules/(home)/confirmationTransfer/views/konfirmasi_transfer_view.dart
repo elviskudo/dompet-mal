@@ -85,12 +85,12 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
     }
 
     final bankName =
-        args['bankAccount'] as String? ?? 'Nama bank tidak tersedia';
-    final bankId = args['bankId'] as String? ?? 'Nama bank tidak tersedia';
+        args['bankAccount'] as String? ?? 'Nama bank accounttidak tersedia';
+    final bankId = args['bankId'] as String? ?? 'id bank tidak tersedia';
     final transactionNumber =
         args['transactionNumber'] as String? ?? 'Nama bank tidak tersedia';
     final transactionId =
-        args['transactionId'] as String? ?? 'Nama bank tidak tersedia';
+        args['transactionId'] as String? ?? 'id transaksi tidak tersedia';
     final userId = args['userId'] as String? ?? 'Nama bank tidak tersedia';
     final bankImage =
         args['bankImage'] as String? ?? 'Image bank tidak tersedia';
@@ -106,7 +106,10 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
     final String idTransaksi =
         generateTransactionId(categoryName: namaKategori);
 
+    print('amount: $totalTransfer');
+
     final totalTransferFormatted = formatAmount(totalTransfer);
+     
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appbar2(
@@ -191,7 +194,10 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
               color: baseGray,
               height: 6,
             ),
-            Section_IdTransaksi(charityId: charityId, idTransaksi: idTransaksi,),
+            Section_IdTransaksi(
+              charityId: charityId,
+              idTransaksi: idTransaksi,
+            ),
             Container(
               width: lebar,
               color: baseGray,
@@ -245,6 +251,11 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                           ),
                           onPressed: () {
                             // Clear session and navigate to home
+                            final TransactionsController controller =
+                                Get.put(TransactionsController());
+
+                            // Hapus transaksi berdasarkan transactionId
+                            controller.deleteTransaction(transactionId);
                             Navigator.popUntil(
                                 context, (route) => route.isFirst);
                           },
@@ -378,7 +389,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                               id: trasactionId,
                               transactionNumber: transactionNumber,
                               status: 2,
-                              donationPrice: double.tryParse(donationPrice),
+                              donationPrice: int.parse(donationPrice),
                               bankId: bankId,
                               charityId: charityId,
                               userId: userId,
@@ -428,7 +439,6 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
       },
     );
   }
-
 
   Container _inputCopyTransfer(String nomorRekening, BuildContext context) {
     return Container(
@@ -500,7 +510,7 @@ class Section_IdTransaksi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final CharityAdminController controller = Get.put(CharityAdminController());
+    final CharityAdminController controller = Get.put(CharityAdminController());
 
     return Padding(
       padding: EdgeInsets.all(16),
@@ -535,7 +545,7 @@ class Section_IdTransaksi extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               }
-              
+
               if (snapshot.hasError) {
                 return Center(child: Text('Error loading charity data'));
               }
@@ -576,7 +586,8 @@ class Section_IdTransaksi extends StatelessWidget {
                   ),
                   subtitle: Text(
                     charity.created_at != null
-                        ? DateFormat('dd MMMM yyyy HH:mm').format(charity.created_at!)
+                        ? DateFormat('dd MMMM yyyy HH:mm')
+                            .format(charity.created_at!)
                         : 'Date not available',
                   ),
                 ),

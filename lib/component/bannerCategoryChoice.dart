@@ -8,9 +8,11 @@ import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/models/BankModel.dart';
 import 'package:dompet_mal/models/Category.dart';
 import 'package:dompet_mal/models/CharityModel.dart';
+import 'package:dompet_mal/models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -114,21 +116,27 @@ class _BannerKategoriState extends State<BannerKategori> {
     return formatter.format(value);
   }
 
-  Widget _buildDonationButton(BuildContext context, String charityId,
-      String categoryName, double lebar) {
+  // Show pending transaction warning
+
+  Widget _buildDonationButton(
+      BuildContext context, String charityId, String categoryName) {
     return Obx(() {
-      final latestTransaction = transactionController.transactions
+      final latestTransaction = transactionController.transactionsNoGroup.value
           .where((t) =>
               t.charityId == charityId &&
-              t.userId == transactionController.userId.value)
-          .toList()
-        ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+              t.userId == transactionController.userId.value &&
+              (t.status == 1 || t.status == 2))
+          .toList();
+      // Sort berdasarkan created_at untuk mendapatkan transaksi terbaru
+      latestTransaction.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName, lebar);
+        return _normalDonationButton(context, charityId, categoryName);
       }
 
-      final status = latestTransaction.first.status;
+      final mostRecentTransaction = latestTransaction.first;
+      final status = mostRecentTransaction.status;
+      // print('duit: $duit');
       if (status == 1 || status == 2) {
         return FutureBuilder<Bank?>(
           future: transactionController
@@ -141,48 +149,73 @@ class _BannerKategoriState extends State<BannerKategori> {
             final bank = snapshot.data;
             return ElevatedButton(
               onPressed: () {
-                Get.toNamed(
-                  Routes.KONFIRMASI_TRANSFER,
-                  arguments: {
-                    'kategori': categoryName,
-                    'charityId': charityId,
-                    'bankImage': bank?.image,
-                    'transactionNumber':
-                        latestTransaction.first.transactionNumber,
-                    'transactionId': latestTransaction.first.id,
-                    'bankId': latestTransaction.first.bankId,
-                    'bankAccount': bank?.name,
-                    'userId': transactionController.userId.value,
-                    'bankNumber': bank?.accountNumber,
-                    'amount':
-                        latestTransaction.first.donationPrice?.toString() ??
-                            '0',
-                  },
-                );
+                if (status == 2) {
+                  // Arahkan ke halaman Send Money jika status == 2
+                  Get.toNamed(
+                    Routes.SEND_MONEY,
+                    arguments: {
+                      'kategori': categoryName,
+                      'charityId': charityId,
+                      'bankImage': bank?.image,
+                      'transactionNumber':
+                          latestTransaction.first.transactionNumber,
+                      'idTransaksi': latestTransaction.first.id,
+                      'bankId': latestTransaction.first.bankId,
+                      'bankAccount': bank?.name,
+                      'userId': transactionController.userId.value,
+                      'bankNumber': bank?.accountNumber,
+                      'donationPrice':
+                          latestTransaction.first.donationPrice?.toString() ??
+                              '0',
+                    },
+                  );
+                } else {
+                  // Tetap ke halaman KONFIRMASI_TRANSFER jika status == 1
+                  Get.toNamed(
+                    Routes.KONFIRMASI_TRANSFER,
+                    arguments: {
+                      'kategori': categoryName,
+                      'charityId': charityId,
+                      'bankImage': bank?.image,
+                      'transactionNumber':
+                          latestTransaction.first.transactionNumber,
+                      'transactionId': latestTransaction.first.id,
+                      'bankId': latestTransaction.first.bankId,
+                      'bankAccount': bank?.name,
+                      'userId': transactionController.userId.value,
+                      'bankNumber': bank?.accountNumber,
+                      'amount':
+                          latestTransaction.first.donationPrice?.toString() ??
+                              '0',
+                    },
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(lebar, 32),
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: Size(80, 24),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 backgroundColor: const Color(0xffFFA500),
                 foregroundColor: Colors.white,
               ),
               child: Text(
                 "Lanjutkan Pembayaran",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(fontSize: 12),
+                style: GoogleFonts.poppins(fontSize: 14),
               ),
             );
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName, lebar);
+        return _normalDonationButton(context, charityId, categoryName);
       }
     });
   }
 
-  Widget _normalDonationButton(BuildContext context, String charityId,
-      String categoryName, double lebar) {
+  Widget _normalDonationButton(
+      BuildContext context, String charityId, String categoryName) {
+    var lebar = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
         Get.bottomSheet(
@@ -400,7 +433,6 @@ class _BannerKategoriState extends State<BannerKategori> {
                             context,
                             banner.id!,
                             categoryName,
-                            lebar,
                           ),
                         )
                       ],

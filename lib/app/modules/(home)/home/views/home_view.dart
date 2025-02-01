@@ -44,6 +44,7 @@ class HomeView extends GetView<HomeController> {
           await charityController.fetchCompanies();
           await charityController.calculateCharitySummary();
           await transactionController.getTransactions();
+          await transactionController.getTransactionsWithNoGrouping();
         },
         backgroundColor: Colors.white,
         child: SingleChildScrollView(

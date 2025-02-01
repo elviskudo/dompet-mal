@@ -3,6 +3,7 @@ import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transact
 import 'package:dompet_mal/app/modules/(home)/home/controllers/home_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/participantPage/controllers/participant_page_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/profile/controllers/profile_controller.dart';
+import 'package:dompet_mal/service/cron_service.dart';
 import 'package:get/get.dart';
 
 import '../controllers/navigation_controller.dart';
@@ -16,5 +17,6 @@ class NavigationBinding extends Bindings {
     Get.lazyPut<ListUserController>(() => ListUserController());
     Get.lazyPut<TransactionsController>(() => TransactionsController());
     Get.lazyPut<ParticipantPageController>(() => ParticipantPageController());
+    // Get.lazyPut<CronService>(() => CronService());
   }
 }

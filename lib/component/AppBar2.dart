@@ -1,5 +1,7 @@
+import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class appbar2 extends StatelessWidget implements PreferredSizeWidget {
@@ -27,7 +29,10 @@ class appbar2 extends StatelessWidget implements PreferredSizeWidget {
           Icons.arrow_back,
           color: iconColor,
         ),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          // Use the same navigation logic when pressing the back button
+          Get.offAllNamed(Routes.NAVIGATION); // Or your main route
+        },
       ),
       title: Text(
         title,

@@ -13,7 +13,7 @@ import 'package:uuid/uuid.dart';
 class TransactionsView extends GetView<TransactionsController> {
   const TransactionsView({super.key});
 
-  String formatToRupiah(double? amount) {
+  String formatToRupiah(int? amount) {
     if (amount == null) return 'Rp 0';
     final formatCurrency = NumberFormat.currency(
       locale: 'id',
@@ -306,7 +306,7 @@ class TransactionsView extends GetView<TransactionsController> {
                 id: transaction?.id,
                 transactionNumber: transactionNumberController.text,
                 status: selectedStatus.value,
-                donationPrice: double.tryParse(donationPriceController.text),
+                donationPrice: int.tryParse(donationPriceController.text),
                 bankId:
                     selectedBankId.value.isEmpty ? null : selectedBankId.value,
                 charityId: selectedCharityId.value.isEmpty

@@ -2,6 +2,7 @@ import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/donationDetailPage/views/donation_detail_page_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
+import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/models/BankModel.dart';
 import 'package:dompet_mal/models/Category.dart';
@@ -11,6 +12,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class StraightCharityComponent extends StatelessWidget {
@@ -51,21 +53,72 @@ class StraightCharityComponent extends StatelessWidget {
     }
   }
 
-  Widget _buildDonationButton(BuildContext context, String charityId,
-      String categoryName, double lebar) {
+  // Add method to check for pending transactions
+  Future<bool> hasUnpaidTransactions() async {
+    final incompleteTransactions = transactionController.transactionsNoGroup
+        .where((t) =>
+            t.userId == transactionController.userId.value &&
+            (t.status == 1 || t.status == 2))
+        .toList();
+    return incompleteTransactions.isNotEmpty;
+  }
+
+  // Show pending transaction warning
+  void _showPendingTransactionWarning(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            'Transaksi Pending',
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          content: Text(
+            'Anda masih memiliki transaksi yang belum diselesaikan. Silakan selesaikan transaksi terlebih dahulu.',
+            style: GoogleFonts.poppins(fontSize: 14),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Tutup',
+                style: GoogleFonts.poppins(color: basecolor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildDonationButton(
+      BuildContext context, String charityId, String categoryName) {
     return Obx(() {
-      final latestTransaction = transactionController.transactions
+      final latestTransaction = transactionController.transactionsNoGroup
           .where((t) =>
               t.charityId == charityId &&
-              t.userId == transactionController.userId.value)
-          .toList()
-        ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+              t.userId == transactionController.userId.value &&
+              (t.status == 1 || t.status == 2))
+          .toList();
+
+      // Sort berdasarkan created_at untuk mendapatkan transaksi terbaru
+      latestTransaction.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName, lebar);
+        return _normalDonationButton(context, charityId, categoryName);
       }
 
-      final status = latestTransaction.first.status;
+      final mostRecentTransaction = latestTransaction.first;
+      final status = mostRecentTransaction.status;
+
       if (status == 1 || status == 2) {
         return FutureBuilder<Bank?>(
           future: transactionController
@@ -76,51 +129,75 @@ class StraightCharityComponent extends StatelessWidget {
             }
 
             final bank = snapshot.data;
-            print(bank?.image);
             return ElevatedButton(
               onPressed: () {
-                Get.toNamed(
-                  Routes.KONFIRMASI_TRANSFER,
-                  arguments: {
-                    'kategori': categoryName,
-                    'charityId': charityId,
-                    'bankImage': bank?.image,
-                    'transactionNumber':
-                        latestTransaction.first.transactionNumber,
-                    'transactionId': latestTransaction.first.id,
-                    'bankId': latestTransaction.first.bankId,
-                    'bankAccount': bank?.name,
-                    'userId': transactionController.userId.value,
-                    'bankNumber': bank?.accountNumber,
-                    'amount':
-                        latestTransaction.first.donationPrice?.toString() ??
-                            '0',
-                  },
-                );
+                if (status == 2) {
+                  // Arahkan ke halaman Send Money jika status == 2
+                  Get.toNamed(
+                    Routes.SEND_MONEY,
+                    arguments: {
+                      'kategori': categoryName,
+                      'charityId': charityId,
+                      'bankImage': bank?.image,
+                      'transactionNumber':
+                          latestTransaction.first.transactionNumber,
+                      'idTransaksi': latestTransaction.first.id,
+                      'bankId': latestTransaction.first.bankId,
+                      'bankAccount': bank?.name,
+                      'userId': transactionController.userId.value,
+                      'bankNumber': bank?.accountNumber,
+                      'donationPrice':
+                          latestTransaction.first.donationPrice?.toString() ??
+                              '0',
+                    },
+                  );
+                } else {
+                  // Tetap ke halaman KONFIRMASI_TRANSFER jika status == 1
+                  Get.toNamed(
+                    Routes.KONFIRMASI_TRANSFER,
+                    arguments: {
+                      'kategori': categoryName,
+                      'charityId': charityId,
+                      'bankImage': bank?.image,
+                      'transactionNumber':
+                          latestTransaction.first.transactionNumber,
+                      'transactionId': latestTransaction.first.id,
+                      'bankId': latestTransaction.first.bankId,
+                      'bankAccount': bank?.name,
+                      'userId': transactionController.userId.value,
+                      'bankNumber': bank?.accountNumber,
+                      'amount':
+                          latestTransaction.first.donationPrice?.toString() ??
+                              '0',
+                    },
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(lebar, 32),
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                minimumSize: Size(80, 24),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 backgroundColor: const Color(0xffFFA500),
                 foregroundColor: Colors.white,
               ),
               child: Text(
                 "Lanjutkan Pembayaran",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(fontSize: 12),
+                style: GoogleFonts.poppins(fontSize: 14),
               ),
             );
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName, lebar);
+        return _normalDonationButton(context, charityId, categoryName);
       }
     });
   }
 
-  Widget _normalDonationButton(BuildContext context, String charityId,
-      String categoryName, double lebar) {
+  Widget _normalDonationButton(
+      BuildContext context, String charityId, String categoryName) {
+    var lebar = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
         Get.bottomSheet(
@@ -139,7 +216,10 @@ class StraightCharityComponent extends StatelessWidget {
         backgroundColor: const Color(0xff4B76D9),
         foregroundColor: Colors.white,
       ),
-      child: Text("Donasi"),
+      child: Text(
+        "Donasi",
+        style: GoogleFonts.poppins(fontSize: 12),
+      ),
     );
   }
 
@@ -273,7 +353,7 @@ class StraightCharityComponent extends StatelessWidget {
 
                         const SizedBox(height: 12),
                         Text(
-                          'Waktu Penyerahan',
+                          'Target Waktu Penyerahan',
                           style: GoogleFonts.poppins(
                             fontSize: 11,
                             color: Colors.black54,
@@ -304,7 +384,6 @@ class StraightCharityComponent extends StatelessWidget {
                             context,
                             banner.id!,
                             categoryName,
-                            lebar,
                           ),
                         )
                       ],

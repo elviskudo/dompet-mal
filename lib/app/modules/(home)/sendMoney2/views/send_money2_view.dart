@@ -1,17 +1,23 @@
 import 'dart:io';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
+import 'package:dompet_mal/app/modules/(home)/notification/controllers/notification_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/app/modules/(home)/sendMoney2/controllers/send_money2_controller.dart';
 import 'package:dompet_mal/color/color.dart';
 import 'package:dompet_mal/models/CharityModel.dart';
 import 'package:dompet_mal/models/TransactionModel.dart';
+import 'package:dompet_mal/models/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class SendMoney2View extends GetView<SendMoney2Controller> {
   SendMoney2View({super.key});
@@ -158,9 +164,43 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     );
   }
 
+  Future<void> _createNotification(
+      String userId, String charityTitle, String donationAmount) async {
+    try {
+      final notification = NotificationModels(
+        title: 'Donasi Berhasil',
+        body:
+            'Terima kasih! Donasi Anda sebesar Rp$donationAmount untuk $charityTitle telah berhasil.',
+        userId: userId,
+        uniqueId: const Uuid().v4(),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        isDeleted: false,
+      );
+      final supabase = Supabase.instance.client;
+
+      await supabase.from('notifications').insert(notification.toJson());
+
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: DateTime.now().millisecondsSinceEpoch.remainder(100000),
+          channelKey: 'transaction_service',
+          title: 'Donasi Berhasil',
+          body:
+              'Terima kasih! Donasi Anda sebesar Rp$donationAmount untuk $charityTitle telah berhasil.',
+          notificationLayout: NotificationLayout.Default,
+        ),
+      );
+    } catch (e) {
+      print('Error creating notification: $e');
+    }
+  }
+
   // Function to show success dialog
   Future<void> _showSuccessDialog(BuildContext context) async {
     final TransactionsController controller = Get.put(TransactionsController());
+    final NotificationController notifController =
+        Get.put(NotificationController());
     final CharityAdminController charityController =
         Get.put(CharityAdminController());
 
@@ -177,7 +217,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     final updatedTransaction = Transaction(
       bankId: bankId,
       charityId: charityId,
-      donationPrice: double.parse(donationPrice),
+      donationPrice: int.parse(donationPrice),
       transactionNumber: transactionNumber,
       userId: userId,
       status: 3, // Update status to 3
@@ -190,7 +230,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
       final charity =
           charityController.charities.firstWhere((c) => c.id == charityId);
       final currentTotal = charity.total ?? 0;
-      final newTotal = currentTotal + double.parse(donationPrice).toInt();
+      final newTotal = currentTotal + int.parse(donationPrice).toInt();
 
       // Calculate new progress percentage
       final targetTotal = charity.targetTotal ?? 1; // Prevent division by zero
@@ -223,10 +263,15 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
         await contributorController.addContributor();
       }
 
+      await _createNotification(
+          userId, charity.title ?? 'Program Amal', donationPrice);
+
       await contributorController.fetchContributors();
       await contributorController.fetchCharity();
       await charityController.fetchCharitiesWithContributors();
       await charityController.calculateCharitySummary();
+      await charityController.calculateCharitySummary();
+      await notifController.loadNotifications();
 
       showDialog(
         context: context,

@@ -12,7 +12,7 @@ class PaymentSuccessView extends GetView<PaymentSuccessController> {
   @override
   Widget build(BuildContext context) {
     final args = Get.arguments as Map<String, dynamic>;
-    final donationPrice = double.parse(args['donationPrice'] as String? ?? '0');
+    final donationPrice = int.parse(args['donationPrice'] as String? ?? '0');
 
     return WillPopScope(
       onWillPop: () async {

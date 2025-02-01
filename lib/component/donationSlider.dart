@@ -419,16 +419,16 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                                           transactionsController.userId.value,
                                       updatedAt: DateTime.now(),
                                       transactionNumber: transactionNumber,
-                                      donationPrice: double.parse(
-                                              donationController
-                                                  .donationAmount.value
-                                                  .toString()) *
-                                          2,
+                                      donationPrice: amount,
                                       status: 1 // Pending
                                       ));
 
                               Get.snackbar(
                                   'Berhasil transaksi', 'Status: pending');
+
+                              final cleanAmount = donationController
+                                  .donationAmount.value
+                                  .replaceAll(RegExp(r'[^0-9]'), '');
 
                               // Kirim data ke halaman konfirmasi
                               Get.toNamed(
@@ -448,8 +448,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
 
                                   'bankNumber':
                                       selectedBankAccount.value!.accountNumber,
-                                  'amount':
-                                      donationController.donationAmount.value,
+                                  'amount': cleanAmount,
                                   // Tambahkan data lain yang diperlukan
                                 },
                               );

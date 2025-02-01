@@ -226,10 +226,11 @@ class EmergencyFundCard extends StatelessWidget {
   Widget _buildDonationButton(
       BuildContext context, String charityId, String categoryName) {
     return Obx(() {
-      final latestTransaction = transactionController.transactions
+     final latestTransaction = transactionController.transactionsNoGroup.value
           .where((t) =>
               t.charityId == charityId &&
-              t.userId == transactionController.userId.value)
+              t.userId == transactionController.userId.value &&
+              (t.status == 1 || t.status == 2))
           .toList()
         ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
@@ -250,30 +251,54 @@ class EmergencyFundCard extends StatelessWidget {
             final bank = snapshot.data;
             return ElevatedButton(
               onPressed: () {
-                Get.toNamed(
-                  Routes.KONFIRMASI_TRANSFER,
-                  arguments: {
-                    'kategori': categoryName,
-                    'charityId': charityId,
-                    'bankImage': bank?.image,
-                    'transactionNumber':
-                        latestTransaction.first.transactionNumber,
-                    'transactionId': latestTransaction.first.id,
-                    'bankId': latestTransaction.first.bankId,
-                    'bankAccount': bank?.name,
-                    'userId': transactionController.userId.value,
-                    'bankNumber': bank?.accountNumber,
-                    'amount':
-                        latestTransaction.first.donationPrice?.toString() ??
-                            '0',
-                  },
-                );
+                if (status == 2) {
+                  // Arahkan ke halaman Send Money jika status == 2
+                  Get.toNamed(
+                    Routes.SEND_MONEY,
+                    arguments: {
+                      'kategori': categoryName,
+                      'charityId': charityId,
+                      'bankImage': bank?.image,
+                      'transactionNumber':
+                          latestTransaction.first.transactionNumber,
+                      'idTransaksi': latestTransaction.first.id,
+                      'bankId': latestTransaction.first.bankId,
+                      'bankAccount': bank?.name,
+                      'userId': transactionController.userId.value,
+                      'bankNumber': bank?.accountNumber,
+                      'donationPrice':
+                          latestTransaction.first.donationPrice?.toString() ??
+                              '0',
+                    },
+                  );
+                } else {
+                  // Tetap ke halaman KONFIRMASI_TRANSFER jika status == 1
+                  Get.toNamed(
+                    Routes.KONFIRMASI_TRANSFER,
+                    arguments: {
+                      'kategori': categoryName,
+                      'charityId': charityId,
+                      'bankImage': bank?.image,
+                      'transactionNumber':
+                          latestTransaction.first.transactionNumber,
+                      'transactionId': latestTransaction.first.id,
+                      'bankId': latestTransaction.first.bankId,
+                      'bankAccount': bank?.name,
+                      'userId': transactionController.userId.value,
+                      'bankNumber': bank?.accountNumber,
+                      'amount':
+                          latestTransaction.first.donationPrice?.toString() ??
+                              '0',
+                    },
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 minimumSize: Size(80, 24),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 backgroundColor: const Color(0xffFFA500),
                 foregroundColor: Colors.white,
               ),
@@ -292,6 +317,7 @@ class EmergencyFundCard extends StatelessWidget {
 
   Widget _normalDonationButton(
       BuildContext context, String charityId, String categoryName) {
+    var lebar = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
         Get.bottomSheet(
@@ -305,15 +331,14 @@ class EmergencyFundCard extends StatelessWidget {
         );
       },
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        minimumSize: Size(80, 24),
+        minimumSize: Size(lebar, 32),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: const Color(0xff4B76D9),
         foregroundColor: Colors.white,
       ),
       child: Text(
         "Donasi",
-        style: GoogleFonts.poppins(fontSize: 14),
+        style: GoogleFonts.poppins(fontSize: 12),
       ),
     );
   }

@@ -11,7 +11,7 @@ class ListPaymentView extends GetView<TransactionsController> {
     Get.put(TransactionsController());
   }
 
-  String formatToRupiah(double? amount) {
+  String formatToRupiah(int? amount) {
     if (amount == null) return 'Rp 0';
     final formatCurrency = NumberFormat.currency(
       locale: 'id',

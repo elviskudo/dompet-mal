@@ -7,7 +7,7 @@ class Transaction {
   final String? userId;
   final String? transactionNumber;
   final int? status;
-  final double? donationPrice;
+  final int? donationPrice;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -31,7 +31,7 @@ class Transaction {
         userId: json['user_id'],
         status: json['status'],
         transactionNumber: json['transaction_number'],
-        donationPrice: json['donation_price']?.toDouble(),
+        donationPrice: json['donation_price'],
         createdAt: json['created_at'] != null
             ? DateTime.parse(json['created_at'])
             : null,
@@ -62,7 +62,7 @@ class Transaction {
     String? userId,
     int? status,
     String? transactionNumber,
-    double? donationPrice,
+    int? donationPrice,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {

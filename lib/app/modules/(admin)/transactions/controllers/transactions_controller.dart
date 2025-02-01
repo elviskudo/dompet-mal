@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 class TransactionsController extends GetxController {
   final SupabaseClient supabase = Supabase.instance.client;
   RxList transactions = <Transaction>[].obs;
+  RxList transactionsNoGroup = <Transaction>[].obs;
   RxBool isLoading = false.obs;
   RxList banks = <Bank>[].obs;
   RxList charities = <Charity>[].obs;
@@ -25,6 +26,7 @@ class TransactionsController extends GetxController {
     getCharities();
     getUsers();
     getCurrentUser();
+    getTransactionsWithNoGrouping();
   }
 
   Future<void> getCurrentUser() async {
@@ -51,6 +53,34 @@ class TransactionsController extends GetxController {
     }
   }
 
+  Future<void> getTransactionsWithNoGrouping() async {
+    try {
+      isLoading.value = true;
+      final response = await supabase
+          .from('transactions')
+          .select(
+              'id, bank_id, charity_id, user_id, transaction_number, status, donation_price, created_at, updated_at')
+          .order('created_at', ascending: false);
+
+      if (response != null) {
+        transactionsNoGroup.value = (response as List<dynamic>)
+            .map((item) => Transaction.fromJson(item))
+            .toList();
+
+        print('Fetched ${transactionsNoGroup.length} transactions');
+      }
+    } catch (e) {
+      print('Error fetching ungrouped transactions: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to fetch transactions: $e',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   // Get all transactions
   Future getTransactions() async {
     try {
@@ -61,23 +91,26 @@ class TransactionsController extends GetxController {
               'id, bank_id, charity_id, user_id, transaction_number, status, donation_price, created_at, updated_at')
           .order('created_at', ascending: false);
 
-      // Map untuk menyimpan transaksi yang digroup
       final Map<String, Map<String, dynamic>> groupedTransactions = {};
 
       for (final item in response) {
         final key = '${item['user_id']}-${item['charity_id']}';
 
+        // Convert donation_price to int
+        int currentDonation = item['donation_price']?.toInt() ?? 0;
+
         if (groupedTransactions.containsKey(key)) {
-          // Jika key sudah ada, tambahkan donation_price ke total
-          groupedTransactions[key]!['donation_price'] +=
-              item['donation_price'] ?? 0;
+          int existingDonation =
+              groupedTransactions[key]!['donation_price'] ?? 0;
+          groupedTransactions[key]!['donation_price'] =
+              existingDonation + currentDonation;
         } else {
-          // Jika key belum ada, tambahkan transaksi baru
-          groupedTransactions[key] = Map<String, dynamic>.from(item);
+          var newItem = Map<String, dynamic>.from(item);
+          newItem['donation_price'] = currentDonation;
+          groupedTransactions[key] = newItem;
         }
       }
 
-      // Konversi hasil group menjadi daftar transaksi
       transactions.value = groupedTransactions.values
           .map((item) => Transaction.fromJson(item))
           .toList();

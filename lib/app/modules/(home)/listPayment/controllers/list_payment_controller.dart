@@ -36,7 +36,7 @@ class ListPaymentController extends GetxController {
   }
 
   // Fungsi untuk mendapatkan total donasi
-  double getTotalDonations() {
+  int getTotalDonations() {
     return payments.fold(0, (sum, payment) => sum + payment.donationAmount);
   }
 
