@@ -102,7 +102,8 @@ class _EmergencyFundSectionState extends State<EmergencyFundSection> {
                                       "imageUrl": contributor.user?.imageUrl ??
                                           'https://via.placeholder.com/40'
                                     })
-                                .toList()
+                                .toList(),
+                            "targetDate": banner.targetDate
                           }
                         });
                       },
@@ -224,7 +225,7 @@ class EmergencyFundCard extends StatelessWidget {
   }
 
   Widget _buildDonationButton(
-      BuildContext context, String charityId, String categoryName) {
+      BuildContext context, String charityId, String categoryName, targetDate) {
     return Obx(() {
      final latestTransaction = transactionController.transactionsNoGroup.value
           .where((t) =>
@@ -235,7 +236,7 @@ class EmergencyFundCard extends StatelessWidget {
         ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName);
+        return _normalDonationButton(context, charityId, categoryName, targetDate);
       }
 
       final status = latestTransaction.first.status;
@@ -310,13 +311,13 @@ class EmergencyFundCard extends StatelessWidget {
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName);
+        return _normalDonationButton(context, charityId, categoryName, targetDate);
       }
     });
   }
 
   Widget _normalDonationButton(
-      BuildContext context, String charityId, String categoryName) {
+      BuildContext context, String charityId, String categoryName, targetDate) {
     var lebar = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
@@ -325,6 +326,7 @@ class EmergencyFundCard extends StatelessWidget {
             kategoriId: charityId,
             charityId: charityId,
             kategori: categoryName,
+            targetDate: targetDate,
           ),
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
@@ -460,6 +462,7 @@ class EmergencyFundCard extends StatelessWidget {
                       context,
                       fund.id!,
                       categoryName,
+                      fund.targetDate!
                     ),
                   )
                 ],

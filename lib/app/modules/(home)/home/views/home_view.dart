@@ -14,10 +14,6 @@ import 'package:dompet_mal/component/logo.dart';
 import 'package:dompet_mal/component/notifcation.dart';
 import 'package:dompet_mal/component/search.dart';
 import 'package:dompet_mal/component/sectionHeader.dart';
-import 'package:dompet_mal/component/shareButton.dart';
-// import 'package:dompet_mal/models/HelpDonationCharity.dart';
-import 'package:dompet_mal/models/MorningCharity.dart';
-import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -72,7 +68,7 @@ class HomeView extends GetView<HomeController> {
               // Content
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+                    const EdgeInsets.symmetric(vertical: 26, horizontal: 0),
                 child: Column(
                   children: [
                     Padding(

@@ -53,6 +53,8 @@ class StraightCharityComponent extends StatelessWidget {
     }
   }
 
+  
+
   // Add method to check for pending transactions
   Future<bool> hasUnpaidTransactions() async {
     final incompleteTransactions = transactionController.transactionsNoGroup
@@ -100,25 +102,23 @@ class StraightCharityComponent extends StatelessWidget {
   }
 
   Widget _buildDonationButton(
-      BuildContext context, String charityId, String categoryName) {
+      BuildContext context, String charityId, String categoryName, targetDate) {
     return Obx(() {
-      final latestTransaction = transactionController.transactionsNoGroup
-          .where((t) =>
-              t.charityId == charityId &&
-              t.userId == transactionController.userId.value &&
-              (t.status == 1 || t.status == 2))
-          .toList();
+        final latestTransaction = transactionController.transactionsNoGroup
+        .where((t) => 
+            t.charityId == charityId && 
+            t.userId == transactionController.userId.value &&
+            (t.status == 1 || t.status == 2))
+        .toList();
 
-      // Sort berdasarkan created_at untuk mendapatkan transaksi terbaru
-      latestTransaction.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+    // Sort berdasarkan created_at untuk mendapatkan transaksi terbaru
+    latestTransaction.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName);
+        return _normalDonationButton(context, charityId, categoryName, targetDate);
       }
 
-      final mostRecentTransaction = latestTransaction.first;
-      final status = mostRecentTransaction.status;
-
+      final status = latestTransaction.first.status;
       if (status == 1 || status == 2) {
         return FutureBuilder<Bank?>(
           future: transactionController
@@ -190,18 +190,19 @@ class StraightCharityComponent extends StatelessWidget {
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName);
+        return _normalDonationButton(context, charityId, categoryName, targetDate);
       }
     });
   }
 
   Widget _normalDonationButton(
-      BuildContext context, String charityId, String categoryName) {
+      BuildContext context, String charityId, String categoryName, targetDate) {
     var lebar = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
         Get.bottomSheet(
           SlidingDonationSheet(
+            targetDate: targetDate,
             kategoriId: charityId,
             charityId: charityId,
             kategori: categoryName,
@@ -384,6 +385,7 @@ class StraightCharityComponent extends StatelessWidget {
                             context,
                             banner.id!,
                             categoryName,
+                            banner.targetDate!
                           ),
                         )
                       ],

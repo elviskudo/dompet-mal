@@ -119,7 +119,7 @@ class _BannerKategoriState extends State<BannerKategori> {
   // Show pending transaction warning
 
   Widget _buildDonationButton(
-      BuildContext context, String charityId, String categoryName) {
+      BuildContext context, String charityId, String categoryName, targetDate) {
     return Obx(() {
       final latestTransaction = transactionController.transactionsNoGroup.value
           .where((t) =>
@@ -131,7 +131,7 @@ class _BannerKategoriState extends State<BannerKategori> {
       latestTransaction.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName);
+        return _normalDonationButton(context, charityId, categoryName, targetDate);
       }
 
       final mostRecentTransaction = latestTransaction.first;
@@ -208,18 +208,19 @@ class _BannerKategoriState extends State<BannerKategori> {
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName);
+        return _normalDonationButton(context, charityId, categoryName, targetDate);
       }
     });
   }
 
   Widget _normalDonationButton(
-      BuildContext context, String charityId, String categoryName) {
+      BuildContext context, String charityId, String categoryName, targetDate) {
     var lebar = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
         Get.bottomSheet(
           SlidingDonationSheet(
+            targetDate: targetDate,
             kategoriId: charityId,
             charityId: charityId,
             kategori: categoryName,
@@ -433,6 +434,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                             context,
                             banner.id!,
                             categoryName,
+                            banner.targetDate
                           ),
                         )
                       ],

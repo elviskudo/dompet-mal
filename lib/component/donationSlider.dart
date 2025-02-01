@@ -1,3 +1,5 @@
+// ignore_for_file: override_on_non_overriding_member
+
 import 'dart:math';
 
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
@@ -18,12 +20,14 @@ class SlidingDonationSheet extends StatefulWidget {
   final String kategoriId;
   final String kategori;
   final String charityId;
+  final String targetDate;
 
   const SlidingDonationSheet({
     Key? key,
     required this.kategoriId,
     required this.kategori,
     required this.charityId,
+    required this.targetDate,
   }) : super(key: key);
   State<SlidingDonationSheet> createState() => _SlidingDonationSheetState();
 }
