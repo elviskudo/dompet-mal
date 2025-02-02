@@ -1,8 +1,10 @@
+import 'package:dompet_mal/component/donationSlider.dart';
 import 'package:dompet_mal/models/pilihanKategoriModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class BannerDanaOperasional extends StatefulWidget {
   const BannerDanaOperasional({
@@ -13,6 +15,8 @@ class BannerDanaOperasional extends StatefulWidget {
 }
 
 class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
+  final supabase = Supabase.instance.client;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -37,11 +41,47 @@ class _BannerDanaOperasionalState extends State<BannerDanaOperasional> {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
-            onTap: () {
-              // Handle tap
-              //  Get.
-              Get.toNamed("/donation-detail-page",
-                  arguments: {dummyDataListCategoryBanner[4]});
+            onTap: () async {
+              try {
+                final allCharities = await supabase
+                    .from('charities')
+                    .select('id, title, category_id');
+
+                print('All charities:');
+                for (var charity in allCharities) {
+                  print(
+                      'Title: ${charity['title']}, ID: ${charity['id']}, Category: ${charity['category_id']}');
+                }
+
+                // Then try to find the specific charity
+                final charityRes = await supabase
+                    .from('charities')
+                    .select()
+                    .ilike('title',
+                        '%dana operasional%')
+                    .limit(1)
+                    .single();
+
+                Get.bottomSheet(
+                  SlidingDonationSheet(
+                    kategoriId: charityRes['category_id'],
+                    charityId: charityRes['id'],
+                    kategori: "Dana Operasional",
+                    targetDate:
+                        DateTime.now().add(Duration(days: 30)).toString(),
+                    title: "Bantu Dana Operasional",
+                  ),
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                );
+              } catch (e) {
+                print('Error fetching charity data: $e');
+                Get.snackbar(
+                  'Error',
+                  'Tidak dapat memuat data donasi',
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              }
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
