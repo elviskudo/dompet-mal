@@ -287,6 +287,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                 "companyName": banner.companyName ?? "",
                 "companyImage": banner.companyImage ?? "",
                 "created_at": banner.created_at,
+                "targetDate": banner.targetDate,
                 "contributors": banner.contributors
                     .map((contributor) => {
                           "imageUrl": contributor.user?.imageUrl ??

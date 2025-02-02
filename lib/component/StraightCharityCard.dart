@@ -53,8 +53,6 @@ class StraightCharityComponent extends StatelessWidget {
     }
   }
 
-  
-
   // Add method to check for pending transactions
   Future<bool> hasUnpaidTransactions() async {
     final incompleteTransactions = transactionController.transactionsNoGroup
@@ -104,18 +102,19 @@ class StraightCharityComponent extends StatelessWidget {
   Widget _buildDonationButton(
       BuildContext context, String charityId, String categoryName, targetDate) {
     return Obx(() {
-        final latestTransaction = transactionController.transactionsNoGroup
-        .where((t) => 
-            t.charityId == charityId && 
-            t.userId == transactionController.userId.value &&
-            (t.status == 1 || t.status == 2))
-        .toList();
+      final latestTransaction = transactionController.transactionsNoGroup
+          .where((t) =>
+              t.charityId == charityId &&
+              t.userId == transactionController.userId.value &&
+              (t.status == 1 || t.status == 2))
+          .toList();
 
-    // Sort berdasarkan created_at untuk mendapatkan transaksi terbaru
-    latestTransaction.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+      // Sort berdasarkan created_at untuk mendapatkan transaksi terbaru
+      latestTransaction.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName, targetDate);
+        return _normalDonationButton(
+            context, charityId, categoryName, targetDate);
       }
 
       final status = latestTransaction.first.status;
@@ -190,7 +189,8 @@ class StraightCharityComponent extends StatelessWidget {
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName, targetDate);
+        return _normalDonationButton(
+            context, charityId, categoryName, targetDate);
       }
     });
   }
@@ -260,6 +260,7 @@ class StraightCharityComponent extends StatelessWidget {
                   "companyName": banner.companyName ?? "",
                   "companyImage": banner.companyImage ?? "",
                   "created_at": banner.created_at,
+                  "targetDate": banner.targetDate,
                   "contributors": banner.contributors
                       .map((contributor) => {
                             "imageUrl": contributor.user?.imageUrl ??
@@ -381,12 +382,8 @@ class StraightCharityComponent extends StatelessWidget {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10)),
                           width: double.infinity,
-                          child: _buildDonationButton(
-                            context,
-                            banner.id!,
-                            categoryName,
-                            banner.targetDate!
-                          ),
+                          child: _buildDonationButton(context, banner.id!,
+                              categoryName, banner.targetDate!),
                         )
                       ],
                     ),
