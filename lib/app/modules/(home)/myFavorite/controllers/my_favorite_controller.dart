@@ -9,16 +9,24 @@ class MyFavoriteController extends GetxController {
   final favorites = <Map<String, dynamic>>[].obs;
   final filteredCharities = <Charity>[].obs;
   final isLoading = false.obs;
+  late final CharityAdminController charityController;
 
   @override
   void onInit() {
     super.onInit();
-    getFavorites();
+    charityController = Get.find<CharityAdminController>();
+    // Tidak perlu memanggil getFavorites di sini karena akan dipanggil dari view
   }
 
-  Future<String?> getUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('userId');
+  @override
+  void onReady() {
+    super.onReady();
+    // Memantau perubahan pada charities di CharityAdminController
+    ever(charityController.charities, (_) {
+      if (favorites.isNotEmpty) {
+        filterCharities();
+      }
+    });
   }
 
   Future<void> getFavorites() async {
@@ -65,14 +73,14 @@ class MyFavoriteController extends GetxController {
 
   Future<bool> isFavorited(String charityId) async {
     try {
-      final userId = await getUserId();
-      if (userId == null) return false;
+      final prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('userId');
 
       final response = await supabase
           .from('favorites')
           .select()
           .eq('charity_id', charityId)
-          .eq('user_id', userId)
+          .eq('user_id', userId!)
           .eq('is_favorite', true)
           .single();
 
@@ -84,7 +92,8 @@ class MyFavoriteController extends GetxController {
 
   Future<void> toggleFavorite(String charityId) async {
     try {
-      final userId = await getUserId();
+      final prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('userId');
       if (userId == null) {
         Get.snackbar(
           'Error',
@@ -118,11 +127,11 @@ class MyFavoriteController extends GetxController {
       // Update filtered charities setelah toggle
       filterCharities();
 
-      Get.snackbar(
-        'Success',
-        existingFavorite == null ? 'Added to favorites' : 'Updated favorites',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      // Get.snackbar(
+      //   'Success',
+      //   existingFavorite == null ? 'Added to favorites' : 'Updated favorites',
+      //   snackPosition: SnackPosition.BOTTOM,
+      // );
     } catch (e) {
       print('Error toggling favorite: $e');
       Get.snackbar(

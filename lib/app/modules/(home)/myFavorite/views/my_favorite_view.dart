@@ -13,10 +13,25 @@ class MyFavoriteView extends GetView<MyFavoriteController> {
   MyFavoriteView({super.key});
 
   final charityController = Get.put(CharityAdminController());
-  final controller = Get.put(MyFavoriteController());
+
+  @override
+  void onInit() {
+    // Memastikan data charity sudah dimuat sebelum memuat favorites
+    initData();
+  }
+
+  Future<void> initData() async {
+    await charityController.charities; // Memuat data charity terlebih dahulu
+    await controller.getFavorites(); // Kemudian memuat data favorites
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Memuat data saat widget dibuild
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initData();
+    });
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Donasi Favorit',

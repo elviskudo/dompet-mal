@@ -1,3 +1,4 @@
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/list_user/controllers/list_user_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/home/controllers/home_controller.dart';
@@ -18,7 +19,8 @@ class NavigationBinding extends Bindings {
     Get.lazyPut<ListUserController>(() => ListUserController());
     Get.lazyPut<TransactionsController>(() => TransactionsController());
     Get.lazyPut<ParticipantPageController>(() => ParticipantPageController());
-    Get.lazyPut<MyFavoriteController>(() => MyFavoriteController());
+    Get.lazyPut<CharityAdminController>(() => CharityAdminController());
+    Get.put(MyFavoriteController());
     // Get.lazyPut<CronService>(() => CronService());
   }
 }

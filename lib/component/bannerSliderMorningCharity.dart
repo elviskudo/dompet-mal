@@ -98,7 +98,7 @@ class _BannerSliderState extends State<BannerSlider> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: Image.network(
-                          banner.image!,
+                          banner.image! ?? "",
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: 215,

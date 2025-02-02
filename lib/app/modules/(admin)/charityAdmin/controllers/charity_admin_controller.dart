@@ -69,8 +69,11 @@ class CharityAdminController extends GetxController {
       isCharitiesLoading.value = true;
       errorMessage.value = '';
 
-      final response =
-          await supabase.from('charities').select().eq('status', 1);
+      final response = await supabase
+          .from('charities')
+          .select()
+          .eq('status', 1)
+          .neq('title', 'Bantuan Dana Operasional');
       List<Charity> charitiesWithDetails = [];
 
       for (var item in response) {

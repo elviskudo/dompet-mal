@@ -431,6 +431,9 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                                       status: 1 // Pending
                                       ));
 
+                              await transactionsController
+                                  .getTransactionsWithNoGrouping();
+
                               Get.snackbar(
                                   'Berhasil transaksi', 'Status: pending');
 

@@ -1,6 +1,7 @@
 import 'package:dompet_mal/app/modules/(home)/home/views/home_view.dart';
 import 'package:dompet_mal/app/modules/(home)/listPayment/views/list_payment_view.dart';
 import 'package:dompet_mal/app/modules/(home)/myDonation/views/my_donation_view.dart';
+import 'package:dompet_mal/app/modules/(home)/myFavorite/controllers/my_favorite_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/myFavorite/views/my_favorite_view.dart';
 import 'package:dompet_mal/app/modules/(home)/navigation/controllers/navigation_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/profile/views/profile_view.dart';
@@ -12,6 +13,7 @@ class NavigationView extends GetView<NavigationController> {
   const NavigationView({super.key});
   @override
   Widget build(BuildContext context) {
+    Get.put(MyFavoriteController());
     return Scaffold(
       body: Obx(
         () => IndexedStack(
