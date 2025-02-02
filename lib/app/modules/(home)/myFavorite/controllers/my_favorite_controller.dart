@@ -24,18 +24,18 @@ class MyFavoriteController extends GetxController {
   Future<void> getFavorites() async {
     try {
       isLoading.value = true;
-      final userId = await getUserId();
-      if (userId == null) return;
+      final prefs = await SharedPreferences.getInstance();
+      var userId = prefs.getString('userId');
 
       // Mengambil data favorites yang is_favorite = true
       final response = await supabase
           .from('favorites')
           .select('*, charities(*)')
-          .eq('user_id', userId)
+          .eq('user_id', userId!)
           .eq('is_favorite', true);
 
       favorites.value = response as List<Map<String, dynamic>>;
-      
+
       // Filter charity berdasarkan data favorites
       filterCharities();
     } catch (e) {
@@ -53,13 +53,13 @@ class MyFavoriteController extends GetxController {
   // Method baru untuk memfilter charities
   void filterCharities() {
     final charityController = Get.find<CharityAdminController>();
-    
+
     // Filter charity yang ada di favorites
-    filteredCharities.value = charityController.charities.value.where((charity) {
-      return favorites.any((favorite) => 
-        favorite['charity_id'] == charity.id && 
-        favorite['is_favorite'] == true
-      );
+    filteredCharities.value =
+        charityController.charities.value.where((charity) {
+      return favorites.any((favorite) =>
+          favorite['charity_id'] == charity.id &&
+          favorite['is_favorite'] == true);
     }).toList();
   }
 
@@ -110,14 +110,14 @@ class MyFavoriteController extends GetxController {
       } else {
         await supabase
             .from('favorites')
-            .update({'is_favorite': !existingFavorite['is_favorite']})
-            .eq('id', existingFavorite['id']);
+            .update({'is_favorite': !existingFavorite['is_favorite']}).eq(
+                'id', existingFavorite['id']);
       }
 
       await getFavorites();
       // Update filtered charities setelah toggle
       filterCharities();
-      
+
       Get.snackbar(
         'Success',
         existingFavorite == null ? 'Added to favorites' : 'Updated favorites',

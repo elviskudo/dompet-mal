@@ -224,10 +224,10 @@ class EmergencyFundCard extends StatelessWidget {
     return total / targetTotal;
   }
 
-  Widget _buildDonationButton(
-      BuildContext context, String charityId, String categoryName, targetDate, String title) {
+  Widget _buildDonationButton(BuildContext context, String charityId,
+      String categoryName, targetDate, String title) {
     return Obx(() {
-     final latestTransaction = transactionController.transactionsNoGroup.value
+      final latestTransaction = transactionController.transactionsNoGroup.value
           .where((t) =>
               t.charityId == charityId &&
               t.userId == transactionController.userId.value &&
@@ -236,7 +236,8 @@ class EmergencyFundCard extends StatelessWidget {
         ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName, targetDate, title);
+        return _normalDonationButton(
+            context, charityId, categoryName, targetDate, title);
       }
 
       final status = latestTransaction.first.status;
@@ -311,13 +312,14 @@ class EmergencyFundCard extends StatelessWidget {
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName, targetDate, title);
+        return _normalDonationButton(
+            context, charityId, categoryName, targetDate, title);
       }
     });
   }
 
-  Widget _normalDonationButton(
-      BuildContext context, String charityId, String categoryName, targetDate, title) {
+  Widget _normalDonationButton(BuildContext context, String charityId,
+      String categoryName, targetDate, title) {
     var lebar = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
@@ -423,7 +425,7 @@ class EmergencyFundCard extends StatelessWidget {
                           ),
                           Gap(2),
                           Text(
-                            formatCurrency(fund.total!),
+                            formatCurrency(fund.total),
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w600, fontSize: 12),
                           ),
@@ -459,13 +461,8 @@ class EmergencyFundCard extends StatelessWidget {
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(10)),
                     width: double.infinity,
-                    child: _buildDonationButton(
-                      context,
-                      fund.id!,
-                      categoryName,
-                      fund.targetDate!,
-                      fund.title!
-                    ),
+                    child: _buildDonationButton(context, fund.id!, categoryName,
+                        fund.targetDate!, fund.title!),
                   )
                 ],
               ),

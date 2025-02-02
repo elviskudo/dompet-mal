@@ -51,6 +51,7 @@ class Charity {
         categoryId: json["category_id"],
         companyId: json["company_id"],
         title: json["title"],
+        total: json["total"],
         description: json["description"],
         progress: json["progress"],
         targetDate: json["target_date"],
