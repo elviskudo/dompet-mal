@@ -245,7 +245,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
         description: charity.description,
         progress: newProgress,
         total: newTotal,
-        targetTotal: charity.targetTotal,
+        // targetTotal: charity.targetTotal,
         targetDate: charity.targetDate,
         status: charity.status,
         updated_at: DateTime.now(),

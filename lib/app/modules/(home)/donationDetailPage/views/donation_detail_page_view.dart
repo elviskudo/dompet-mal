@@ -3,7 +3,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/app/modules/(admin)/transactions/controllers/transactions_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/donationDetailPage/controllers/donation_detail_page_controller.dart';
+import 'package:dompet_mal/app/modules/(home)/myFavorite/controllers/my_favorite_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/myFavorite/views/my_favorite_view.dart';
+import 'package:dompet_mal/app/modules/(home)/navigation/controllers/navigation_controller.dart';
 import 'package:dompet_mal/app/modules/(home)/participantPage/views/participant_page_view.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:dompet_mal/component/donationSlider.dart';
@@ -33,6 +35,8 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
   Widget build(BuildContext context) {
     final TransactionsController transactionsController =
         Get.put(TransactionsController());
+    final MyFavoriteController favController =
+        Get.put(MyFavoriteController());
     final arguments = Get.arguments as Map<String, dynamic>;
     final Map<String, dynamic>? detail = Get.arguments;
 
@@ -108,10 +112,15 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.favorite, color: Colors.black),
-            onPressed: () {
-              Get.to(MyFavoriteView());
-            },
+            icon: Obx(() {
+              final isFavorited = favController.favorites.any((f) =>
+                  f['charity_id'] == charity["id"] && f['is_favorite'] == true);
+              return Icon(
+                Icons.favorite,
+                color: isFavorited ? Colors.red : Colors.grey,
+              );
+            }),
+            onPressed: () => favController.toggleFavorite(charity["id"]),
           ),
           ShareButton(
             title: charity["title"] ?? "kk",
@@ -453,11 +462,16 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       SizedBox(
                         height: 32,
                       ),
-                      Obx(
-                        () {
-                          if (transactionsController.transactions.isNotEmpty) {
-                            final latestTransaction =
-                                transactionsController.transactions.first;
+                      Obx(() {
+                        final relevantTransactions = transactionsController
+                            .transactions
+                            .where((t) => t.charityId == charity["id"])
+                            .toList();
+
+                        if (relevantTransactions.isNotEmpty) {
+                          final latestTransaction = relevantTransactions.first;
+                          // Tampilkan card hanya jika status delivered (3)
+                          if (latestTransaction.status == 3) {
                             return laporanCard(
                               context,
                               transactionsController.banks
@@ -468,11 +482,11 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                                   .toStringAsFixed(0),
                               latestTransaction.createdAt!,
                             );
-                          } else {
-                            return CircularProgressIndicator();
                           }
-                        },
-                      ),
+                        }
+                        return SizedBox
+                            .shrink(); // Tidak menampilkan apa-apa jika tidak ada transaksi atau status bukan 3
+                      }),
                       Gap(26),
                       Container(
                         width: double.infinity,
@@ -485,6 +499,7 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                                 charityId: charity["id"] ?? "",
                                 kategori: categoryName ?? "",
                                 targetDate: targetDate ?? "",
+                                title: charity["title"] ?? "",
                               ),
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,

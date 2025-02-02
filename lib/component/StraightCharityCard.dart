@@ -100,7 +100,7 @@ class StraightCharityComponent extends StatelessWidget {
   }
 
   Widget _buildDonationButton(
-      BuildContext context, String charityId, String categoryName, targetDate) {
+      BuildContext context, String charityId, String categoryName, targetDate, String title) {
     return Obx(() {
       final latestTransaction = transactionController.transactionsNoGroup
           .where((t) =>
@@ -114,7 +114,7 @@ class StraightCharityComponent extends StatelessWidget {
 
       if (latestTransaction.isEmpty) {
         return _normalDonationButton(
-            context, charityId, categoryName, targetDate);
+            context, charityId, categoryName, targetDate, title);
       }
 
       final status = latestTransaction.first.status;
@@ -190,13 +190,13 @@ class StraightCharityComponent extends StatelessWidget {
         );
       } else {
         return _normalDonationButton(
-            context, charityId, categoryName, targetDate);
+            context, charityId, categoryName, targetDate, title);
       }
     });
   }
 
   Widget _normalDonationButton(
-      BuildContext context, String charityId, String categoryName, targetDate) {
+      BuildContext context, String charityId, String categoryName, targetDate,  String title) {
     var lebar = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
@@ -206,6 +206,7 @@ class StraightCharityComponent extends StatelessWidget {
             kategoriId: charityId,
             charityId: charityId,
             kategori: categoryName,
+            title: title,
           ),
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
@@ -383,7 +384,7 @@ class StraightCharityComponent extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10)),
                           width: double.infinity,
                           child: _buildDonationButton(context, banner.id!,
-                              categoryName, banner.targetDate!),
+                              categoryName, banner.targetDate!, banner.title!),
                         )
                       ],
                     ),

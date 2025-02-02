@@ -11,8 +11,11 @@ import '../controllers/my_favorite_controller.dart';
 
 class MyFavoriteView extends GetView<MyFavoriteController> {
   MyFavoriteView({super.key});
-  @override
+
   final charityController = Get.put(CharityAdminController());
+  final controller = Get.put(MyFavoriteController());
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
@@ -30,12 +33,17 @@ class MyFavoriteView extends GetView<MyFavoriteController> {
           padding: EdgeInsetsDirectional.all(24),
           child: Obx(
             () {
-              if (charityController.charities.value.isEmpty) {
-                return Center(child: Text('Tidak ada data ditemukan'));
+              if (controller.isLoading.value) {
+                return Center(child: CircularProgressIndicator());
               }
+
+              if (controller.filteredCharities.isEmpty) {
+                return Center(child: Text('Tidak ada data favorit'));
+              }
+
               return BannerKategori(
                 category: charityController.categories.value,
-                banners: charityController.charities.value,
+                banners: controller.filteredCharities,
                 maxItems: 0,
               );
             },

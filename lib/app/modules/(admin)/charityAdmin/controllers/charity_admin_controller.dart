@@ -303,7 +303,7 @@ class CharityAdminController extends GetxController {
         description: descriptionController.text,
         progress: int.parse(progressController.text),
         // total: int.parse(totalController.text),
-        targetTotal: int.parse(targetTotalController.text),
+        // targetTotal: int.parse(targetTotalController.text),
         targetDate: targetDateController.text,
         created_at: DateTime.now(),
         updated_at: DateTime.now(),
@@ -340,7 +340,7 @@ class CharityAdminController extends GetxController {
         description: descriptionController.text,
         progress: int.parse(progressController.text),
         // total: int.parse(totalController.text),
-        targetTotal: int.parse(targetTotalController.text),
+        // targetTotal: int.parse(targetTotalController.text),
         targetDate: targetDateController.text,
         created_at: DateTime.now(), // Optionally keep the original created_at
         updated_at: DateTime.now(),

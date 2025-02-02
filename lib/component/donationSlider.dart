@@ -21,6 +21,7 @@ class SlidingDonationSheet extends StatefulWidget {
   final String kategori;
   final String charityId;
   final String targetDate;
+  final String title;
 
   const SlidingDonationSheet({
     Key? key,
@@ -28,6 +29,7 @@ class SlidingDonationSheet extends StatefulWidget {
     required this.kategori,
     required this.charityId,
     required this.targetDate,
+    required this.title,
   }) : super(key: key);
   State<SlidingDonationSheet> createState() => _SlidingDonationSheetState();
 }
@@ -261,7 +263,9 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                 ),
               ),
               Text(
-                'Masukkan Nominal Donasi\nUntuk Dana Operasional',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                'Masukkan Nominal Donasi\nUntuk ${widget.title}', // Ubah text ini
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,

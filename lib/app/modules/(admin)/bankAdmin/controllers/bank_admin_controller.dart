@@ -36,6 +36,7 @@ class BankAdminController extends GetxController {
             .eq('module_id', bank.id!)
             .limit(1)
             .maybeSingle();
+        
 
         if (fileResponse != null) {
           bank.image = fileResponse['file_name'];

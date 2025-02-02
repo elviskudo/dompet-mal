@@ -119,7 +119,7 @@ class _BannerKategoriState extends State<BannerKategori> {
   // Show pending transaction warning
 
   Widget _buildDonationButton(
-      BuildContext context, String charityId, String categoryName, targetDate) {
+      BuildContext context, String charityId, String categoryName, targetDate, title) {
     return Obx(() {
       final latestTransaction = transactionController.transactionsNoGroup.value
           .where((t) =>
@@ -131,7 +131,7 @@ class _BannerKategoriState extends State<BannerKategori> {
       latestTransaction.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
       if (latestTransaction.isEmpty) {
-        return _normalDonationButton(context, charityId, categoryName, targetDate);
+        return _normalDonationButton(context, charityId, categoryName, targetDate, title);
       }
 
       final mostRecentTransaction = latestTransaction.first;
@@ -208,13 +208,13 @@ class _BannerKategoriState extends State<BannerKategori> {
           },
         );
       } else {
-        return _normalDonationButton(context, charityId, categoryName, targetDate);
+        return _normalDonationButton(context, charityId, categoryName, targetDate, title);
       }
     });
   }
 
   Widget _normalDonationButton(
-      BuildContext context, String charityId, String categoryName, targetDate) {
+      BuildContext context, String charityId, String categoryName, targetDate, title) {
     var lebar = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {
@@ -224,6 +224,7 @@ class _BannerKategoriState extends State<BannerKategori> {
             kategoriId: charityId,
             charityId: charityId,
             kategori: categoryName,
+            title: title,
           ),
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
@@ -435,7 +436,8 @@ class _BannerKategoriState extends State<BannerKategori> {
                             context,
                             banner.id!,
                             categoryName,
-                            banner.targetDate
+                            banner.targetDate,
+                            banner.title!
                           ),
                         )
                       ],

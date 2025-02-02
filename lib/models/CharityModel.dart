@@ -38,7 +38,6 @@ class Charity {
     this.total,
     this.image,
     this.companyName,
-    this.targetTotal,
     this.companyImage,
     this.targetDate,
     this.created_at,
@@ -54,8 +53,6 @@ class Charity {
         title: json["title"],
         description: json["description"],
         progress: json["progress"],
-        total: json["total"],
-        targetTotal: json["target_total"],
         targetDate: json["target_date"],
         created_at: json["created_at"] == null
             ? null
