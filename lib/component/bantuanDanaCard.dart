@@ -269,8 +269,7 @@ class EmergencyFundCard extends StatelessWidget {
                       'userId': transactionController.userId.value,
                       'bankNumber': bank?.accountNumber,
                       'donationPrice':
-                          latestTransaction.first.donationPrice?.toString() ??
-                              '0',
+                          latestTransaction.first.donationPrice ?? 0,
                     },
                   );
                 } else {
@@ -288,9 +287,7 @@ class EmergencyFundCard extends StatelessWidget {
                       'bankAccount': bank?.name,
                       'userId': transactionController.userId.value,
                       'bankNumber': bank?.accountNumber,
-                      'amount':
-                          latestTransaction.first.donationPrice?.toString() ??
-                              '0',
+                      'amount': latestTransaction.first.donationPrice ?? 0,
                     },
                   );
                 }

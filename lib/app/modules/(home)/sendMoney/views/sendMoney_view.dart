@@ -29,7 +29,7 @@ class SendMoneyView extends GetView<SendMoneyController> {
         args?['transactionNumber'] as String? ?? default_id_transaksi;
     final charityId = args?['charityId'] as String? ?? '';
     final bankId = args?['bankId'] as String? ?? '';
-    final donationPrice = args?['donationPrice'] as String? ?? '0';
+    final int donationPrice = args?['donationPrice'] as int? ?? 0;
     final userId = args?['userId'] as String? ?? '';
 
     print('transid id : $transactionId');

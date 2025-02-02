@@ -165,8 +165,7 @@ class _BannerKategoriState extends State<BannerKategori> {
                       'userId': transactionController.userId.value,
                       'bankNumber': bank?.accountNumber,
                       'donationPrice':
-                          latestTransaction.first.donationPrice?.toString() ??
-                              '0',
+                          latestTransaction.first.donationPrice ?? 0,
                     },
                   );
                 } else {
@@ -185,8 +184,8 @@ class _BannerKategoriState extends State<BannerKategori> {
                       'userId': transactionController.userId.value,
                       'bankNumber': bank?.accountNumber,
                       'amount':
-                          latestTransaction.first.donationPrice?.toString() ??
-                              '0',
+                          latestTransaction.first.donationPrice ??
+                              0,
                     },
                   );
                 }

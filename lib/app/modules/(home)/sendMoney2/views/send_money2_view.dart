@@ -165,7 +165,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
   }
 
   Future<void> _createNotification(
-      String userId, String charityTitle, String donationAmount) async {
+      String userId, String charityTitle, int donationAmount) async {
     try {
       final notification = NotificationModels(
         title: 'Donasi Berhasil',
@@ -211,13 +211,13 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     final transactionNumber = args?['transactionNumber'] as String? ?? '';
     final charityId = args?['charityId'] as String? ?? '';
     final bankId = args?['bankId'] as String? ?? '';
-    final donationPrice = args?['donationPrice'] as String? ?? '0';
+    final int donationPrice = args?['donationPrice'] as int? ?? 0;
     final userId = args?['userId'] as String? ?? '';
 
     final updatedTransaction = Transaction(
       bankId: bankId,
       charityId: charityId,
-      donationPrice: int.parse(donationPrice),
+      donationPrice: donationPrice,
       transactionNumber: transactionNumber,
       userId: userId,
       status: 3, // Update status to 3
@@ -230,7 +230,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
       final charity =
           charityController.charities.firstWhere((c) => c.id == charityId);
       final currentTotal = charity.total ?? 0;
-      final newTotal = currentTotal + int.parse(donationPrice).toInt();
+      final newTotal = currentTotal + donationPrice;
 
       // Calculate new progress percentage
       final targetTotal = charity.targetTotal ?? 1; // Prevent division by zero
@@ -453,7 +453,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
     await Future.delayed(Duration(seconds: 2));
     Navigator.pop(context);
     final args = Get.arguments as Map<String, dynamic>;
-    final donationPrice = args['donationPrice'] as String? ?? '0';
+    final int donationPrice = args['donationPrice'] as int? ?? 0;
     Get.offNamed(
       Routes.PAYMENT_SUCCESS,
       arguments: {

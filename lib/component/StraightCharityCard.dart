@@ -99,8 +99,8 @@ class StraightCharityComponent extends StatelessWidget {
     );
   }
 
-  Widget _buildDonationButton(
-      BuildContext context, String charityId, String categoryName, targetDate, String title) {
+  Widget _buildDonationButton(BuildContext context, String charityId,
+      String categoryName, targetDate, String title) {
     return Obx(() {
       final latestTransaction = transactionController.transactionsNoGroup
           .where((t) =>
@@ -146,8 +146,7 @@ class StraightCharityComponent extends StatelessWidget {
                       'userId': transactionController.userId.value,
                       'bankNumber': bank?.accountNumber,
                       'donationPrice':
-                          latestTransaction.first.donationPrice?.toString() ??
-                              '0',
+                          latestTransaction.first.donationPrice ?? 0,
                     },
                   );
                 } else {
@@ -165,9 +164,7 @@ class StraightCharityComponent extends StatelessWidget {
                       'bankAccount': bank?.name,
                       'userId': transactionController.userId.value,
                       'bankNumber': bank?.accountNumber,
-                      'amount':
-                          latestTransaction.first.donationPrice?.toString() ??
-                              '0',
+                      'amount': latestTransaction.first.donationPrice ?? 0,
                     },
                   );
                 }
@@ -195,8 +192,8 @@ class StraightCharityComponent extends StatelessWidget {
     });
   }
 
-  Widget _normalDonationButton(
-      BuildContext context, String charityId, String categoryName, targetDate,  String title) {
+  Widget _normalDonationButton(BuildContext context, String charityId,
+      String categoryName, targetDate, String title) {
     var lebar = MediaQuery.of(context).size.width;
     return ElevatedButton(
       onPressed: () {

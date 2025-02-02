@@ -20,8 +20,6 @@ import 'package:intl/intl.dart';
 
 import '../controllers/konfirmasi_transfer_controller.dart';
 
-
-
 String generateTransactionId({
   required String categoryName,
 }) {
@@ -79,15 +77,20 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
         args['bankNumber'] as String? ?? 'Nomor rekening tidak tersedia';
     // final String idTransaksi = "#DM110703412";
     var lebar = MediaQuery.of(context).size.width;
-    final totalTransfer = args['amount'] ?? '0';
+    final int totalTransfer = args['amount'] ?? 0;
     final namaKategori = args['kategori'] as String? ?? 'haha';
     final String idTransaksi =
         generateTransactionId(categoryName: namaKategori);
 
-    print('amount: $totalTransfer');
+    // print('amount: $totalTransfer');
+    final formatRupiah = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
 
-    // final totalTransferFormatted = formatAmount(totalTransfer);
-     
+    final totalTransferFormatted = formatRupiah.format(totalTransfer! ?? 0);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appbar2(
@@ -144,7 +147,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                   const SizedBox(height: 16),
                   _inputCopyTransfer('${bankNumber}', context),
                   const SizedBox(height: 16),
-                  _inputCopyTransfer(totalTransfer, context),
+                  _inputCopyTransfer(totalTransferFormatted, context),
                   const SizedBox(height: 16),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -258,7 +261,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
   }
 
   void _showCenteredPopup(BuildContext context, String bankId, String charityId,
-      donationPrice, transactionNumber, String userId, String trasactionId) {
+     int donationPrice, transactionNumber, String userId, String trasactionId) {
     final TransactionsController controller = Get.put(TransactionsController());
     showDialog(
       context: context,
@@ -367,7 +370,7 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
                               id: trasactionId,
                               transactionNumber: transactionNumber,
                               status: 2,
-                              donationPrice: int.parse(donationPrice),
+                              donationPrice: donationPrice,
                               bankId: bankId,
                               charityId: charityId,
                               userId: userId,

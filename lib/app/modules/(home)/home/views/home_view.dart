@@ -60,7 +60,7 @@ class HomeView extends GetView<HomeController> {
                   ),
                   Container(
                     width: lebar,
-                    height: tinggi * 0.58,
+                    height: tinggi * 0.63,
                     color: Colors.white,
                   )
                 ],
@@ -68,7 +68,7 @@ class HomeView extends GetView<HomeController> {
               // Content
               Padding(
                 padding: const EdgeInsets.only(
-                    top: 56, left: 0, right: 0, bottom: 0),
+                    top: 42, left: 0, right: 0, bottom: 0),
                 child: Column(
                   children: [
                     Padding(

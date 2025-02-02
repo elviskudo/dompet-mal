@@ -343,7 +343,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            formatAmount(amount.toString()),
+                            formatRupiah(amount),
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -483,9 +483,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                               Get.snackbar(
                                   'Berhasil transaksi', 'Status: pending');
 
-                              final cleanAmount = donationController
-                                  .donationAmount.value
-                                  .replaceAll(RegExp(r'[^0-9]'), '');
+                          
 
                               // Kirim data ke halaman konfirmasi
                               Get.toNamed(
@@ -505,7 +503,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
 
                                   'bankNumber':
                                       selectedBankAccount.value!.accountNumber,
-                                  'amount': cleanAmount,
+                                  'amount': amount,
                                   // Tambahkan data lain yang diperlukan
                                 },
                               );
