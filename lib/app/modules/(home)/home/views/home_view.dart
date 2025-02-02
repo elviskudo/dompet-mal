@@ -67,8 +67,8 @@ class HomeView extends GetView<HomeController> {
               ),
               // Content
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 26, horizontal: 0),
+                padding: const EdgeInsets.only(
+                    top: 56, left: 0, right: 0, bottom: 0),
                 child: Column(
                   children: [
                     Padding(

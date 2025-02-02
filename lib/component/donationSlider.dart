@@ -87,6 +87,52 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
     _controller.forward();
   }
 
+  String formatAmount(String value) {
+    try {
+      // Bersihkan string dari karakter non-numerik
+      final cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+
+      // Konversi ke number
+      int number = int.tryParse(cleanValue) ?? 0;
+
+      // Generate random number (0-99)
+      final random = Random();
+      final randomNum = random.nextInt(100);
+
+      // Tambahkan random number
+      number = number + randomNum;
+
+      // Format dengan separator ribuan dan tambahkan Rp
+      final formatter = NumberFormat('#,###', 'id_ID');
+      return "Rp ${formatter.format(number).replaceAll(',', '.')}";
+    } catch (e) {
+      print('Error formatting amount: $e');
+      return 'Rp 0';
+    }
+  }
+
+  int formatAmount2(String value) {
+    try {
+      // Bersihkan string dari karakter non-numerik
+      final cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+
+      // Konversi ke number
+      int number = int.tryParse(cleanValue) ?? 0;
+
+      // Generate random number (0-99)
+      final random = Random();
+      final randomNum = random.nextInt(100);
+
+      // Tambahkan random number
+      number = number + randomNum;
+
+      return number;
+    } catch (e) {
+      print('Error formatting amount: $e');
+      return 0;
+    }
+  }
+
   String _formatNumber(String value) {
     // Remove any existing formatting
     value = value.replaceAll('.', '');
@@ -297,7 +343,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            formatRupiah(amount),
+                            formatAmount(amount.toString()),
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -400,7 +446,7 @@ class _SlidingDonationSheetState extends State<SlidingDonationSheet>
                               }
 
                               // Validasi jumlah donasi
-                              final amount = int.tryParse(
+                              final amount = formatAmount2(
                                   donationController.donationAmount.value);
                               if (amount == null || amount < 10000) {
                                 Get.snackbar(

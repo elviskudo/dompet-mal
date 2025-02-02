@@ -33,7 +33,7 @@ class PaymentSuccessView extends GetView<PaymentSuccessController> {
                   top: 16,
                   left: 16,
                   child: GestureDetector(
-                    onTap: () => Get.back(),
+                    onTap: () => Get.offAllNamed(Routes.NAVIGATION), // Ganti '/navigation' dengan route tujuan(),
                     child: Icon(
                       Icons.close,
                       color: Colors.white,
