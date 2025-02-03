@@ -2,12 +2,12 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dompet_mal/app/modules/(home)/notification/controllers/notification_controller.dart';
 import 'package:dompet_mal/models/notification.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TransactionCronJob {
   final supabase = Supabase.instance.client;
- 
 
   Future<bool> isValidUser() async {
     try {
@@ -150,16 +150,25 @@ class TransactionCronJob {
               String notificationTitle;
               String notificationBody;
 
+              String formatRupiah(num value) {
+                final formatter = NumberFormat.currency(
+                  locale: 'id_ID',
+                  symbol: 'Rp ',
+                  decimalDigits: 0,
+                );
+                return formatter.format(value);
+              }
+
               switch (status) {
                 case 1:
                   notificationTitle = 'Pembayaran Tertunda!';
                   notificationBody =
-                      'Transaksi untuk "${charityData['title']}" senilai Rp${transaction['donation_price'].toStringAsFixed(0)} masih tertunda. Segera selesaikan pembayaran Anda!';
+                      'Transaksi untuk "${charityData['title']}" senilai ${formatRupiah(transaction['donation_price'])} masih tertunda. Segera selesaikan pembayaran Anda!';
                   break;
                 case 2:
                   notificationTitle = 'Menunggu Verifikasi';
                   notificationBody =
-                      'Pembayaran untuk "${charityData['title']}" senilai Rp${transaction['donation_price'].toStringAsFixed(0)} sedang dalam proses verifikasi.';
+                      'Pembayaran untuk "${charityData['title']}" senilai ${formatRupiah(transaction['donation_price'])} sedang dalam proses verifikasi.';
                   break;
 
                 default:
@@ -255,16 +264,25 @@ class TransactionCronJob {
       String title;
       String body;
 
+      String formatRupiah(num value) {
+        final formatter = NumberFormat.currency(
+          locale: 'id_ID',
+          symbol: 'Rp ',
+          decimalDigits: 0,
+        );
+        return formatter.format(value);
+      }
+
       switch (status) {
         case 1:
           title = 'Pembayaran Tertunda!';
           body =
-              'Transaksi #$transactionNumber untuk "$charityTitle" senilai Rp${amount.toStringAsFixed(0)} masih tertunda. Segera selesaikan pembayaran Anda!';
+              'Transaksi #$transactionNumber untuk "$charityTitle" senilai ${formatRupiah(amount)} masih tertunda. Segera selesaikan pembayaran Anda!';
           break;
         case 2:
           title = 'Menunggu Verifikasi';
           body =
-              'Pembayaran #$transactionNumber untuk "$charityTitle" senilai Rp${amount.toStringAsFixed(0)} sedang dalam proses verifikasi.';
+              'Pembayaran #$transactionNumber untuk "$charityTitle" senilai ${formatRupiah(amount)} sedang dalam proses verifikasi.';
           break;
 
         default:
