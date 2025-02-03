@@ -77,7 +77,19 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
         args['bankNumber'] as String? ?? 'Nomor rekening tidak tersedia';
     // final String idTransaksi = "#DM110703412";
     var lebar = MediaQuery.of(context).size.width;
-    final int totalTransfer = args['amount'] ?? 0;
+    // Handle both string and int types for amount
+    final dynamic rawAmount = args['amount'] ?? 0;
+    final int totalTransfer;
+
+    if (rawAmount is String) {
+      totalTransfer = int.parse(rawAmount);
+    } else if (rawAmount is int) {
+      totalTransfer = rawAmount;
+    } else {
+      totalTransfer = 0; // Default value if neither string nor int
+      print('Warning: amount argument is neither string nor int');
+    }
+    // int.tryParse(totalTransfer)
     final namaKategori = args['kategori'] as String? ?? 'haha';
     final String idTransaksi =
         generateTransactionId(categoryName: namaKategori);
@@ -260,8 +272,14 @@ class ConfirmationTransferView extends GetView<ConfirmationTransferController> {
     );
   }
 
-  void _showCenteredPopup(BuildContext context, String bankId, String charityId,
-     int donationPrice, transactionNumber, String userId, String trasactionId) {
+  void _showCenteredPopup(
+      BuildContext context,
+      String bankId,
+      String charityId,
+      int donationPrice,
+      transactionNumber,
+      String userId,
+      String trasactionId) {
     final TransactionsController controller = Get.put(TransactionsController());
     showDialog(
       context: context,

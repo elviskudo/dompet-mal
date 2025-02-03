@@ -121,7 +121,7 @@ class TransactionCronJob {
           final positiveElapsedMinutes =
               elapsedMinutes > 0 ? elapsedMinutes : 0;
 
-          if (elapsedMinutes >= -417) {
+          if (elapsedMinutes >= -418) {
             if (existingNotifications == null ||
                 (existingNotifications as List).isEmpty) {
               print('Transaction is eligible for notification. Sending...');
@@ -179,7 +179,7 @@ class TransactionCronJob {
                 transaction['id'],
                 transaction['transaction_number'],
                 charityData['title'] ?? 'Unknown Charity',
-                (transaction['donation_price']),
+                transaction['donation_price'],
                 categori["name"] ?? '',
                 charityData['id'] ?? '',
                 bankData['id'] ?? '',

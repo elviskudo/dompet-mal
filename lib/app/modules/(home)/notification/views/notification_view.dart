@@ -133,7 +133,7 @@ class NotificationCard extends StatelessWidget {
             Text(
               notification.createdAt != null
                   ? DateFormat('dd MMM yyyy, HH:mm')
-                      .format(notification.createdAt!)
+                      .format(notification.createdAt!.toLocal())
                   : '',
               style: GoogleFonts.poppins(
                 fontSize: 12,

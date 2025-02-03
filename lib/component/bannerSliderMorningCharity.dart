@@ -76,6 +76,7 @@ class _BannerSliderState extends State<BannerSlider> {
                       "categoryId": banner.categoryId ?? '',
                       "companyName": banner.companyName ?? "",
                       "companyImage": banner.companyImage ?? "",
+                      "targetDate": banner.targetDate ,
                       "created_at": banner.created_at,
                       "contributors": banner.contributors
                           .map((contributor) => {
@@ -193,6 +194,7 @@ class _BannerSliderState extends State<BannerSlider> {
                                         "description": banner.description ?? '',
                                         "categoryId": banner.categoryId ?? '',
                                         "companyName": banner.companyName ?? "",
+                                        "targetDate": banner.targetDate ,
                                         "companyImage":
                                             banner.companyImage ?? "",
                                         "created_at": banner.created_at,
