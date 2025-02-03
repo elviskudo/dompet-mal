@@ -1,15 +1,21 @@
-import 'package:dompet_mal/app/modules/(admin)/bankAdmin/bindings/bank_admin_binding.dart';
-import 'package:dompet_mal/app/modules/(admin)/bankAdmin/views/bank_admin_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/(admin)/admin_panel/bindings/admin_panel_binding.dart';
 import '../modules/(admin)/admin_panel/views/admin_panel_view.dart';
+import '../modules/(admin)/bankAdmin/bindings/bank_admin_binding.dart';
+import '../modules/(admin)/bankAdmin/views/bank_admin_view.dart';
 import '../modules/(admin)/categories/bindings/categories_binding.dart';
 import '../modules/(admin)/categories/views/categories_view.dart';
+import '../modules/(admin)/charityAdmin/bindings/charity_admin_binding.dart';
+import '../modules/(admin)/charityAdmin/views/charity_admin_view.dart';
 import '../modules/(admin)/companies/bindings/companies_binding.dart';
 import '../modules/(admin)/companies/views/companies_view.dart';
+import '../modules/(admin)/contributorAdmin/bindings/contributor_admin_binding.dart';
+import '../modules/(admin)/contributorAdmin/views/contributor_admin_view.dart';
 import '../modules/(admin)/list_user/bindings/list_user_binding.dart';
 import '../modules/(admin)/list_user/views/list_user_view.dart';
+import '../modules/(admin)/transactions/bindings/transactions_binding.dart';
+import '../modules/(admin)/transactions/views/transactions_view.dart';
 import '../modules/(admin)/upload/bindings/upload_binding.dart';
 import '../modules/(admin)/upload/views/upload_view.dart';
 import '../modules/(home)/Report/bindings/report_binding.dart';
@@ -18,12 +24,8 @@ import '../modules/(home)/aggrement/bindings/aggrement_binding.dart';
 import '../modules/(home)/aggrement/views/aggrement_view.dart';
 import '../modules/(home)/category/bindings/category_binding.dart';
 import '../modules/(home)/category/views/category_view.dart';
-import '../modules/(admin)/charityAdmin/bindings/charity_admin_binding.dart';
-import '../modules/(admin)/charityAdmin/views/charity_admin_view.dart';
 import '../modules/(home)/confirmationTransfer/bindings/konfirmasi_transfer_binding.dart';
 import '../modules/(home)/confirmationTransfer/views/konfirmasi_transfer_view.dart';
-import '../modules/(admin)/contributorAdmin/bindings/contributor_admin_binding.dart';
-import '../modules/(admin)/contributorAdmin/views/contributor_admin_view.dart';
 import '../modules/(home)/donationDetailPage/bindings/donation_detail_page_binding.dart';
 import '../modules/(home)/donationDetailPage/views/donation_detail_page_view.dart';
 import '../modules/(home)/email_verification/bindings/email_verification_binding.dart';
@@ -68,8 +70,8 @@ import '../modules/(home)/sendMoney2/bindings/send_money2_binding.dart';
 import '../modules/(home)/sendMoney2/views/send_money2_view.dart';
 import '../modules/(home)/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/(home)/splash_screen/views/splash_screen_view.dart';
-import '../modules/(admin)/transactions/bindings/transactions_binding.dart';
-import '../modules/(admin)/transactions/views/transactions_view.dart';
+import '../modules/alQuran-page/bindings/al_quran_page_binding.dart';
+import '../modules/alQuran-page/views/al_quran_page_view.dart';
 
 part 'app_routes.dart';
 
@@ -161,7 +163,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PROFILE,
-      page: () =>  ProfileView(),
+      page: () => ProfileView(),
       binding: ListUserBinding(),
     ),
     GetPage(
@@ -169,7 +171,6 @@ class AppPages {
       page: () => const NavigationView(),
       binding: NavigationBinding(),
     ),
-  
     GetPage(
       name: _Paths.SEND_MONEY,
       page: () => const SendMoneyView(),
@@ -264,6 +265,11 @@ class AppPages {
       name: _Paths.BANK_ADMIN,
       page: () => const BankAdminView(),
       binding: BankAdminBinding(),
+    ),
+    GetPage(
+      name: _Paths.AL_QURAN_PAGE,
+      page: () => const AlQuranPageView(),
+      binding: AlQuranPageBinding(),
     ),
   ];
 }
