@@ -22,12 +22,12 @@ class AlQuranPageView extends GetView<AlQuranPageController> {
             Container(
               width: double.infinity,
               height: 140,
-               decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/bgbatik.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/bgbatik.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             SafeArea(
               child: Padding(
@@ -35,11 +35,15 @@ class AlQuranPageView extends GetView<AlQuranPageController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    Stack(
                       children: [
-                       Logo(),
-                        const SizedBox(width: 10),
-                        
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 16), // Menambahkan padding ke kanan
+                            child: Logo(),
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 12),
