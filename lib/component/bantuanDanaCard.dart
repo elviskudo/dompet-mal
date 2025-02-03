@@ -234,7 +234,32 @@ class EmergencyFundCard extends StatelessWidget {
               (t.status == 1 || t.status == 2))
           .toList()
         ..sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
-
+      double progressValue = calculateProgress(fund.total, fund.targetTotal);
+      int progressPercentage = (progressValue * 100).round();
+      if (progressPercentage >= 100) {
+        return Container(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: null, // Button is disabled
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              minimumSize: Size(80, 24),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              backgroundColor:
+                  const Color(0xff4CAF50), // Green color for success
+              disabledBackgroundColor: const Color(0xff4CAF50),
+              foregroundColor: Colors.white,
+              disabledForegroundColor: Colors.white,
+            ),
+            child: Text(
+              "Donasi Terpenuhi",
+              style: GoogleFonts.poppins(fontSize: 14),
+            ),
+          ),
+        );
+      }
       if (latestTransaction.isEmpty) {
         return _normalDonationButton(
             context, charityId, categoryName, targetDate, title);
@@ -349,6 +374,7 @@ class EmergencyFundCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double progressValue = calculateProgress(fund.total, fund.targetTotal);
     int progressPercentage = (progressValue * 100).round();
+    bool isComplete = progressPercentage >= 100;
     var categoryName = category
         .firstWhere(
           (cat) => cat.id == fund.categoryId,
@@ -364,107 +390,110 @@ class EmergencyFundCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: InkWell(
-        onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Image.network(
-                fund.image ?? 'https://via.placeholder.com/150',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.image, size: 50),
-                  );
-                },
+        onTap: isComplete ? null : onTap,
+        child: Opacity(
+          opacity: isComplete ? 0.5 : 1.0,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.network(
+                  fund.image ?? 'https://via.placeholder.com/150',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.image, size: 50),
+                    );
+                  },
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    fund.title ?? 'Untitled Charity',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 16),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: progressValue,
-                      minHeight: 8,
-                      backgroundColor: baseGray,
-                      valueColor: AlwaysStoppedAnimation<Color>(basecolor),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Terkumpul',
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Gap(2),
-                          Text(
-                            formatCurrency(fund.total),
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600, fontSize: 12),
-                          ),
-                        ],
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      fund.title ?? 'Untitled Charity',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Sisa hari',
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Gap(2),
-                          Text(
-                            calculateRemainingDays(fund
-                                .targetDate), // This was hardcoded in the original, you might want to calculate dynamically
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 16),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: progressValue,
+                        minHeight: 8,
+                        backgroundColor: baseGray,
+                        valueColor: AlwaysStoppedAnimation<Color>(basecolor),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  buildContributorSection(fund.contributors),
-                  Gap(8),
-                  Container(
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                    width: double.infinity,
-                    child: _buildDonationButton(context, fund.id!, categoryName,
-                        fund.targetDate!, fund.title!),
-                  )
-                ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Terkumpul',
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Gap(2),
+                            Text(
+                              formatCurrency(fund.total),
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Sisa hari',
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Gap(2),
+                            Text(
+                              calculateRemainingDays(fund
+                                  .targetDate), // This was hardcoded in the original, you might want to calculate dynamically
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    buildContributorSection(fund.contributors),
+                    Gap(8),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)),
+                      width: double.infinity,
+                      child: _buildDonationButton(context, fund.id!,
+                          categoryName, fund.targetDate!, fund.title!),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
