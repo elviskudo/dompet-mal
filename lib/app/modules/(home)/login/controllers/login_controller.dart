@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../../../../helper/PasswordHasher.dart';
 import '../../../../routes/app_pages.dart';
 
@@ -33,149 +34,118 @@ class LoginController extends GetxController {
   }
 
   Future<void> signInWithGoogle() async {
-    // try {
-    //   isLoading.value = true;
+    try {
+      isLoading.value = true;
 
-    //   // Trigger the Google OAuth sign in flow
-    //   final bool success = await supabase.auth.signInWithOAuth(
-    //     OAuthProvider.google,
-    //     redirectTo: 'io.supabase.flutter://login-callback/',
-    //   );
+      // Trigger Google Sign In
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        throw 'Google Sign In dibatalkan';
+      }
 
-    //   if (success) {
-    //     // Wait for the session to be available
-    //     final Session? session = supabase.auth.currentSession;
-    //     final User? user = session?.user;
+      // Get Google Sign In authentication
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
-    //     if (user != null) {
-    //       try {
-    //         // Get user details from Supabase
-    //         final userData = await supabase
-    //             .from('users')
-    //             .select()
-    //             .eq('email', user)
-    //             .single();
+      // Check if user already exists in Supabase
+      final existingUser = await supabase
+          .from('users')
+          .select()
+          .eq('email', googleUser.email)
+          .maybeSingle();
 
-    //         final DateTime now = DateTime.now();
+      String userId;
 
-    //         // If user doesn't exist in your users table, create them
-    //         if (userData == null) {
-    //           // Insert new user
-    //           final String userId = await supabase
-    //               .from('users')
-    //               .insert({
-    //                 'name': user.userMetadata?['full_name'] ?? '',
-    //                 'email': user.email,
-    //                 'password': '', // Empty for Google Sign In
-    //                 'phone_number': '',
-    //                 'access_token': session?.accessToken ?? '',
-    //                 'created_at': now.toIso8601String(),
-    //                 'updated_at': now.toIso8601String(),
-    //               })
-    //               .select('id')
-    //               .single()
-    //               .then((response) => response['id']);
+      if (existingUser == null) {
+        // Create new user if doesn't exist
+        final newUser = {
+          'email': googleUser.email,
+          'name': googleUser.displayName ?? 'Google User',
+          'access_token': '',
+          'password': '12345678', // Empty password for Google users
+          'phone_number': '+62', // Default phone number as requested
+        };
 
-    //           // Assign member role to new user
-    //           await supabase.from('user_roles').insert({
-    //             'user_id': userId,
-    //             'role_id': MEMBER_ROLE_ID,
-    //             'created_at': now.toIso8601String(),
-    //             'updated_at': now.toIso8601String(),
-    //           });
+        final response =
+            await supabase.from('users').insert(newUser).select().single();
 
-    //           // Store user session details
-    //           final prefs = await SharedPreferences.getInstance();
-    //           await prefs.setBool('isLoggedIn', true);
-    //           await prefs.setString('userEmail', user.email ?? '');
-    //           await prefs.setString('userId', userId);
-    //           await prefs.setString(
-    //               'userName', user.userMetadata?['full_name'] ?? '');
-    //           await prefs.setString('accessToken', session?.accessToken ?? '');
-    //           await prefs.setString('userRole', 'member');
-    //         } else {
-    //           // Update existing user's access token
-    //           await supabase.from('users').update({
-    //             'access_token': session?.accessToken ?? '',
-    //             'updated_at': now.toIso8601String(),
-    //           }).eq('id', userData['id']);
+        userId = response['id'];
 
-    //           // Get user's role
-    //           final userRole = await supabase
-    //               .from('user_roles')
-    //               .select('roles (name)')
-    //               .eq('user_id', userData['id'])
-    //               .single();
+        // Create user role (assuming member role)
+        await supabase.from('user_roles').insert({
+          'user_id': userId,
+          'role_id': '3b762a72-a685-4020-841e-db8f86ba71e3', // Member role ID
+        });
+      } else {
+        userId = existingUser['id'];
+      }
 
-    //           // Store user session details
-    //           final prefs = await SharedPreferences.getInstance();
-    //           await prefs.setBool('isLoggedIn', true);
-    //           await prefs.setString('userEmail', userData['email']);
-    //           await prefs.setString('userId', userData['id']);
-    //           await prefs.setString('userName', userData['name']);
-    //           await prefs.setString('accessToken', session?.accessToken ?? '');
-    //           await prefs.setString('userRole', userRole['roles']['name']);
-    //         }
+      // Get user role
+      final userRole = await supabase
+          .from('user_roles')
+          .select()
+          .eq('user_id', userId)
+          .single();
 
-    //         // Show success message
-    //         Get.snackbar(
-    //           'Sukses',
-    //           'Berhasil login dengan Google',
-    //           backgroundColor: Colors.green,
-    //           colorText: Colors.white,
-    //           margin: EdgeInsets.all(20),
-    //           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    //           snackPosition: SnackPosition.BOTTOM,
-    //           duration: Duration(seconds: 2),
-    //           snackStyle: SnackStyle.FLOATING,
-    //           forwardAnimationCurve: Curves.easeOut,
-    //           reverseAnimationCurve: Curves.easeIn,
-    //         );
+      final roles = await supabase
+          .from('roles')
+          .select()
+          .eq('id', userRole['role_id'])
+          .single();
 
-    //         // Navigate to main screen
-    //         Get.offAllNamed(Routes.NAVIGATION);
-    //       } catch (e) {
-    //         print('Error processing user data: $e');
-    //         Get.snackbar(
-    //           'Error',
-    //           'Terjadi kesalahan saat memproses data pengguna',
-    //           backgroundColor: Colors.red,
-    //           colorText: Colors.white,
-    //         );
-    //       }
-    //     } else {
-    //       Get.snackbar(
-    //         'Error',
-    //         'Gagal mendapatkan data pengguna',
-    //         backgroundColor: Colors.red,
-    //         colorText: Colors.white,
-    //       );
-    //     }
-    //   } else {
-    //     Get.snackbar(
-    //       'Error',
-    //       'Gagal login dengan Google',
-    //       backgroundColor: Colors.red,
-    //       colorText: Colors.white,
-    //     );
-    //   }
-    // } on AuthException catch (error) {
-    //   Get.snackbar(
-    //     'Error',
-    //     error.message,
-    //     backgroundColor: Colors.red,
-    //     colorText: Colors.white,
-    //   );
-    // } catch (error) {
-    //   Get.snackbar(
-    //     'Error',
-    //     'Terjadi kesalahan saat login dengan Google: $error',
-    //     backgroundColor: Colors.red,
-    //     colorText: Colors.white,
-    //   );
-    // } finally {
-    //   isLoading.value = false;
-    // }
+      final roleUsers = roles['name'] ?? 'member';
+      final defaultProfileImage =
+          'https://res.cloudinary.com/dcthljxbl/image/upload/v1738161418/bycisnwjaqzyxddx7ome.webp';
+      final fileData = {
+        'module_class': 'users',
+        'module_id': userId,
+        'file_name': defaultProfileImage,
+        'file_type': 'webp',
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      await supabase.from('files').insert(fileData);
+
+      // Save user data to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('userEmail', googleUser.email);
+      await prefs.setString('userId', userId);
+      await prefs.setString(
+          'userName', googleUser.displayName ?? 'Google User');
+      await prefs.setString('userPhone', '+62');
+      await prefs.setString('userProfileImage', defaultProfileImage);
+      Get.snackbar(
+        'Sukses',
+        'Berhasil login dengan Google',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(20),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 2),
+        snackStyle: SnackStyle.FLOATING,
+        forwardAnimationCurve: Curves.easeOut,
+        reverseAnimationCurve: Curves.easeIn,
+      );
+
+      // Navigate based on role
+      if (roleUsers == 'admin') {
+        Get.offAllNamed(Routes.ADMIN_PANEL);
+      } else {
+        Get.offAllNamed(Routes.NAVIGATION);
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Terjadi kesalahan: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> login() async {
@@ -226,7 +196,6 @@ class LoginController extends GetxController {
         return;
       }
       isLoading.value = true;
-   
 
       final user = await supabase
           .from('users')
