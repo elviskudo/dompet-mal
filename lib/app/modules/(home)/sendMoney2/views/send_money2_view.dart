@@ -15,6 +15,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -167,10 +168,19 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
   Future<void> _createNotification(
       String userId, String charityTitle, int donationAmount) async {
     try {
+      String formatRupiah(num value) {
+        final formatter = NumberFormat.currency(
+          locale: 'id_ID',
+          symbol: 'Rp ',
+          decimalDigits: 0,
+        );
+        return formatter.format(value);
+      }
+
       final notification = NotificationModels(
         title: 'Donasi Berhasil',
         body:
-            'Terima kasih! Donasi Anda sebesar Rp$donationAmount untuk $charityTitle telah berhasil.',
+            'Terima kasih! Donasi Anda sebesar ${formatRupiah(donationAmount)} untuk $charityTitle telah berhasil.',
         userId: userId,
         uniqueId: const Uuid().v4(),
         createdAt: DateTime.now(),
@@ -187,7 +197,7 @@ class SendMoney2View extends GetView<SendMoney2Controller> {
           channelKey: 'transaction_service',
           title: 'Donasi Berhasil',
           body:
-              'Terima kasih! Donasi Anda sebesar Rp$donationAmount untuk $charityTitle telah berhasil.',
+              'Terima kasih! Donasi Anda sebesar ${formatRupiah(donationAmount)} untuk $charityTitle telah berhasil.',
           notificationLayout: NotificationLayout.Default,
         ),
       );
