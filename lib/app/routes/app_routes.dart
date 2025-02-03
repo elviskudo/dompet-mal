@@ -41,6 +41,7 @@ abstract class Routes {
   static const COMPANIES = _Paths.COMPANIES;
   static const TRANSACTIONS = _Paths.TRANSACTIONS;
   static const BANK_ADMIN = _Paths.BANK_ADMIN;
+  static const AL_QURAN_PAGE = _Paths.AL_QURAN_PAGE;
 }
 
 abstract class _Paths {
@@ -84,4 +85,5 @@ abstract class _Paths {
   static const COMPANIES = '/companies';
   static const TRANSACTIONS = '/transactions';
   static const BANK_ADMIN = '/bank-admin';
+  static const AL_QURAN_PAGE = '/al-quran-page';
 }

@@ -8,8 +8,8 @@ class chat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.toNamed(Routes.MESSAGE),
-      child: Image.asset('assets/images/chat.png'),
+      onTap: () => Get.toNamed(Routes.AL_QURAN_PAGE),
+      child:Icon(Icons.menu_book_rounded, color: Colors.white),
     );
   }
 }

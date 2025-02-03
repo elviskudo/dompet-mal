@@ -462,66 +462,93 @@ class DonationDetailView extends GetView<DonationDetailPageController> {
                       SizedBox(
                         height: 32,
                       ),
-                      Obx(() {
-                        final relevantTransactions = transactionsController
-                            .transactions
-                            .where((t) => t.charityId == charity["id"])
-                            .toList();
+                     Obx(() {
+  final relevantTransactions = transactionsController.transactions
+      .where((t) => t.charityId == charity["id"])
+      .toList();
 
-                        if (relevantTransactions.isNotEmpty) {
-                          final latestTransaction = relevantTransactions.first;
-                          // Tampilkan card hanya jika status delivered (3)
-                          if (latestTransaction.status == 3) {
-                            return laporanCard(
-                              context,
-                              transactionsController.banks
-                                  .firstWhere((bank) =>
-                                      bank.id == latestTransaction.bankId)
-                                  .name,
-                              latestTransaction.donationPrice!
-                                  .toStringAsFixed(0),
-                              latestTransaction.createdAt!,
-                            );
-                          }
-                        }
-                        return SizedBox
-                            .shrink(); // Tidak menampilkan apa-apa jika tidak ada transaksi atau status bukan 3
-                      }),
-                      Gap(26),
-                      Container(
-                        width: double.infinity,
-                        height: 60,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.bottomSheet(
-                              SlidingDonationSheet(
-                                kategoriId: charity["categoryId"] ?? "",
-                                charityId: charity["id"] ?? "",
-                                kategori: categoryName ?? "",
-                                targetDate: targetDate ?? "",
-                                title: charity["title"] ?? "",
-                              ),
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff4B76D9),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Lanjut pembayaran',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
+  if (relevantTransactions.isNotEmpty) {
+    final latestTransaction = relevantTransactions.first;
+    // Show card only if status is delivered (4)
+    if (latestTransaction.status == 4) {
+      return Column(
+        children: [
+          laporanCard(
+            context,
+            transactionsController.banks
+                .firstWhere((bank) => bank.id == latestTransaction.bankId)
+                .name,
+            latestTransaction.donationPrice!.toStringAsFixed(0),
+            latestTransaction.createdAt!,
+          ),
+          Gap(26),
+          Container(
+            width: double.infinity,
+            height: 60,
+            child: ElevatedButton(
+              onPressed: null, // Disabled when delivered
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'Penyerahan Dana',
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
+  // If not delivered, show regular donation button
+  return Container(
+    width: double.infinity,
+    height: 60,
+    child: ElevatedButton(
+      onPressed: () {
+        Get.bottomSheet(
+          SlidingDonationSheet(
+            kategoriId: charity["categoryId"] ?? "",
+            charityId: charity["id"] ?? "",
+            kategori: categoryName ?? "",
+            targetDate: targetDate ?? "",
+            title: charity["title"] ?? "",
+          ),
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: (charity["total"] ?? 0) >= (charity["targetTotal"] ?? 0) 
+            ? Colors.green 
+            : const Color(0xff4B76D9),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      child: Text(
+        (charity["total"] ?? 0) >= (charity["targetTotal"] ?? 0)
+            ? 'Target Tercapai'
+            : 'Lanjut pembayaran',
+        style: GoogleFonts.poppins(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+  );
+}),
                     ],
                   ),
                 ],
