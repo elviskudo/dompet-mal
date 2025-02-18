@@ -1,3 +1,4 @@
+import 'package:dompet_mal/app/modules/(admin)/contributorAdmin/controllers/contributor_admin_controller.dart';
 import 'package:dompet_mal/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,13 +6,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class OnBoardingPageController extends GetxController {
   static const String ONBOARDING_SHOWN_KEY = 'onboarding_shown';
+  var latestContributions = <Contributor>[].obs;
+  final supabase = Supabase.instance.client;
 
   final CarouselSliderController carouselController =
       CarouselSliderController();
   final currentSlide = 0.obs;
+  var isLoading = false.obs;
+
 
   // Slide data
   final List<Map<String, String>> slides = [
@@ -37,6 +43,7 @@ class OnBoardingPageController extends GetxController {
   void onInit() {
     super.onInit();
     checkOnboardingStatus();
+    fetchLatestContributions();
   }
 
   void checkOnboardingStatus() async {
@@ -70,7 +77,26 @@ class OnBoardingPageController extends GetxController {
     // Implement Google login logic here
     Get.offAllNamed(Routes.LOGIN);
   }
+  Future<void> fetchLatestContributions() async {
+  isLoading.value = true;
+  try {
+    final response = await supabase
+        .from('contributors')
+        .select('*, users:user_id(*), charities:charity_id(*)')
+        .order('lastContributor', ascending: false)
+        .order('lastTransaction', ascending: false)
+        .limit(3);
 
+    latestContributions.value = (response as List)
+        .map((data) => Contributor.fromJson(data))
+        .toList();
+  } catch (e) {
+    print('Error fetching latest contributions: $e');
+    Get.snackbar('Error', 'Failed to fetch latest contributions');
+  } finally {
+    isLoading.value = false;
+  }
+}
   @override
   void onClose() {
     super.onClose();
