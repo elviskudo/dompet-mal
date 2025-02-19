@@ -47,6 +47,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_background_service: ^5.1.0
+  flutter_launcher_icons: ^0.14.3
   gap: ^3.0.1
   get: ^4.6.6
   get_storage: ^2.1.1
@@ -110,3 +111,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logoLogin.png"
+  min_sdk_android: 21 # Required for adaptive icons on Android 8.0+
+  remove_alpha_ios: true

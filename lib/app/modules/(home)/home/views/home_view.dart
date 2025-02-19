@@ -13,7 +13,6 @@ import 'package:dompet_mal/component/chat.dart';
 import 'package:dompet_mal/component/logo.dart';
 import 'package:dompet_mal/component/notifcation.dart';
 import 'package:dompet_mal/component/search.dart';
-import 'package:dompet_mal/component/section.dart';
 import 'package:dompet_mal/component/sectionHeader.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
