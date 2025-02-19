@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dompet_mal/app/modules/(admin)/charityAdmin/controllers/charity_admin_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ class OnboardingPageView extends GetView<OnBoardingPageController> {
 
   @override
   Widget build(BuildContext context) {
+    final adminCntrl = Get.put(CharityAdminController());
     return Scaffold(
       body: Stack(
         children: [
@@ -21,13 +23,13 @@ class OnboardingPageView extends GetView<OnBoardingPageController> {
               viewportFraction: 1.0,
               onPageChanged: controller.onPageChanged,
             ),
-            items: controller.slides.map((slide) {
+            items: adminCntrl.charities.value.map((slide) {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(slide["image"]!),
+                        image: NetworkImage(slide.image!),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -62,7 +64,8 @@ class OnboardingPageView extends GetView<OnBoardingPageController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Obx(() => Text(
-                        controller.slides[controller.currentSlide.value]["title"]!,
+                        adminCntrl.charities
+                            .value[controller.currentSlide.value].title!,
                         style: GoogleFonts.poppins(
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
@@ -71,7 +74,8 @@ class OnboardingPageView extends GetView<OnBoardingPageController> {
                       )),
                   const SizedBox(height: 8),
                   Obx(() => Text(
-                        controller.slides[controller.currentSlide.value]["description"]!,
+                        adminCntrl.charities
+                            .value[controller.currentSlide.value].description!,
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           color: Colors.grey[600],
